@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:stryke_main/intro_screen.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+// Code to go from splash to intro
+// Make cool transition later
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => IntroScreen()),
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
