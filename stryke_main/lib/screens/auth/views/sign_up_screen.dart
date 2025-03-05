@@ -1,7 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../bloc/sign_up_bloc/sign_up_bloc.dart';
 import '../../../components/my_text_field.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -30,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return
-    /*  BlocListener<SignUpBloc, SignUpState>(
+      BlocListener<SignUpBloc, SignUpState>(
       listener: (context, state) {
         if(state is SignUpSuccess) {
           setState(() {
@@ -45,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           return;
         }
       },
-      child:*/
+      child:
       Form(
         key: _formKey,
         child: Center(
@@ -151,62 +153,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              /*Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "⚈  1 uppercase",
-                        style: TextStyle(
-                            color: containsUpperCase
-                                ? Colors.green
-                                : Theme.of(context).colorScheme.onSurface
-                        ),
-                      ),
-                      Text(
-                        "⚈  1 lowercase",
-                        style: TextStyle(
-                            color: containsLowerCase
-                                ? Colors.green
-                                : Theme.of(context).colorScheme.onSurface
-                        ),
-                      ),
-                      Text(
-                        "⚈  1 number",
-                        style: TextStyle(
-                            color: containsNumber
-                                ? Colors.green
-                                : Theme.of(context).colorScheme.onSurface
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "⚈  1 special character",
-                        style: TextStyle(
-                            color: containsSpecialChar
-                                ? Colors.green
-                                : Theme.of(context).colorScheme.onSurface
-                        ),
-                      ),
-                      Text(
-                        "⚈  8 minimum character",
-                        style: TextStyle(
-                            color: contains8Length
-                                ? Colors.green
-                                : Theme.of(context).colorScheme.onSurface
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),*/
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: MyTextField(
@@ -258,12 +204,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           name: nameController.text,
                         );
                         setState(() {
-                        /*  context.read<SignUpBloc>().add(
+                          context.read<SignUpBloc>().add(
                               SignUpRequired(
                                   myUser,
                                   passwordController.text
                               )
-                          );*/
+                          );
                         });
                       }
                     },
@@ -293,6 +239,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ],
           ),
         ),
+      ),
     );
   }
 }
