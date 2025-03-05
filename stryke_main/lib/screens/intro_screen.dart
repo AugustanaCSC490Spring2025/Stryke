@@ -11,78 +11,92 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double buttonWidth = MediaQuery.of(context).size.width * 0.7;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      backgroundColor: Colors.black54,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.green,
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(40)),
+      backgroundColor: const Color(0xFF1C1C1C),
+      body: Column(
+        children: [
+          SizedBox(
+            height: screenHeight * 0.5,
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Color(0xFFB7FF00),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
+              ),
+              child: const Icon(Icons.bolt_sharp, size: 300),
+            ),
+          ),
+          verticalSpacing(30),
+          Center(
+            child: Text(
+              "Say Hello to \n The STRYKE App",
+              style: ThemeTextStyles.introScreenText_SubTitle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          verticalSpacing(50),
+          Center(
+            child: Text(
+              "Join your team to track your metrics \n and see the progress you have made in season!",
+              style: ThemeTextStyles.introScreenText,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          verticalSpacing(40),
+          Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  width: buttonWidth,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const WelcomeScreen(selectedTab: 1)),
+                      );
+                    },
+                    style: ButtonStyles.colorButton(
+                      backgroundColor: const Color(0xFFB7FF00),
+                      textColor: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    child: const Text("Sign Up"),
+                  ),
                 ),
-                child: const Icon(Icons.bolt_sharp, size: 300),
-              ),
+                verticalSpacing(24),
+                SizedBox(
+                  width: buttonWidth,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const WelcomeScreen(selectedTab: 0)),
+                      );
+                    },
+                    style: ButtonStyles.transparentButton(
+                      borderColor: Colors.white,
+                      textColor: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    child: const Text("Login"),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 30), // Added spacing
-            Center(
-              child: Text(
-                "Say Hello to \n the STRYKE App",
-                style: ThemeTextStyles.introScreenText_SubTitle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 10), // Added spacing
-            Center(
-              child: Text(
-                "Join your team to track your metrics \n and see the progress you have made in season!",
-                style: ThemeTextStyles.introScreenText,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 20), // Added spacing
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const WelcomeScreen(selectedTab: 1)),
-                );
-              },
-              style: ButtonStyles.colorButton(
-                backgroundColor: Colors.green,
-                textColor: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-              ),
-              child: const Text("Sign Up"),
-            ),
-            verticalSpacing(24),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const WelcomeScreen(selectedTab: 0)),
-                );
-              },
-              style: ButtonStyles.transparentButton(
-                borderColor: Colors.white,
-                textColor: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-              ),
-              child: const Text("Login"),
-            ),
-            verticalSpacing(150), // Kept your existing spacing method
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

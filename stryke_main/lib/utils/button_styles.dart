@@ -12,7 +12,7 @@ class ButtonStyles {
       foregroundColor: textColor,
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(26),
       ),
       elevation: 5,
       textStyle: TextStyle(
@@ -34,7 +34,7 @@ class ButtonStyles {
       backgroundColor: Colors.transparent, // Transparent background
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(26),
         side: borderColor != null
             ? BorderSide(color: borderColor, width: borderWidth)
             : BorderSide.none,

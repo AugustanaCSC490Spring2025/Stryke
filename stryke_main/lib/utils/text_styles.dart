@@ -3,5 +3,5 @@
 
   class ThemeTextStyles {
     static TextStyle introScreenText_SubTitle = GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32);
-    static TextStyle introScreenText = GoogleFonts.poppins(color: Colors.white, fontSize: 14);
+    static TextStyle introScreenText = GoogleFonts.poppins(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600);
   }

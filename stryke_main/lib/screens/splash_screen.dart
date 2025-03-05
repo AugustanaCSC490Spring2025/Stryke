@@ -24,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF1C1C1C),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(50),
@@ -34,14 +35,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 padding: const EdgeInsets.all(2),
                 margin: const EdgeInsets.only(right: 7),
                 decoration: const BoxDecoration(
-                  color: Colors.green,
+                  color: Color(0xFFB7FF00),
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
                 child: const Icon(Icons.bolt_sharp, size: 40),
               ),
               const Text(
                 "STRYKE",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ],
           ),
