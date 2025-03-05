@@ -2,6 +2,6 @@
   import 'package:google_fonts/google_fonts.dart';
 
   class ThemeTextStyles {
-    static TextStyle introScreenTextBold = GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.bold);
-    static TextStyle introScreenText = GoogleFonts.poppins(color: Colors.black);
+    static TextStyle introScreenText_SubTitle = GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 32);
+    static TextStyle introScreenText = GoogleFonts.poppins(color: Colors.black, fontSize: 14);
   }
