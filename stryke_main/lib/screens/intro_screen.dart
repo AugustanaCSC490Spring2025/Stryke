@@ -54,8 +54,12 @@ class IntroScreen extends StatelessWidget {
                           const WelcomeScreen(selectedTab: 1)),
                 );
               },
-              child: Text("Sign Up", style: ThemeTextStyles.introScreenText),
-              style: ButtonStyles.colorButton(Colors.green, Colors.black)
+              style: ButtonStyles.colorButton(
+                backgroundColor: Colors.green,
+                textColor: Colors.black,
+                fontSize: 24,
+              ),
+              child: const Text("Sign Up"),
             ),
             ElevatedButton(
               onPressed: () {
@@ -66,8 +70,11 @@ class IntroScreen extends StatelessWidget {
                           const WelcomeScreen(selectedTab: 0)),
                 );
               },
-              child: Text("Sign In", style: ThemeTextStyles.introScreenText),
-              style: ButtonStyles.colorButton(Colors.white, Colors.black87),
+              style: ButtonStyles.colorButton(
+                  backgroundColor: Colors.white,
+                  textColor: Colors.black,
+                  fontSize: 12),
+              child: const Text("Sign In"),
             ),
             verticalSpacing(150), // Kept your existing spacing method
           ],
