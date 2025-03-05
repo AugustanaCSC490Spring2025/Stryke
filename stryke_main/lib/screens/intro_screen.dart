@@ -12,6 +12,7 @@ class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black54,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,9 +55,7 @@ class IntroScreen extends StatelessWidget {
                 );
               },
               child: Text("Sign Up", style: ThemeTextStyles.introScreenText),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.green),
-              ),
+              style: ButtonStyles.colorButton(Colors.green, Colors.black)
             ),
             ElevatedButton(
               onPressed: () {
@@ -68,7 +67,7 @@ class IntroScreen extends StatelessWidget {
                 );
               },
               child: Text("Sign In", style: ThemeTextStyles.introScreenText),
-              style: ButtonStyles.colorButton(Colors.white),
+              style: ButtonStyles.colorButton(Colors.white, Colors.black87),
             ),
             verticalSpacing(150), // Kept your existing spacing method
           ],

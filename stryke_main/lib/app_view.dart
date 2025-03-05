@@ -31,7 +31,9 @@ class MyAppView extends StatelessWidget {
               create: (context) => SignInBloc(
                   userRepository: context.read<AuthenticationBloc>().userRepository
               ),
-              child: const HomeScreen(),
+              child: const SplashScreen(),
+                //JUST UNCOMMENT THE LINE BELOW FOR THE LOGIN FUNCTION, IT STILL WORKS I JUST WANT TO TEST
+              //const HomeScreen(),
             );
           } else {
             return const SplashScreen();

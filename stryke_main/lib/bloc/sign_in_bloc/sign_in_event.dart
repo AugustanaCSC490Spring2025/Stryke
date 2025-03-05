@@ -15,6 +15,5 @@ class SignInRequired extends SignInEvent{
 }
 
 class SignOutRequired extends SignInEvent{
-
   const SignOutRequired();
 }
