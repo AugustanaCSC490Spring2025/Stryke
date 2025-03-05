@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_app/screens/auth/views/welcome_screen.dart';
 import 'package:test_app/screens/home/views/home_screen.dart';
-import 'package:test_app/screens/intro_screen.dart';
 import 'package:test_app/screens/splash_screen.dart';
-
 import 'bloc/authentication_bloc/authentication_bloc.dart';
+import 'bloc/sign_in_bloc/sign_in_bloc.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});
@@ -14,7 +12,7 @@ class MyAppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Pizza Delivery",
+      title: "Stryke App",
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
         colorScheme: ColorScheme.light(
@@ -27,8 +25,14 @@ class MyAppView extends StatelessWidget {
       ),
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: ((context, state) {
+          print('Authentication status: ${state.status}');
           if(state.status == AuthenticationStatus.authenticated){
-            return const HomeScreen();
+            return BlocProvider(
+              create: (context) => SignInBloc(
+                  userRepository: context.read<AuthenticationBloc>().userRepository
+              ),
+              child: const HomeScreen(),
+            );
           } else {
             return const SplashScreen();
           }

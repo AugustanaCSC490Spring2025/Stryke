@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../bloc/sign_in_bloc/sign_in_bloc.dart';
 import '../../../components/my_text_field.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -21,7 +23,23 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return BlocListener<SignInBloc, SignInState>(
+        listener: (context, state) {
+          if(state is SignInSuccess) {
+            setState(() {
+              signInRequired = false;
+            });
+          } else if(state is SignInProcess) {
+            setState(() {
+              signInRequired = true;
+            });
+          } else if(state is SignInFailure) {
+            setState(() {
+              signInRequired = false;
+              _errorMsg = 'Invalid email or password';
+            });
+          }
+        }, child: Form(
       key: _formkey,
       child: Column(
         children:[
@@ -86,16 +104,15 @@ class _SignInScreenState extends State<SignInScreen> {
               )
           ),
           const SizedBox(height: 20),
-          !signInRequired
-          ? SizedBox(
+          !signInRequired ? SizedBox(
             width: MediaQuery.of(context).size.width * .5,
             child: TextButton(
               onPressed: () {
                 if(_formkey.currentState!.validate()){
-                  /*context.read<SignInBloc>().add(SignInRequired(
-                    email: emailController.text,
-                    password: passwordController.text
-                  );*/
+                  context.read<SignInBloc>().add(SignInRequired(
+                    emailController.text,
+                    passwordController.text)
+                  );
                 }
               },
               style: TextButton.styleFrom(
@@ -122,7 +139,8 @@ class _SignInScreenState extends State<SignInScreen> {
           )
           : const CircularProgressIndicator(),
        ],
-      )
+      ),
+    ),
     );
   }
 }

@@ -30,11 +30,19 @@ class FirebaseUserRepo implements UserRepository {
 
   @override
   Future<void> signIn(String email, String password) async {
-    try{
+    try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-    } catch (e){
+      print("User signed in successfully");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print("No user found");
+      } else if (e.code == 'wrong-password') {
+        print("Wrong password");
+      } else {
+        print("Sign-in failed: ${e.message}");
+      }
+    } catch (e) {
       log(e.toString());
-      rethrow;
     }
   }
 
@@ -64,5 +72,4 @@ class FirebaseUserRepo implements UserRepository {
       rethrow;
     }
   }
-  
 }

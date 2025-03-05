@@ -1,8 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_app/screens/auth/views/sign_in_screen.dart';
 import 'package:test_app/screens/auth/views/sign_up_screen.dart';
+
+import '../../../bloc/authentication_bloc/authentication_bloc.dart';
+import '../../../bloc/sign_in_bloc/sign_in_bloc.dart';
+import '../../../bloc/sign_up_bloc/sign_up_bloc.dart';
 
 class WelcomeScreen extends StatefulWidget {
   final int selectedTab;
@@ -87,9 +92,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                       Expanded(
                           child: TabBarView(
                             controller: tabController,
-                            children:const [
-                              SignInScreen(),
-                              SignUpScreen()
+                            children: [
+                              BlocProvider<SignInBloc>(
+                                create: (context) => SignInBloc(
+                                    userRepository: context.read<AuthenticationBloc>().userRepository
+                                ),
+                                child: const SignInScreen(),
+                              ),
+                              BlocProvider<SignUpBloc>(
+                                create: (context) => SignUpBloc(
+                                    userRepository: context.read<AuthenticationBloc>().userRepository
+                                ),
+                                child: const SignUpScreen(),
+                              ),
                             ],
                           ),
                       ),
