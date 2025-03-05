@@ -5,7 +5,8 @@ import 'package:test_app/screens/auth/views/sign_in_screen.dart';
 import 'package:test_app/screens/auth/views/sign_up_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+  final int selectedTab;
+  const WelcomeScreen({super.key, required this.selectedTab});
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -21,6 +22,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
       length: 2,
       vsync: this
     );
+    tabController.index = widget.selectedTab;
     super.initState();
   }
 
@@ -89,8 +91,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                               SignInScreen(),
                               SignUpScreen()
                             ],
-                          )
-                      )
+                          ),
+                      ),
                     ],
                   ),
                 ),
