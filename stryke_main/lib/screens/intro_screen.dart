@@ -28,7 +28,7 @@ class IntroScreen extends StatelessWidget {
                 child: const Icon(Icons.bolt_sharp, size: 300),
               ),
             ),
-            const SizedBox(height: 20), // Added spacing
+            const SizedBox(height: 30), // Added spacing
             Center(
               child: Text(
                 "Say Hello to \n the STRYKE App",
@@ -58,9 +58,11 @@ class IntroScreen extends StatelessWidget {
                 backgroundColor: Colors.green,
                 textColor: Colors.black,
                 fontSize: 24,
+                fontWeight: FontWeight.w500,
               ),
               child: const Text("Sign Up"),
             ),
+            verticalSpacing(24),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -70,11 +72,13 @@ class IntroScreen extends StatelessWidget {
                           const WelcomeScreen(selectedTab: 0)),
                 );
               },
-              style: ButtonStyles.colorButton(
-                  backgroundColor: Colors.white,
-                  textColor: Colors.black,
-                  fontSize: 12),
-              child: const Text("Sign In"),
+              style: ButtonStyles.transparentButton(
+                borderColor: Colors.white,
+                textColor: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+              ),
+              child: const Text("Login"),
             ),
             verticalSpacing(150), // Kept your existing spacing method
           ],
