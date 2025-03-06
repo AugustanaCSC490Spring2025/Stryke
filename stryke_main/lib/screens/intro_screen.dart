@@ -5,6 +5,7 @@ import '../utils/button_styles.dart';
 import '../utils/spacing.dart';
 import '../utils/text_styles.dart';
 import 'auth/views/sign_up_screen.dart';
+import 'login_screen.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
@@ -56,11 +57,7 @@ class IntroScreen extends StatelessWidget {
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const WelcomeScreen(selectedTab: 1)),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen(selectedTab: 1)),
                       );
                     },
                     style: ButtonStyles.colorButton(
@@ -81,7 +78,7 @@ class IntroScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const WelcomeScreen(selectedTab: 0)),
+                                const LoginScreen()),
                       );
                     },
                     style: ButtonStyles.transparentButton(
