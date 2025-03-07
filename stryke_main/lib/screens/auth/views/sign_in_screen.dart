@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/sign_in_bloc/sign_in_bloc.dart';
 import '../../../components/my_text_field.dart';
 import '../../home/views/home_screen.dart';
+import '../blocs/sign_in_bloc/sign_in_bloc.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

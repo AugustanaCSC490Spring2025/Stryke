@@ -5,12 +5,13 @@ class ButtonStyles {
     required Color backgroundColor,
     required Color textColor,
     double fontSize = 16, // Default size
-    FontWeight fontWeight = FontWeight.normal, // Default weight
+    FontWeight fontWeight = FontWeight.normal,
+    double verticalPadding = 16.0
   }) {
     return ElevatedButton.styleFrom(
       backgroundColor: backgroundColor,
       foregroundColor: textColor,
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+      padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 24.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(26),
       ),

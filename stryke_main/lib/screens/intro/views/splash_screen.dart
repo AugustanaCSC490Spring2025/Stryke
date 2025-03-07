@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'intro_screen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -6,6 +7,12 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const IntroScreen()),
+      );
+    });
+
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
       body: Center(

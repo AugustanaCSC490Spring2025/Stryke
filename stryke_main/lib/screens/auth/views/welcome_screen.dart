@@ -6,8 +6,8 @@ import 'package:test_app/screens/auth/views/sign_in_screen.dart';
 import 'package:test_app/screens/auth/views/sign_up_screen.dart';
 
 import '../../../bloc/authentication_bloc/authentication_bloc.dart';
-import '../../../bloc/sign_in_bloc/sign_in_bloc.dart';
-import '../../../bloc/sign_up_bloc/sign_up_bloc.dart';
+import '../blocs/sign_in_bloc/sign_in_bloc.dart';
+import '../blocs/sign_up_bloc/sign_up_bloc.dart';
 
 class WelcomeScreen extends StatefulWidget {
   final int selectedTab;

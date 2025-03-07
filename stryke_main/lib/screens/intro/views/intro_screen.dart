@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/auth/views/sign_in_screen.dart';
 import 'package:test_app/screens/auth/views/welcome_screen.dart';
-import '../utils/button_styles.dart';
-import '../utils/spacing.dart';
-import '../utils/text_styles.dart';
-import 'auth/views/sign_up_screen.dart';
+import '../../../utils/button_styles.dart';
+import '../../../utils/spacing.dart';
+import '../../../utils/text_styles.dart';
+import '../../auth/views/sign_up_screen.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
@@ -59,11 +59,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                            const WelcomeScreen(selectedTab: 1)),
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen(selectedTab: 1)),
                       );
                     },
                     style: ButtonStyles.colorButton(
@@ -82,9 +78,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        MaterialPageRoute<void>(
                             builder: (context) =>
-                            const WelcomeScreen(selectedTab: 0)),
+                            // const LoginScreen()), // FOR UI DESIGN PURPOSE
+                            const WelcomeScreen(selectedTab: 0)) // FOR BACK END PURPOSE
                       );
                     },
                     style: ButtonStyles.transparentButton(
