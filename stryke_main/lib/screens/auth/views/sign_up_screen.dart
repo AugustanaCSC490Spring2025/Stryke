@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../bloc/sign_up_bloc/sign_up_bloc.dart';
 import '../../../components/my_text_field.dart';
+import '../../home/views/home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -38,7 +39,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           setState(() {
             signUpRequired = false;
           });
-          // Navigator.pop(context);
         } else if(state is SignUpProcess) {
           setState(() {
             signUpRequired = true;

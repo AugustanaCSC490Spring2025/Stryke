@@ -6,15 +6,18 @@ import '../utils/spacing.dart';
 import '../utils/text_styles.dart';
 import 'auth/views/sign_up_screen.dart';
 
-class IntroScreen extends StatelessWidget {
+class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
 
   @override
+  State<IntroScreen> createState() => _IntroScreenState();
+}
+
+class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
+  @override
   Widget build(BuildContext context) {
-
-
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonWidth = MediaQuery.of(context).size.width * 0.7;
+    double buttonWidth = screenWidth * 0.7;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -60,7 +63,7 @@ class IntroScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const WelcomeScreen(selectedTab: 1)),
+                            const WelcomeScreen(selectedTab: 1)),
                       );
                     },
                     style: ButtonStyles.colorButton(
@@ -81,7 +84,7 @@ class IntroScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const WelcomeScreen(selectedTab: 0)),
+                            const WelcomeScreen(selectedTab: 0)),
                       );
                     },
                     style: ButtonStyles.transparentButton(
@@ -101,3 +104,4 @@ class IntroScreen extends StatelessWidget {
     );
   }
 }
+

@@ -17,14 +17,14 @@ class FirebaseUserRepo implements UserRepository {
   @override
   Stream<MyUser?> get user {
     return _firebaseAuth.authStateChanges().flatMap((firebaseUser) async* {
-        if(firebaseUser == null) {
-          yield MyUser.empty;
-        } else {
-          yield await usersCollection
-              .doc(firebaseUser.uid)
-              .get()
-              .then((value) => MyUser.fromEntity(MyUserEntity.fromDocument(value.data()!)));
-        }
+      if(firebaseUser == null) {
+        yield MyUser.empty;
+      } else {
+        yield await usersCollection
+            .doc(firebaseUser.uid)
+            .get()
+            .then((value) => MyUser.fromEntity(MyUserEntity.fromDocument(value.data()!)));
+      }
     });
   }
 
@@ -32,27 +32,23 @@ class FirebaseUserRepo implements UserRepository {
   Future<void> signIn(String email, String password) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      print("User signed in successfully");
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print("No user found");
-      } else if (e.code == 'wrong-password') {
-        print("Wrong password");
-      } else {
-        print("Sign-in failed: ${e.message}");
-      }
     } catch (e) {
       log(e.toString());
+      rethrow;
     }
   }
 
   @override
   Future<MyUser> signUp(MyUser myUser, String password) async {
-    try{
-      UserCredential user = await _firebaseAuth.createUserWithEmailAndPassword(email: myUser.email, password: password);
+    try {
+      UserCredential user = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: myUser.email,
+          password: password
+      );
+
       myUser.userId = user.user!.uid;
       return myUser;
-    } catch (e){
+    } catch (e) {
       log(e.toString());
       rethrow;
     }
@@ -65,9 +61,11 @@ class FirebaseUserRepo implements UserRepository {
 
   @override
   Future<void> setUserData(MyUser myUser) async {
-    try{
-      await usersCollection.doc(myUser.userId).set(myUser.toEntity().toDocument());
-    } catch (e){
+    try {
+      await usersCollection
+          .doc(myUser.userId)
+          .set(myUser.toEntity().toDocument());
+    } catch (e) {
       log(e.toString());
       rethrow;
     }

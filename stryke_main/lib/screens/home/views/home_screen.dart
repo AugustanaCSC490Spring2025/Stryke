@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                context.read<SignInBloc>().add(const SignOutRequired());
+                context.read<SignInBloc>().add(SignOutRequired());
               },
               icon: const Icon(Icons.login)
           )
