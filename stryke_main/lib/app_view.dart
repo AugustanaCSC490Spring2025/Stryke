@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_app/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
-import 'package:test_app/screens/auth/views/sign_in_screen.dart';
 import 'package:test_app/screens/auth/views/welcome_screen.dart';
 import 'package:test_app/screens/home/views/home_screen.dart';
 import 'package:test_app/screens/intro/views/intro_screen.dart';
@@ -38,8 +37,8 @@ class MyAppView extends StatelessWidget {
               );
             } else {
               print('Authentication status: ${state.status}' + " splash");
-              return const WelcomeScreen(selectedTab: 0); // FOR BACK END PURPOSE
-              //return const IntroScreen(); // FOR UI DESIGN PURPOSE
+              //return const WelcomeScreen(selectedTab: 0); // FOR BACK END PURPOSE
+              return const IntroScreen(); // FOR UI DESIGN PURPOSE
             }
           },
         ),
