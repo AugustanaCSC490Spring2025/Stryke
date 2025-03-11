@@ -92,6 +92,7 @@ class _SignInScreenState extends State<SignInScreen>{
               ),
               verticalSpacing(20),
               AnimatedContainer(
+                curve: Curves.ease,
                 duration: const Duration(milliseconds: 500),
                 child: InkWell(
                   onTap: GoogleAuth().googlesignin,
