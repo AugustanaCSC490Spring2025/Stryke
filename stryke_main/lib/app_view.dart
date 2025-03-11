@@ -6,6 +6,7 @@ import 'package:test_app/screens/auth/views/welcome_screen.dart';
 import 'package:test_app/screens/home/views/home_screen.dart';
 import 'package:test_app/screens/intro/views/intro_screen.dart';
 import 'bloc/authentication_bloc/authentication_bloc.dart';
+import 'navi_bug.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});
@@ -13,6 +14,7 @@ class MyAppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        navigatorObservers: [MyNavigatorObserver()],
       title: "Stryke App",
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
@@ -33,12 +35,11 @@ class MyAppView extends StatelessWidget {
                 create: (context) => SignInBloc(
                   context.read<AuthenticationBloc>().userRepository,
                 ),
-                child: const HomeScreen(),
+                  child: const HomeScreen(),
               );
             } else {
-              print('Authentication status: ${state.status}' + " splash");
-              //return const WelcomeScreen(selectedTab: 0); // FOR BACK END PURPOSE
-              return const IntroScreen(); // FOR UI DESIGN PURPOSE
+              print('Authentication status: ${state.status}' + " intro");
+              return const IntroScreen();
             }
           },
         ),
