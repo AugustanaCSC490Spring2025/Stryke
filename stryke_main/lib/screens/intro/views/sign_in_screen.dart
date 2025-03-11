@@ -89,16 +89,14 @@ class _SignInScreenState extends State<SignInScreen>{
                     ),
               ),
               verticalSpacing(20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: GoogleAuth().googlesignin,
-                  child: Text("Sign In With Google"),
-                  style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                child: InkWell(
+                  onTap: GoogleAuth().googlesignin,
+
+                  child: Text("Sign In With Google", style: ThemeTextStyles.introScreenText_SubTitle,),
                 )
               )
-
-
-
             ],
           ),
     );
