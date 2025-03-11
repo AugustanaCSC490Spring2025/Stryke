@@ -32,7 +32,7 @@ class _SignInScreenState extends State<SignInScreen>{
           body: Column(
             children: [
               SizedBox(
-                height: screenHeight * 0.25,
+                height: screenHeight * 0.35,
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
@@ -40,7 +40,7 @@ class _SignInScreenState extends State<SignInScreen>{
                     borderRadius:
                         BorderRadius.vertical(bottom: Radius.circular(40)),
                   ),
-                  child: Icon(Icons.bolt_sharp, size: screenHeight * .15),
+                  child: Icon(Icons.bolt_sharp, size: screenHeight * .2),
                 ),
               ),
               verticalSpacing(40),
@@ -83,23 +83,21 @@ class _SignInScreenState extends State<SignInScreen>{
               ),
               verticalSpacing(35),
               SizedBox(
+                width: screenWidth * .5,
                 child: ElevatedButton(
                     onPressed: (){},
-                    style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold),
+                    style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
                     child: Text("Create Account")
                     ),
               ),
               verticalSpacing(20),
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: GoogleAuth().googlesignin,
-                  child: Text("Sign In With Google"),
-                  style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                child: InkWell(
+                  onTap: GoogleAuth().googlesignin,
+                  child: Text("Sign In With Google", style: ThemeTextStyles.textWidthSizing(size: 14),),
                 )
               )
-
-
-
             ],
           ),
     );
