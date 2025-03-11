@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/auth/views/welcome_screen.dart';
-import '../../../utils/button_styles.dart';
-import '../../../utils/spacing.dart';
-import '../../../utils/text_styles.dart';
-import 'login_screen.dart';
-import 'package:test_app/screens/auth/google_sign_in/google_auth.dart';
+import '../utils/button_styles.dart';
+import '../utils/spacing.dart';
+import '../utils/text_styles.dart';
 
-class IntroScreen extends StatefulWidget {
+class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
 
   @override
-  State<IntroScreen> createState() => _IntroScreenState();
-}
-
-class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
-  @override
   Widget build(BuildContext context) {
+
+
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonWidth = screenWidth * 0.7;
+    double buttonWidth = MediaQuery.of(context).size.width * 0.7;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -59,7 +54,11 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen(selectedTab: 1)),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const WelcomeScreen(selectedTab: 1)),
                       );
                     },
                     style: ButtonStyles.colorButton(
@@ -78,10 +77,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute<void>(
+                        MaterialPageRoute(
                             builder: (context) =>
-                            const LoginScreen()), // FOR UI DESIGN PURPOSE
-                            // const WelcomeScreen(selectedTab: 0)) // not working BACK END PURPOSE
+                                const WelcomeScreen(selectedTab: 0)),
                       );
                     },
                     style: ButtonStyles.transparentButton(
@@ -93,14 +91,6 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     child: const Text("Login"),
                   ),
                 ),
-                verticalSpacing(4),
-                SizedBox(
-                  width: buttonWidth,
-                  child: ElevatedButton(
-                    onPressed: GoogleAuth().googlesignin,
-                    child: const Text("Sign in with Google"),
-                  ),
-                ),
               ],
             ),
           ),
@@ -109,4 +99,3 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     );
   }
 }
-

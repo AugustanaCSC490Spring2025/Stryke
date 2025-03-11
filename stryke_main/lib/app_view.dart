@@ -26,9 +26,9 @@ class MyAppView extends StatelessWidget {
       ),
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
-            print('Authentication status: ${state.status}' + " preview");
+            print('Authentication status: ${state.status}' " preview");
             if (state.status == AuthenticationStatus.authenticated) {
-              print('Authentication status: ${state.status}' + " home");
+              print('Authentication status: ${state.status}' " home");
               return BlocProvider(
                 create: (context) => SignInBloc(
                   context.read<AuthenticationBloc>().userRepository,
@@ -36,7 +36,7 @@ class MyAppView extends StatelessWidget {
                 child: const HomeScreen(),
               );
             } else {
-              print('Authentication status: ${state.status}' + " splash");
+              print('Authentication status: ${state.status}' " splash");
               //return const WelcomeScreen(selectedTab: 0); // FOR BACK END PURPOSE
               return const IntroScreen(); // FOR UI DESIGN PURPOSE
             }
