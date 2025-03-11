@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_app/screens/auth/views/sign_in_screen.dart';
 import 'package:test_app/screens/auth/views/welcome_screen.dart';
+import '../../../bloc/authentication_bloc/authentication_bloc.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
 import '../../../utils/text_styles.dart';
+import '../../auth/blocs/sign_in_bloc/sign_in_bloc.dart';
+import '../../auth/blocs/sign_up_bloc/sign_up_bloc.dart';
 import '../../auth/views/sign_up_screen.dart';
 import 'login_screen.dart';
 
@@ -60,7 +64,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen(selectedTab: 1)),
+                      Navigator.pushReplacement(
+                        context, MaterialPageRoute(
+                          builder:(context) => const WelcomeScreen(selectedTab: 1))
                       );
                     },
                     style: ButtonStyles.colorButton(
@@ -77,12 +83,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (context) =>
-                            const LoginScreen()), // FOR UI DESIGN PURPOSE
-                            // const WelcomeScreen(selectedTab: 0)) // not working BACK END PURPOSE
+                      Navigator.pushReplacement(
+                          context, MaterialPageRoute(
+                          builder:(context) => const WelcomeScreen(selectedTab: 0))
                       );
                     },
                     style: ButtonStyles.transparentButton(
