@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/screens/auth/views/sign_in_screen.dart';
+import 'package:test_app/screens/auth/views/sign_in_screen_old.dart';
 import 'package:test_app/screens/auth/views/welcome_screen.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
 import '../../../utils/text_styles.dart';
-import '../../auth/views/sign_up_screen.dart';
+import '../../intro/views/sign_in_screen.dart';
 import 'login_screen.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -60,7 +60,12 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const WelcomeScreen(selectedTab: 1)),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (context) =>
+                            const SignInScreen()), 
+                            // const WelcomeScreen(selectedTab: 0)) // not working BACK END PURPOSE
                       );
                     },
                     style: ButtonStyles.colorButton(

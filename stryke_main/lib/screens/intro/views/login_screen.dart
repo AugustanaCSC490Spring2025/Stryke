@@ -16,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: screenWidth * .8,
                     child: TextFormField(
                         controller: _passwordController,
+                        obscureText: obscurePassword,
                         style: ThemeTextStyles.textFieldInput,
                         decoration: TextFormFieldsStyles.formTextFieldDefault(
                             hintText: "Password")),
@@ -103,6 +105,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
-    ;
   }
 }
