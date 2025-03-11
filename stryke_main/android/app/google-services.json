@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "430644823856",
+    "project_id": "stryke-30afd",
+    "storage_bucket": "stryke-30afd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430644823856:android:98104ea679d03c32bbeaf5",
+        "android_client_info": {
+          "package_name": "com.example.stryke_main"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430644823856-ki6mllcrj8gjqkegrphrmjqfk1k1sqv4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.stryke_main",
+            "certificate_hash": "ee7987d2a39d0736e709ba9660a1e2de6df86ce8"
+          }
+        },
+        {
+          "client_id": "430644823856-jthb9mpqm8irh0j9u50n5jktb290rrp0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdgtoVYXLYG2r_2K-z_RZLdcfRS_sTNJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430644823856-jthb9mpqm8irh0j9u50n5jktb290rrp0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "430644823856-omarojfbsenjai8495nkc4f8ih1rtulm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.strykeMain"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

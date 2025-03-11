@@ -3,6 +3,7 @@ import 'package:test_app/utils/button_styles.dart';
 import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/utils/text_form_field_styles.dart';
 import 'package:test_app/utils/text_styles.dart';
+import 'package:test_app/screens/auth/google_sign_in/google_auth.dart';
 
 
 class SignInScreen extends StatefulWidget {
@@ -104,6 +105,14 @@ class _SignInScreenState extends State<SignInScreen>{
                     style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold),
                     child: Text("Create Account")
                     ),
+              ),
+              verticalSpacing(20),
+              SizedBox(
+                child: ElevatedButton(
+                  onPressed: GoogleAuth().googlesignin,
+                  child: Text("Sign In With Google"),
+                  style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold),
+                )
               )
 
 

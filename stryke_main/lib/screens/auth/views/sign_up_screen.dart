@@ -38,6 +38,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           setState(() {
             signUpRequired = false;
           });
+          // Navigator.pop(context);
         } else if(state is SignUpProcess) {
           setState(() {
             signUpRequired = true;
