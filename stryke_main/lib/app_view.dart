@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_app/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:test_app/screens/auth/views/welcome_screen.dart';
-import 'package:test_app/screens/home/views/home_screen.dart';
+//import 'package:test_app/screens/home/views/home_screen.dart';
 import 'package:test_app/screens/intro/views/intro_screen.dart';
 import 'bloc/authentication_bloc/authentication_bloc.dart';
 import 'navi_bug.dart';
@@ -35,7 +35,7 @@ class MyAppView extends StatelessWidget {
                 create: (context) => SignInBloc(
                   context.read<AuthenticationBloc>().userRepository,
                 ),
-                  child: const HomeScreen(),
+                // child: const HomeScreen(),
               );
             } else {
               print('Authentication status: ${state.status}' + " intro");

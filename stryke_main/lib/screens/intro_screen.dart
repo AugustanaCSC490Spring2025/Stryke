@@ -1,30 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/screens/auth/views/sign_in_screen_old.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_app/screens/auth/views/sign_in_screen.dart';
 import 'package:test_app/screens/auth/views/welcome_screen.dart';
-import '../../../bloc/authentication_bloc/authentication_bloc.dart';
-import '../../../utils/button_styles.dart';
-import '../../../utils/spacing.dart';
-import '../../../utils/text_styles.dart';
-import '../../intro/views/sign_in_screen.dart';
-import '../../auth/blocs/sign_in_bloc/sign_in_bloc.dart';
-import '../../auth/blocs/sign_up_bloc/sign_up_bloc.dart';
-import '../../auth/views/sign_up_screen.dart';
-import 'login_screen.dart';
-import 'package:test_app/screens/auth/google_sign_in/google_auth.dart';
+import 'package:test_app/screens/intro/views/login_screen.dart';
+import '../utils/button_styles.dart';
+import '../utils/spacing.dart';
+import '../utils/text_styles.dart';
 
-class IntroScreen extends StatefulWidget {
+class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
 
   @override
-  State<IntroScreen> createState() => _IntroScreenState();
-}
-
-class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin {
-  @override
   Widget build(BuildContext context) {
+
+
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonWidth = screenWidth * 0.7;
+    double buttonWidth = MediaQuery.of(context).size.width * 0.7;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -68,11 +58,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute<void>(
+                        MaterialPageRoute(
                             builder: (context) =>
-                            const SignInScreen()), 
-                            // const WelcomeScreen(selectedTab: 0)) // not working BACK END PURPOSE
-
+                                const SignInScreen()),
                       );
                     },
                     style: ButtonStyles.colorButton(
@@ -90,8 +78,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
-                          context, MaterialPageRoute(
-                          builder:(context) => const LoginScreen())
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const LoginScreen()),
                       );
                     },
                     style: ButtonStyles.transparentButton(
@@ -102,7 +92,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     ),
                     child: const Text("Login"),
                   ),
-                ),                
+                ),
               ],
             ),
           ),
@@ -111,4 +101,3 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
     );
   }
 }
-
