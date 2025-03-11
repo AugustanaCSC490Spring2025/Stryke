@@ -6,6 +6,7 @@ import '../../../utils/spacing.dart';
 import '../../../utils/text_styles.dart';
 
 
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -51,7 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     icon: const Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: Colors.white,
-                    )),
+                    )
+                  ),
                 Expanded(
                   child: Text(
                     "Please Login",
