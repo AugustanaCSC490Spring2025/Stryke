@@ -45,7 +45,21 @@ class _SignInScreenState extends State<SignInScreen>{
                   child: Icon(Icons.bolt_sharp, size: screenHeight * .2),
                 ),
               ),
-              verticalSpacing(40),
+              verticalSpacing(25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }, 
+                      icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white,)
+                  ),
+                  Text("Create Account", style: ThemeTextStyles.introScreenText_SubTitle,),
+                  horizontalSpacing(50)
+                ],
+              ),
+              verticalSpacing(30),
               SizedBox(
                 width: screenWidth * .7,
                 child: TextFormField(
