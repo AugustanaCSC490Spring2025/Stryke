@@ -20,7 +20,9 @@ class _SignInScreenState extends State<SignInScreen>{
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController = TextEditingController();
+
   bool obscurePassword = true;
+  bool isRounded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +96,16 @@ class _SignInScreenState extends State<SignInScreen>{
               AnimatedContainer(
                 curve: Curves.ease,
                 duration: const Duration(milliseconds: 500),
+                decoration: BoxDecoration(
+                  borderRadius: isRounded ? BorderRadius.circular(14) : BorderRadius.circular(0),
+                ),
                 child: InkWell(
-                  onTap: GoogleAuth().googlesignin,
+                  onTap: () {
+                    setState(() {
+                      isRounded = !isRounded;
+                    });
+                    GoogleAuth().googlesignin();
+                  },
                   child: Text("Sign In With Google", style: ThemeTextStyles.textWidthSizing(size: 14),),
                 )
               )
