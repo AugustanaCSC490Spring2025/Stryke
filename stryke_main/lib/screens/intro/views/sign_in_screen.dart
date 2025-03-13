@@ -25,20 +25,26 @@ class _SignInScreenState extends State<SignInScreen>{
   bool obscurePassword = true;
   bool isRounded = false;
 
-  void signupUser() async {
+  Future<bool> signupUser() async {
     try {
       if (_passwordController.text == _passwordConfirmController.text) {
-        final credential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
+        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: _emailController.text,
               password: _passwordController.text,
             );
+        return true;
       } else {
-        //showErrorMessage("Passwords don't match");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Passwords don't match")),
+        );
+        return false;
       }    
     } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Signup failed: Please enter Username and Password")),
+      );
+      return false;
     }
-
   }
 
 
@@ -119,7 +125,17 @@ class _SignInScreenState extends State<SignInScreen>{
               SizedBox(
                 width: screenWidth * .5,
                 child: ElevatedButton(
-                    onPressed: signupUser,
+                    onPressed: () async {
+                      bool success = await signupUser();
+                      if (success) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InfoInputScreen()
+                          ),
+                        );
+                      }
+                    },
                     style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
                     child: Text("Create Account")
                     ),
