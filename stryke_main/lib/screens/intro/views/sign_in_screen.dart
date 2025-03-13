@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/screens/intro/views/info_input_screen.dart';
 import 'package:test_app/utils/button_styles.dart';
 import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/utils/text_form_field_styles.dart';
@@ -101,7 +102,14 @@ class _SignInScreenState extends State<SignInScreen>{
               SizedBox(
                 width: screenWidth * .5,
                 child: ElevatedButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (context) =>
+                            const InfoInputScreen()),
+                      );
+                    },
                     style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
                     child: Text("Create Account")
                     ),
