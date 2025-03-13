@@ -64,9 +64,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context, MaterialPageRoute(
-                          builder:(context) => const WelcomeScreen(selectedTab: 1))
+                          builder:(context) => const LoginScreen())
                       );
                     },
                     style: ButtonStyles.colorButton(
@@ -83,9 +83,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   width: buttonWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context, MaterialPageRoute(
-                          builder:(context) => const WelcomeScreen(selectedTab: 0))
+                          builder:(context) => const LoginScreen())
                       );
                     },
                     style: ButtonStyles.transparentButton(

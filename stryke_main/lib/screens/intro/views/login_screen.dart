@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/utils/button_styles.dart';
 import 'package:test_app/utils/text_form_field_styles.dart';
@@ -14,8 +15,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final passwordController = TextEditingController();
+  final emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     width: screenWidth * .8,
                     child: TextFormField(
-                        controller: _usernameController,
+                        controller: emailController,
                         style: ThemeTextStyles.textFieldInput,
                         decoration: TextFormFieldsStyles.formTextFieldDefault(
                             hintText: "Username")),
@@ -79,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     width: screenWidth * .8,
                     child: TextFormField(
-                        controller: _passwordController,
+                        controller: passwordController,
                         style: ThemeTextStyles.textFieldInput,
                         decoration: TextFormFieldsStyles.formTextFieldDefault(
                             hintText: "Password")),
