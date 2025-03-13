@@ -107,7 +107,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               borderRadius: BorderRadius.circular(30), 
               border: Border.all(color:  const Color(0xffb7ff00)) 
             ),
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.only(left: 20),
             width: screenWidth * .7,
             height: 60,
             child: DropdownButtonHideUnderline(
