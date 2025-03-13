@@ -64,9 +64,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                         context,
                         MaterialPageRoute<void>(
                             builder: (context) =>
-                            const SignInScreen()), 
-                            // const WelcomeScreen(selectedTab: 0)) // not working BACK END PURPOSE
-
+                            const SignInScreen()),
                       );
                     },
                     style: ButtonStyles.colorButton(
