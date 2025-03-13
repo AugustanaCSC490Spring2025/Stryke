@@ -16,6 +16,7 @@ class InfoInputScreen extends StatefulWidget {
 class _InfoInputScreenState extends State<InfoInputScreen> {
 
   String? _dropdownValue;
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -39,7 +40,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: screenHeight * 0.35,
+            height: screenHeight * 0.25,
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
@@ -47,7 +48,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                 borderRadius:
                 BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: Icon(Icons.bolt_sharp, size: screenHeight * .2),
+              child: Icon(Icons.bolt_sharp, size: screenHeight * .15),
             ),
           ),
           verticalSpacing(25),
@@ -63,6 +64,15 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               Text("Give us some Info", style: ThemeTextStyles.introScreenText_SubTitle,),
               horizontalSpacing(50)
             ],
+          ),
+          verticalSpacing(30),
+          SizedBox(
+            width: screenWidth * .7,
+            child: TextFormField(
+              controller: _nameController,
+              style: ThemeTextStyles.textFieldInput,
+              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: Dave"),
+            ),
           ),
           verticalSpacing(30),
           SizedBox(
@@ -94,10 +104,12 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
           verticalSpacing(35),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color:  const Color(0xffb7ff00))
+              borderRadius: BorderRadius.circular(30), 
+              border: Border.all(color:  const Color(0xffb7ff00)) 
             ),
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(15),
             width: screenWidth * .7,
+            height: 60,
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
               iconEnabledColor: const Color(0xffb7ff00),
