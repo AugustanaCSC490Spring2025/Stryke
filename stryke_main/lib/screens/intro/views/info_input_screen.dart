@@ -14,6 +14,7 @@ class InfoInputScreen extends StatefulWidget {
 
 class _InfoInputScreenState extends State<InfoInputScreen> {
 
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
@@ -29,7 +30,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: screenHeight * 0.35,
+            height: screenHeight * 0.25,
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
@@ -37,7 +38,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                 borderRadius:
                 BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: Icon(Icons.bolt_sharp, size: screenHeight * .2),
+              child: Icon(Icons.bolt_sharp, size: screenHeight * .15),
             ),
           ),
           verticalSpacing(25),
@@ -53,6 +54,15 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               Text("Give us some Info", style: ThemeTextStyles.introScreenText_SubTitle,),
               horizontalSpacing(50)
             ],
+          ),
+          verticalSpacing(30),
+          SizedBox(
+            width: screenWidth * .7,
+            child: TextFormField(
+              controller: _nameController,
+              style: ThemeTextStyles.textFieldInput,
+              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: Dave"),
+            ),
           ),
           verticalSpacing(30),
           SizedBox(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
 import 'package:test_app/utils/button_styles.dart';
@@ -18,12 +19,28 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen>{
 
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController = TextEditingController();
 
   bool obscurePassword = true;
   bool isRounded = false;
+
+  void signupUser() async {
+    try {
+      if (_passwordController.text == _passwordConfirmController.text) {
+        final credential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
+      } else {
+        //showErrorMessage("Passwords don't match");
+      }    
+    } on FirebaseAuthException catch (e) {
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +63,8 @@ class _SignInScreenState extends State<SignInScreen>{
                   child: Icon(Icons.bolt_sharp, size: screenHeight * .2),
                 ),
               ),
+
+              //CREATE ACCOUNT TEXT
               verticalSpacing(25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,6 +79,8 @@ class _SignInScreenState extends State<SignInScreen>{
                   horizontalSpacing(50)
                 ],
               ),
+
+              //Email field
               verticalSpacing(30),
               SizedBox(
                 width: screenWidth * .7,
@@ -69,15 +90,8 @@ class _SignInScreenState extends State<SignInScreen>{
                     decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "Email"),
                 ),
               ),
-              verticalSpacing(35),
-              SizedBox(
-                width: screenWidth * .7,
-                child: TextFormField(
-                    controller: _usernameController,
-                    style: ThemeTextStyles.textFieldInput,
-                    decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "Username"),
-                ),
-              ),
+
+              //Password field
               verticalSpacing(35),
                SizedBox(
                 width: screenWidth * .7,
@@ -88,6 +102,7 @@ class _SignInScreenState extends State<SignInScreen>{
                     decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "Password"),
                 ),
               ),
+              //confirm password field
               verticalSpacing(35),
                SizedBox(
                 width: screenWidth * .7,
@@ -98,22 +113,19 @@ class _SignInScreenState extends State<SignInScreen>{
                     decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "Confirm Password"),
                 ),
               ),
+
+              //create account
               verticalSpacing(35),
               SizedBox(
                 width: screenWidth * .5,
                 child: ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (context) =>
-                            const InfoInputScreen()),
-                      );
-                    },
+                    onPressed: signupUser,
                     style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
                     child: Text("Create Account")
                     ),
               ),
+
+              //sign in with google
               verticalSpacing(20),
               AnimatedContainer(
                 curve: Curves.ease,

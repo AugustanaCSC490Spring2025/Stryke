@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/utils/button_styles.dart';
 import 'package:test_app/utils/text_form_field_styles.dart';
@@ -16,8 +16,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final passwordController = TextEditingController();
-  final emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool obscurePassword = true;
+
+  void loginUser() async{
+    try{
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text, 
+        password: _passwordController.text,
+      );
+    }on FirebaseAuthException catch(e){
+      //showErrorMessage(e.code);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +85,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     width: screenWidth * .8,
                     child: TextFormField(
-                        controller: emailController,
+                        controller: _emailController,
                         style: ThemeTextStyles.textFieldInput,
                         decoration: TextFormFieldsStyles.formTextFieldDefault(
-                            hintText: "Username")),
+                            hintText: "Email")),
                   ),
                   verticalSpacing(35),
                   SizedBox(
                     width: screenWidth * .8,
                     child: TextFormField(
-                        controller: passwordController,
+                        controller: _passwordController,
                         style: ThemeTextStyles.textFieldInput,
                         decoration: TextFormFieldsStyles.formTextFieldDefault(
                             hintText: "Password")),
@@ -91,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                       width: screenWidth * .7,
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: loginUser,
                           style: ButtonStyles.colorButton(
                               backgroundColor: const Color(0xFFB7FF00),
                               textColor: Colors.black,
