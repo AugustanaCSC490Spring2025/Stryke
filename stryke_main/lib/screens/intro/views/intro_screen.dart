@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
 import '../../../utils/text_styles.dart';
-import '../../intro/views/sign_in_screen.dart';
+import '../../intro/views/sign_up_screen.dart';
 import 'login_screen.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                         context,
                         MaterialPageRoute<void>(
                             builder: (context) =>
-                            const SignInScreen()),
+                            const SignUnScreen()),
                       );
                     },
                     style: ButtonStyles.colorButton(
