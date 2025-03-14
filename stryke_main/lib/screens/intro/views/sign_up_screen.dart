@@ -6,7 +6,6 @@ import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/utils/text_form_field_styles.dart';
 import 'package:test_app/utils/text_styles.dart';
 import 'package:test_app/auth/google_sign_in/google_auth.dart';
-import '../../../utils/text_styles.dart';
 
 
 class SignUnScreen extends StatefulWidget {

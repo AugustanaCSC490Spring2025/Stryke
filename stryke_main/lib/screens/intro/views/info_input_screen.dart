@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/screens/home/home_screen.dart';
 
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
@@ -142,8 +143,8 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
           SizedBox(
             width: screenWidth * .5,
             child: ElevatedButton(
-                onPressed: (){
-                  FirebaseFirestore.instance.collection("users").add({
+                onPressed: () async{
+                  await FirebaseFirestore.instance.collection("users").add({
                     "first_Name": _firsstNameController.text,
                     "last_Name": _lastNameController.text,
                     "age": _ageController.text,
@@ -151,6 +152,12 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                     "weight": _weightController.text,
                     "Sex": _dropdownValue,
                 });
+                Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()
+                          ),
+                        );
                 },
                 style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
                 child: Text("Join STRYKE")
