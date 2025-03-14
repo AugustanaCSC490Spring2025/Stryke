@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/utils/button_styles.dart';
 import 'package:test_app/utils/text_form_field_styles.dart';
-
 import '../../../utils/spacing.dart';
 import '../../../utils/text_styles.dart';
 
@@ -62,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pop(context);
                     },
                     icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
+                      Icons.arrow_back,
                       color: Colors.white,
                     )
                   ),

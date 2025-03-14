@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+
+class _HomePageState extends State<HomePage> {
+  final String userName = "Tommy"; // replace with actual name from database
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF1C1C1C),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: false,
+            pinned: true,
+            snap: false,
+            backgroundColor: const Color(0xFF1C1C1C),
+            expandedHeight: 60.0,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                'Welcome, $userName!',
+                style: const TextStyle(color: Color(0xFFB7FF00), fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.notifications, color: Color(0xFFB7FF00)),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "For Today...",
+                      style: TextStyle(color: Color(0xFFB7FF00), fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 5)),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF303030),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Select workout", style: TextStyle(color: Color(0xFFB7FF00))),
+                          IconButton(
+                            icon: const Icon(Icons.add, color: Color(0xFFB7FF00)),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    const Text(
+                      "Performance Data",
+                      style: TextStyle(color: Color(0xFFB7FF00), fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    Container(
+                      height: 200,
+                      color: const Color(0xFF303030),
+                      child: const Center(
+                        child: Text(
+                          "Graph Placeholder",
+                          style: TextStyle(color: Color(0xFFB7FF00)),
+                        ),
+                      ),
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    const Text( // could maybe be bottom navigation bar?
+                      "Quick Access",
+                      style: TextStyle(color: Color(0xFFB7FF00), fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.flag, color: Color(0xFFB7FF00)),
+                      title: const Text("Goals", style: TextStyle(color: Color(0xFFB7FF00))),
+                      onTap: () {},
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.bar_chart, color: Color(0xFFB7FF00)),
+                      title: const Text("View Progress", style: TextStyle(color: Color(0xFFB7FF00))),
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+}
