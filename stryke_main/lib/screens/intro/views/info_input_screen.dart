@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/button_styles.dart';
@@ -16,7 +17,8 @@ class InfoInputScreen extends StatefulWidget {
 class _InfoInputScreenState extends State<InfoInputScreen> {
 
   String? _dropdownValue;
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _firsstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -65,16 +67,25 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               horizontalSpacing(50)
             ],
           ),
-          verticalSpacing(30),
+          verticalSpacing(25),
           SizedBox(
             width: screenWidth * .7,
             child: TextFormField(
-              controller: _nameController,
+              controller: _firsstNameController,
               style: ThemeTextStyles.textFieldInput,
               decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: Dave"),
             ),
           ),
-          verticalSpacing(30),
+            verticalSpacing(25),
+          SizedBox(
+            width: screenWidth * .7,
+            child: TextFormField(
+              controller: _lastNameController,
+              style: ThemeTextStyles.textFieldInput,
+              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: Dave"),
+            ),
+          ),
+          verticalSpacing(25),
           SizedBox(
             width: screenWidth * .7,
             child: TextFormField(
@@ -83,7 +94,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 25"),
             ),
           ),
-          verticalSpacing(35),
+          verticalSpacing(25),
           SizedBox(
             width: screenWidth * .7,
             child: TextFormField(
@@ -92,7 +103,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 6'0"),
             ),
           ),
-          verticalSpacing(35),
+          verticalSpacing(25),
           SizedBox(
             width: screenWidth * .7,
             child: TextFormField(
@@ -101,7 +112,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 185 (in lbs)"),
             ),
           ),
-          verticalSpacing(35),
+          verticalSpacing(25),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30), 
@@ -127,11 +138,20 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             ),
             )
           ),
-          verticalSpacing(35),
+          verticalSpacing(25),
           SizedBox(
             width: screenWidth * .5,
             child: ElevatedButton(
-                onPressed: (){},
+                onPressed: (){
+                  FirebaseFirestore.instance.collection("users").add({
+                    "first_Name": _firsstNameController.text,
+                    "last_Name": _lastNameController.text,
+                    "age": _ageController.text,
+                    "height": _heightController.text,
+                    "weight": _weightController.text,
+                    "Sex": _dropdownValue,
+                });
+                },
                 style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
                 child: Text("Join STRYKE")
             ),
