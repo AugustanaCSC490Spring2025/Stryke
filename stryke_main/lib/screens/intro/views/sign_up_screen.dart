@@ -79,7 +79,7 @@ class _SignUnScreenState extends State<SignUnScreen>{
                       onPressed: () {
                         Navigator.pop(context);
                       }, 
-                      icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white,)
+                      icon: const Icon(Icons.arrow_back, color: Colors.white,)
                   ),
                   Text("Create Account", style: ThemeTextStyles.introScreenText_SubTitle,),
                   horizontalSpacing(50)
@@ -108,6 +108,7 @@ class _SignUnScreenState extends State<SignUnScreen>{
                     decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "Password"),
                 ),
               ),
+
               //confirm password field
               verticalSpacing(35),
                SizedBox(

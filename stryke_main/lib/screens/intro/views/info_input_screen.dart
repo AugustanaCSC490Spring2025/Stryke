@@ -49,7 +49,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white,)
+                  icon: const Icon(Icons.arrow_back, color: Colors.white,)
               ),
               Text("Give us some Info", style: ThemeTextStyles.introScreenText_SubTitle,),
               horizontalSpacing(50)
