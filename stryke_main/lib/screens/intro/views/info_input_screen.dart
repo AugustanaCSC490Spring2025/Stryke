@@ -16,11 +16,11 @@ class InfoInputScreen extends StatefulWidget {
 
 class _InfoInputScreenState extends State<InfoInputScreen> {
   String? _dropdownValue;
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _heightController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
+  final  _firstNameController = TextEditingController();
+  final  _lastNameController = TextEditingController();
+  final  _ageController = TextEditingController();
+  final  _heightController = TextEditingController();
+  final  _weightController = TextEditingController();
 
   void dropdownCallback(String? selectedValue) {
     if (selectedValue != null) {
