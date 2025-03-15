@@ -116,6 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: const TextStyle(color: Colors.white),
                               hintText: 'Email',
                               decoration: InputDecoration(
+                                hintText: "Email",
                                 labelText: "Email",
                                 labelStyle:
                                     const TextStyle(color: Color(0xFFB7FF00)),
@@ -152,6 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             controller: _passwordController,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
+                              hintText: "Password",
                               labelText: "Password",
                               labelStyle:
                                   const TextStyle(color: Color(0xFFB7FF00)),

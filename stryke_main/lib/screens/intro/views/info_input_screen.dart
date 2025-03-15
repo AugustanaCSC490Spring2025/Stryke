@@ -41,7 +41,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: screenHeight * 0.25,
+            height: screenHeight * 0.125,
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
@@ -49,7 +49,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: Icon(Icons.bolt_sharp, size: screenHeight * .15),
+              child: Icon(Icons.electric_bolt_sharp, size: 100),
             ),
           ),
           verticalSpacing(25),
@@ -78,7 +78,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               controller: _firstNameController,
               style: ThemeTextStyles.textFieldInput,
               decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "ex: Dave"),
+                  hintText: "First Name"),
             ),
           ),
           verticalSpacing(25),
@@ -88,7 +88,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               controller: _lastNameController,
               style: ThemeTextStyles.textFieldInput,
               decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "ex: Dave"),
+                  hintText: "Last Name"),
             ),
           ),
           verticalSpacing(25),
@@ -98,7 +98,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               controller: _ageController,
               style: ThemeTextStyles.textFieldInput,
               decoration:
-                  TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 25"),
+                  TextFormFieldsStyles.formTextFieldDefault(hintText: "Age (25)"),
             ),
           ),
           verticalSpacing(25),
@@ -108,7 +108,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               controller: _heightController,
               style: ThemeTextStyles.textFieldInput,
               decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "ex: 6'0"),
+                  hintText: "Height (6'0\")"),
             ),
           ),
           verticalSpacing(25),
@@ -118,7 +118,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               controller: _weightController,
               style: ThemeTextStyles.textFieldInput,
               decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "ex: 185 (in lbs)"),
+                  hintText: "Weight (185)"),
             ),
           ),
           verticalSpacing(25),

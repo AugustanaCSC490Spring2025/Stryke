@@ -53,6 +53,11 @@ class _SignUnScreenState extends State<SignUnScreen> {
     }
   }
 
+  Future<bool> googleSignIn() async {
+    await Future.delayed(Duration(seconds: 1));
+    return true; // Change this based on actual result
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -114,6 +119,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                             style: const TextStyle(color: Colors.white),
                             hintText: 'Email',
                             decoration: InputDecoration(
+                              hintText: "Email",
                               labelText: "Email",
                               labelStyle:
                                   const TextStyle(color: Color(0xFFB7FF00)),
@@ -150,6 +156,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                           controller: _passwordController,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            hintText: "Password",
                             labelText: "Password",
                             labelStyle:
                                 const TextStyle(color: Color(0xFFB7FF00)),
@@ -202,6 +209,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                           controller: _confirmPasswordController,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            hintText: "Confirm Password",
                             labelText: "Confirm Password",
                             labelStyle:
                                 const TextStyle(color: Color(0xFFB7FF00)),
@@ -248,7 +256,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const HomePage()),
+                                builder: (context) => const InfoInputScreen()),
                           );
                         }
                       }
@@ -295,12 +303,25 @@ class _SignUnScreenState extends State<SignUnScreen> {
               ],
             ),
             child: InkWell(
-              onTap: () {
+              onTap: () async {
                 setState(() {
                   isRounded = !isRounded;
                 });
-                // Call your Google sign-in function here
-                GoogleAuth().googlesignin();
+                // Call your Google sign-in function
+                bool success = await googleSignIn();
+
+                if (success) {
+                  // Navigate to another screen if sign-in is successful
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => InfoInputScreen()), // Replace HomePage with your target screen
+                  );
+                } else {
+                  // Handle sign-in failure if needed
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Sign-in failed, please try again.")),
+                  );
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -334,7 +355,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                MaterialPageRoute(builder: (context) => const InfoInputScreen()),
               );
             },
             child: RichText(
