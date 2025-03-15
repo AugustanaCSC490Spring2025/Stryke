@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../intro/views/splash_screen.dart';
+
 
 
 class HomePage extends StatefulWidget {
@@ -46,6 +48,10 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    IconButton(
+                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashScreen())),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                    ),
                     const Text(
                       "For Today...",
                       style: TextStyle(color: Color(0xFFB7FF00), fontSize: 18, fontWeight: FontWeight.bold),

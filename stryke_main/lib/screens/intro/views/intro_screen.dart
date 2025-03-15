@@ -31,7 +31,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                 color: Color(0xFFB7FF00),
                 borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: const Icon(Icons.bolt_sharp, size: 300),
+              child: const Icon(Icons.electric_bolt_sharp, size: 300),
             ),
           ),
           verticalSpacing(30),

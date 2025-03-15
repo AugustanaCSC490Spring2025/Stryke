@@ -14,21 +14,19 @@ class InfoInputScreen extends StatefulWidget {
   State<InfoInputScreen> createState() => _InfoInputScreenState();
 }
 
-
 class _InfoInputScreenState extends State<InfoInputScreen> {
-
   String? _dropdownValue;
-  final TextEditingController _firsstNameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
 
-  void dropdownCallback (String? selectedValue){
-  if (selectedValue != null){
-    setState((){
-      _dropdownValue = selectedValue;
-      print(_dropdownValue);
+  void dropdownCallback(String? selectedValue) {
+    if (selectedValue != null) {
+      setState(() {
+        _dropdownValue = selectedValue;
+        print(_dropdownValue);
       });
     }
   }
@@ -49,7 +47,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               decoration: const BoxDecoration(
                 color: Color(0xFFB7FF00),
                 borderRadius:
-                BorderRadius.vertical(bottom: Radius.circular(40)),
+                    BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
               child: Icon(Icons.bolt_sharp, size: screenHeight * .15),
             ),
@@ -62,9 +60,14 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(Icons.arrow_back, color: Colors.white,)
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  )),
+              Text(
+                "Give us some Info",
+                style: ThemeTextStyles.introScreenText_SubTitle,
               ),
-              Text("Give us some Info", style: ThemeTextStyles.introScreenText_SubTitle,),
               horizontalSpacing(50)
             ],
           ),
@@ -72,18 +75,20 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
           SizedBox(
             width: screenWidth * .7,
             child: TextFormField(
-              controller: _firsstNameController,
+              controller: _firstNameController,
               style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: Dave"),
+              decoration: TextFormFieldsStyles.formTextFieldDefault(
+                  hintText: "ex: Dave"),
             ),
           ),
-            verticalSpacing(25),
+          verticalSpacing(25),
           SizedBox(
             width: screenWidth * .7,
             child: TextFormField(
               controller: _lastNameController,
               style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: Dave"),
+              decoration: TextFormFieldsStyles.formTextFieldDefault(
+                  hintText: "ex: Dave"),
             ),
           ),
           verticalSpacing(25),
@@ -92,7 +97,8 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             child: TextFormField(
               controller: _ageController,
               style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 25"),
+              decoration:
+                  TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 25"),
             ),
           ),
           verticalSpacing(25),
@@ -101,7 +107,8 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             child: TextFormField(
               controller: _heightController,
               style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 6'0"),
+              decoration: TextFormFieldsStyles.formTextFieldDefault(
+                  hintText: "ex: 6'0"),
             ),
           ),
           verticalSpacing(25),
@@ -110,58 +117,68 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             child: TextFormField(
               controller: _weightController,
               style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(hintText: "ex: 185 (in lbs)"),
+              decoration: TextFormFieldsStyles.formTextFieldDefault(
+                  hintText: "ex: 185 (in lbs)"),
             ),
           ),
           verticalSpacing(25),
           Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30), 
-              border: Border.all(color:  const Color(0xffb7ff00)) 
-            ),
-            padding: EdgeInsets.only(left: 20),
-            width: screenWidth * .7,
-            height: 60,
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-              iconEnabledColor: const Color(0xffb7ff00),
-              dropdownColor: const Color(0xFF717171),
-              style: ThemeTextStyles.textFieldInput,
-              value: _dropdownValue,
-              isExpanded: true,
-              hint: Text("Select Sex", style: ThemeTextStyles.textFieldInput) ,
-              onChanged: dropdownCallback,
-              items: const [
-                DropdownMenuItem(child: Text("Male"), value: "Male",),
-                DropdownMenuItem(child: Text("Female"), value: "Female",),
-                DropdownMenuItem(child: Text("Other"), value: "Other",),
-              ],
-            ),
-            )
-          ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: const Color(0xffb7ff00))),
+              padding: EdgeInsets.only(left: 20),
+              width: screenWidth * .7,
+              height: 60,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  iconEnabledColor: const Color(0xffb7ff00),
+                  dropdownColor: const Color(0xFF717171),
+                  style: ThemeTextStyles.textFieldInput,
+                  value: _dropdownValue,
+                  isExpanded: true,
+                  hint:
+                      Text("Select Sex", style: ThemeTextStyles.textFieldInput),
+                  onChanged: dropdownCallback,
+                  items: const [
+                    DropdownMenuItem(
+                      child: Text("Male"),
+                      value: "Male",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Female"),
+                      value: "Female",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Other"),
+                      value: "Other",
+                    ),
+                  ],
+                ),
+              )),
           verticalSpacing(25),
           SizedBox(
             width: screenWidth * .5,
             child: ElevatedButton(
-                onPressed: () async{
+                onPressed: () async {
                   await FirebaseFirestore.instance.collection("users").add({
-                    "first_Name": _firsstNameController.text,
+                    "first_Name": _firstNameController.text,
                     "last_Name": _lastNameController.text,
                     "age": _ageController.text,
                     "height": _heightController.text,
                     "weight": _weightController.text,
                     "Sex": _dropdownValue,
-                });
-                Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage()
-                          ),
-                        );
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
                 },
-                style: ButtonStyles.colorButton(backgroundColor: const Color(0xffb7ff00), textColor: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
-                child: Text("Join STRYKE")
-            ),
+                style: ButtonStyles.colorButton(
+                    backgroundColor: const Color(0xffb7ff00),
+                    textColor: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+                child: Text("Join STRYKE")),
           ),
         ],
       ),

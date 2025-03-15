@@ -28,11 +28,14 @@ class SplashScreen extends StatelessWidget {
                   color: Color(0xFFB7FF00),
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
-                child: const Icon(Icons.bolt_sharp, size: 40),
+                child: const Icon(Icons.electric_bolt_sharp, size: 40),
               ),
               const Text(
                 "STRYKE",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ],
           ),
@@ -41,4 +44,3 @@ class SplashScreen extends StatelessWidget {
     );
   }
 }
-

@@ -12,6 +12,8 @@ class MyTextField extends StatelessWidget{
   final String? Function(String?)? onChanged;
   final FocusNode? focusNode;
   final String? errorMsg;
+  final dynamic decoration;
+  final dynamic style;
 
   const MyTextField({super.key,
     required this.controller,
@@ -24,7 +26,9 @@ class MyTextField extends StatelessWidget{
     this.validator,
     this.onChanged,
     this.focusNode,
-    this.errorMsg
+    this.errorMsg,
+    required this.decoration,
+    required this.style,
   });
 
   @override
@@ -38,23 +42,8 @@ class MyTextField extends StatelessWidget{
       onTap: onTap,
       textInputAction: TextInputAction.next,
       onChanged: onChanged,
-      decoration: InputDecoration(
-        suffixIcon: suffixIcon,
-        prefixIcon: prefixIcon,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.transparent),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-        ),
-        fillColor: Colors.grey.shade200,
-        filled: true,
-        hintText: hintText,
-        hintStyle: TextStyle(color : Colors.grey[500]),
-        errorText: errorMsg
-        ),
+      decoration: decoration,
+      style: style,
       );
   }
 }

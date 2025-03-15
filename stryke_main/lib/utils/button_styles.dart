@@ -32,7 +32,7 @@ class ButtonStyles {
   }) {
     return TextButton.styleFrom(
       foregroundColor: textColor, // Text color
-      backgroundColor: Colors.transparent, // Transparent background
+      backgroundColor: const Color(0xFF1C1C1C), // Transparent background
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(26),
