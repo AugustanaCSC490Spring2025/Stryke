@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/home/home_screen.dart';
 
+import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
-import '../../../utils/text_form_field_styles.dart';
 import '../../../utils/text_styles.dart';
 
 class InfoInputScreen extends StatefulWidget {
@@ -16,11 +17,12 @@ class InfoInputScreen extends StatefulWidget {
 
 class _InfoInputScreenState extends State<InfoInputScreen> {
   String? _dropdownValue;
-  final  _firstNameController = TextEditingController();
-  final  _lastNameController = TextEditingController();
-  final  _ageController = TextEditingController();
-  final  _heightController = TextEditingController();
-  final  _weightController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String? _errorMsg;
 
   void dropdownCallback(String? selectedValue) {
     if (selectedValue != null) {
@@ -52,7 +54,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               child: Icon(Icons.electric_bolt_sharp, size: 100),
             ),
           ),
-          verticalSpacing(25),
+          verticalSpacing(30),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -64,121 +66,287 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                     Icons.arrow_back,
                     color: Colors.white,
                   )),
-              Text(
-                "Give us some Info",
-                style: ThemeTextStyles.introScreenText_SubTitle,
+              const Text(
+                "STRYKE On!",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               horizontalSpacing(50)
             ],
           ),
-          verticalSpacing(25),
-          SizedBox(
-            width: screenWidth * .7,
-            child: TextFormField(
-              controller: _firstNameController,
-              style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "First Name"),
-            ),
-          ),
-          verticalSpacing(25),
-          SizedBox(
-            width: screenWidth * .7,
-            child: TextFormField(
-              controller: _lastNameController,
-              style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "Last Name"),
-            ),
-          ),
-          verticalSpacing(25),
-          SizedBox(
-            width: screenWidth * .7,
-            child: TextFormField(
-              controller: _ageController,
-              style: ThemeTextStyles.textFieldInput,
-              decoration:
-                  TextFormFieldsStyles.formTextFieldDefault(hintText: "Age (25)"),
-            ),
-          ),
-          verticalSpacing(25),
-          SizedBox(
-            width: screenWidth * .7,
-            child: TextFormField(
-              controller: _heightController,
-              style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "Height (6'0\")"),
-            ),
-          ),
-          verticalSpacing(25),
-          SizedBox(
-            width: screenWidth * .7,
-            child: TextFormField(
-              controller: _weightController,
-              style: ThemeTextStyles.textFieldInput,
-              decoration: TextFormFieldsStyles.formTextFieldDefault(
-                  hintText: "Weight (185)"),
-            ),
-          ),
-          verticalSpacing(25),
-          Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: const Color(0xffb7ff00))),
-              padding: EdgeInsets.only(left: 20),
-              width: screenWidth * .7,
-              height: 60,
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  iconEnabledColor: const Color(0xffb7ff00),
-                  dropdownColor: const Color(0xFF717171),
-                  style: ThemeTextStyles.textFieldInput,
-                  value: _dropdownValue,
-                  isExpanded: true,
-                  hint:
-                      Text("Select Sex", style: ThemeTextStyles.textFieldInput),
-                  onChanged: dropdownCallback,
-                  items: const [
-                    DropdownMenuItem(
-                      child: Text("Male"),
-                      value: "Male",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Female"),
-                      value: "Female",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Other"),
-                      value: "Other",
-                    ),
-                  ],
+          verticalSpacing(20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 50),
+            child: Column(
+              children: [
+                Text(
+                  "Now input some basic information about yourself to finish joining STRYKE!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
                 ),
-              )),
-          verticalSpacing(25),
+              ],
+            ),
+          ),
+          verticalSpacing(30),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 75,
+                    child: MyTextField(
+                        controller: _nameController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          errorStyle: const TextStyle(height: .8),
+                          hintText: 'ex. Phil Foden',
+                          labelText: "First & Last name",
+                          labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
+                          filled: true,
+                          fillColor: const Color(0xFF1C1C1C),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide:
+                                const BorderSide(color: Color(0xFFB7FF00)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide:
+                                const BorderSide(color: Color(0xFFB7FF00)),
+                          ),
+                        ),
+                        obscureText: false,
+                        keyboardType: TextInputType.emailAddress,
+                        errorMsg: _errorMsg,
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'Please fill in this field';
+                          } else if (!RegExp(r'^[A-Za-z]+ [A-Za-z]+$')
+                              .hasMatch(val)) {
+                            return 'Please enter your first and last name';
+                          }
+                          return null;
+                        }),
+                  ),
+                  verticalSpacing(25),
+                  SizedBox(
+                    height: 75,
+                    child: MyTextField(
+                      controller: _ageController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        errorStyle: const TextStyle(height: .8),
+                        hintText: 'ex. 20',
+                        labelText: "Age",
+                        labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
+                        filled: true,
+                        fillColor: const Color(0xFF1C1C1C),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
+                        ),
+                      ),
+                      obscureText: false,
+                      keyboardType: TextInputType.visiblePassword,
+                      prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                      errorMsg: _errorMsg,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please fill in this field';
+                        } else if (!RegExp(r'^[0-9]+$').hasMatch(val)) {
+                          return 'Please enter a valid age';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  verticalSpacing(25),
+                  SizedBox(
+                    height: 75,
+                    child: MyTextField(
+                      controller: _heightController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        errorStyle: const TextStyle(height: .8),
+                        hintText: 'ex. 6 2',
+                        labelText: "Height",
+                        labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
+                        filled: true,
+                        fillColor: const Color(0xFF1C1C1C),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
+                        ),
+                      ),
+                      obscureText: false,
+                      keyboardType: TextInputType.visiblePassword,
+                      prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                      errorMsg: _errorMsg,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please fill in this field';
+                        } else if (!RegExp(r'^[0-9]{1} [0-9]{1,2}$')
+                            .hasMatch(val)) {
+                          return 'Please enter height';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  verticalSpacing(25),
+                  SizedBox(
+                    height: 75,
+                    child: MyTextField(
+                      controller: _weightController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        errorStyle: const TextStyle(height: .8),
+                        hintText: '(in lbs) ex. 185 ',
+                        labelText: "Weight",
+                        labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
+                        filled: true,
+                        fillColor: const Color(0xFF1C1C1C),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 20.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
+                        ),
+                      ),
+                      obscureText: false,
+                      keyboardType: TextInputType.visiblePassword,
+                      prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                      errorMsg: _errorMsg,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please fill in this field';
+                        } else if (!RegExp(r'^[0-9]+$').hasMatch(val)) {
+                          return 'Please enter weight';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  verticalSpacing(25),
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: const Color(0xffb7ff00))),
+                      padding: const EdgeInsets.only(left: 20),
+                      width: screenWidth * .9,
+                      height: 63,
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          iconEnabledColor: const Color(0xffb7ff00),
+                          dropdownColor: const Color(0xFF717171),
+                          style: ThemeTextStyles.textFieldInput,
+                          value: _dropdownValue,
+                          isExpanded: true,
+                          hint: Text("Select Sex",
+                              style: ThemeTextStyles.textFieldInput),
+                          onChanged: dropdownCallback,
+                          items: const [
+                            DropdownMenuItem(
+                              child: Text("Male"),
+                              value: "Male",
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Female"),
+                              value: "Female",
+                            ),
+                            DropdownMenuItem(
+                              child: Text("Other"),
+                              value: "Other",
+                            ),
+                          ],
+                        ),
+                      )),
+                ],
+              ),
+            ),
+          ),
+          verticalSpacing(35),
           SizedBox(
-            width: screenWidth * .5,
+            width: screenWidth * .9,
+            height: 70,
             child: ElevatedButton(
                 onPressed: () async {
-                  await FirebaseFirestore.instance.collection("users").add({
-                    "first_Name": _firstNameController.text,
-                    "last_Name": _lastNameController.text,
-                    "age": _ageController.text,
-                    "height": _heightController.text,
-                    "weight": _weightController.text,
-                    "Sex": _dropdownValue,
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
+                  if (_formKey.currentState!.validate()) {
+                    // Perform async tasks like sending data
+                    await FirebaseFirestore.instance.collection("users").add({
+                      "first_Name": _nameController.text.split(' ').first,
+                      "last_Name": _nameController.text.split(' ').last,
+                      "age": _ageController.text,
+                      "height": _heightController.text,
+                      "weight": _weightController.text,
+                      "Sex": _dropdownValue,
+                    });
+
+                    // Navigate once complete
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                    );
+                  }
                 },
                 style: ButtonStyles.colorButton(
                     backgroundColor: const Color(0xffb7ff00),
                     textColor: Colors.black,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18),
-                child: Text("Join STRYKE")),
+                    fontSize: 20),
+                child: const Text("Join STRYKE")),
+          ),
+          verticalSpacing(5),
+          RichText(
+            text: const TextSpan(
+              children: [
+                TextSpan(
+                  text: 'By Continuing you Agree',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                TextSpan(
+                  text: ' Terms & Conditions',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFFB7FF00),
+                    // Green color for Sign Up
+                    fontWeight: FontWeight.bold, // Bold style
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

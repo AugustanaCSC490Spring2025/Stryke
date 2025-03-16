@@ -2,14 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
-import 'package:test_app/utils/button_styles.dart';
 import 'package:test_app/utils/spacing.dart';
-import 'package:test_app/utils/text_form_field_styles.dart';
-import 'package:test_app/utils/text_styles.dart';
-import 'package:test_app/auth/google_sign_in/google_auth.dart';
 
 import '../../../components/my_text_field.dart';
-import '../../home/home_screen.dart';
 import 'login_screen.dart';
 
 class SignUnScreen extends StatefulWidget {
@@ -54,14 +49,13 @@ class _SignUnScreenState extends State<SignUnScreen> {
   }
 
   Future<bool> googleSignIn() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     return true; // Change this based on actual result
   }
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
@@ -114,19 +108,115 @@ class _SignUnScreenState extends State<SignUnScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        MyTextField(
-                            controller: _emailController,
+                        SizedBox(
+                          height: 90,
+                          child: MyTextField(
+                              controller: _emailController,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                hintText: "ex. user@gmail.com",
+                                labelText: "Email",
+                                labelStyle:
+                                    const TextStyle(color: Color(0xFFB7FF00)),
+                                filled: true,
+                                fillColor: const Color(0xFF1C1C1C),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 22.5, horizontal: 20.0),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFFB7FF00)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFFB7FF00)),
+                                ),
+                              ),
+                              obscureText: false,
+                              keyboardType: TextInputType.emailAddress,
+                              errorMsg: _errorMsg,
+                              validator: (val) {
+                                if (val!.isEmpty) {
+                                  return 'Please fill in this field';
+                                } else if (!RegExp(
+                                        r'^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$')
+                                    .hasMatch(val)) {
+                                  return 'Please enter a valid email';
+                                }
+                                return null;
+                              }),
+                        ),
+                        verticalSpacing(20),
+                        SizedBox(
+                          height: 90,
+                          child: MyTextField(
+                            controller: _passwordController,
                             style: const TextStyle(color: Colors.white),
-                            hintText: 'Email',
                             decoration: InputDecoration(
-                              hintText: "Email",
-                              labelText: "Email",
+                              hintText: "ex. Test1234!",
+                              labelText: "Password",
                               labelStyle:
                                   const TextStyle(color: Color(0xFFB7FF00)),
                               filled: true,
                               fillColor: const Color(0xFF1C1C1C),
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 22.5, horizontal: 10.0),
+                                  vertical: 22.5, horizontal: 20.0),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFFB7FF00)),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide:
+                                    const BorderSide(color: Color(0xFFB7FF00)),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  obscurePassword
+                                      ? CupertinoIcons.eye_fill
+                                      : CupertinoIcons.eye_slash_fill,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    obscurePassword = !obscurePassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            obscureText: obscurePassword,
+                            keyboardType: TextInputType.visiblePassword,
+                            prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                            errorMsg: _errorMsg,
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return 'Please fill in this field';
+                              } else if (!RegExp(
+                                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
+                                  .hasMatch(val)) {
+                                return 'Please enter a valid password';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        verticalSpacing(20),
+                        SizedBox(
+                          height: 90,
+                          child: MyTextField(
+                            controller: _confirmPasswordController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              labelText: "Confirm Password",
+                              hintText: 'ex. Test1234!',
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFFB7FF00)),
+                              filled: true,
+                              fillColor: const Color(0xFF1C1C1C),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 22.5, horizontal: 20.0),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide:
@@ -138,113 +228,23 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                     const BorderSide(color: Color(0xFFB7FF00)),
                               ),
                             ),
-                            obscureText: false,
-                            keyboardType: TextInputType.emailAddress,
+                            obscureText: obscurePassword,
+                            keyboardType: TextInputType.visiblePassword,
+                            prefixIcon: const Icon(CupertinoIcons.lock_fill),
                             errorMsg: _errorMsg,
                             validator: (val) {
                               if (val!.isEmpty) {
                                 return 'Please fill in this field';
-                              } else if (!RegExp(
-                                      r'^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$')
-                                  .hasMatch(val)) {
-                                return 'Please enter a valid email';
+                              } else if (val != _passwordController.text) {
+                                return 'Please enter a correct password';
                               }
                               return null;
-                            }),
-                        const SizedBox(height: 30),
-                        MyTextField(
-                          controller: _passwordController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Password",
-                            labelText: "Password",
-                            labelStyle:
-                                const TextStyle(color: Color(0xFFB7FF00)),
-                            filled: true,
-                            fillColor: const Color(0xFF1C1C1C),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 22.5, horizontal: 10.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide:
-                                  const BorderSide(color: Color(0xFFB7FF00)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide:
-                                  const BorderSide(color: Color(0xFFB7FF00)),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                obscurePassword
-                                    ? CupertinoIcons.eye_fill
-                                    : CupertinoIcons.eye_slash_fill,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  obscurePassword = !obscurePassword;
-                                });
-                              },
-                            ),
+                            },
                           ),
-                          hintText: 'Password',
-                          obscureText: obscurePassword,
-                          keyboardType: TextInputType.visiblePassword,
-                          prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                          errorMsg: _errorMsg,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return 'Please fill in this field';
-                            } else if (!RegExp(
-                                    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
-                                .hasMatch(val)) {
-                              return 'Please enter a valid password';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 30),
-                        MyTextField(
-                          controller: _confirmPasswordController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Confirm Password",
-                            labelText: "Confirm Password",
-                            labelStyle:
-                                const TextStyle(color: Color(0xFFB7FF00)),
-                            filled: true,
-                            fillColor: const Color(0xFF1C1C1C),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 20.0, horizontal: 10.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide:
-                                  const BorderSide(color: Color(0xFFB7FF00)),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide:
-                                  const BorderSide(color: Color(0xFFB7FF00)),
-                            ),
-                          ),
-                          hintText: 'Password',
-                          obscureText: obscurePassword,
-                          keyboardType: TextInputType.visiblePassword,
-                          prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                          errorMsg: _errorMsg,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return 'Please fill in this field';
-                            } else if (val != _passwordController.text) {
-                              return 'Please enter a correct password';
-                            }
-                            return null;
-                          },
                         ),
                       ],
                     )),
-                const SizedBox(height: 35),
+                verticalSpacing(35),
                 SizedBox(
                   width: double.infinity,
                   height: 70,
@@ -298,7 +298,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
                   blurRadius: 8,
-                  offset: Offset(0, 4),
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -314,12 +314,9 @@ class _SignUnScreenState extends State<SignUnScreen> {
                   // Navigate to another screen if sign-in is successful
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => InfoInputScreen()), // Replace HomePage with your target screen
-                  );
-                } else {
-                  // Handle sign-in failure if needed
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Sign-in failed, please try again.")),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            const InfoInputScreen()), // Replace HomePage with your target screen
                   );
                 }
               },
@@ -355,7 +352,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const InfoInputScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
             child: RichText(
