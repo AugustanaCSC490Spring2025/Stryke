@@ -154,6 +154,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                             controller: _passwordController,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
+                              errorStyle: const TextStyle(height: .85),
                               hintText: "ex. Test1234!",
                               labelText: "Password",
                               labelStyle:
@@ -193,13 +194,30 @@ class _SignUnScreenState extends State<SignUnScreen> {
                             validator: (val) {
                               if (val!.isEmpty) {
                                 return 'Please fill in this field';
-                              } else if (!RegExp(
-                                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
-                                  .hasMatch(val)) {
-                                return 'Please enter a valid password';
                               }
-                              return null;
-                            },
+                              // Check for missing conditions and build the error message
+                              String errorMessage = '';
+                              if (!RegExp(r'^(?=.*?[A-Z])').hasMatch(val)) {
+                                errorMessage += '• At least one uppercase letter\n';
+                              }
+                              if (!RegExp(r'^(?=.*?[a-z])').hasMatch(val)) {
+                                errorMessage += '• At least one lowercase letter\n';
+                              }
+                              if (!RegExp(r'^(?=.*?[0-9])').hasMatch(val)) {
+                                errorMessage += '• At least one number\n';
+                              }
+                              if (!RegExp(r'^(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^])').hasMatch(val)) {
+                                errorMessage += '• At least one special character\n';
+                              }
+                              if (val.length < 8) {
+                                errorMessage += '• Minimum of 8 characters\n';
+                              }
+                              // If any condition is missing, return the error message
+                              if (errorMessage.isNotEmpty) {
+                                return 'Password must contain:\n$errorMessage';
+                              }
+                              return null; // Return null if password is valid
+                            }
                           ),
                         ),
                         verticalSpacing(20),

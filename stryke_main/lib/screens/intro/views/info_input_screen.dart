@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:test_app/screens/home/home_screen.dart';
 
 import '../../../components/my_text_field.dart';
@@ -23,6 +24,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
   final _weightController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _errorMsg;
+  final FocusNode _heightFocusNode = FocusNode();
 
   void dropdownCallback(String? selectedValue) {
     if (selectedValue != null) {
@@ -179,44 +181,76 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                     ),
                   ),
                   verticalSpacing(25),
-                  SizedBox(
-                    height: 75,
-                    child: MyTextField(
-                      controller: _heightController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        errorStyle: const TextStyle(height: .8),
-                        hintText: 'ex. 6 2',
-                        labelText: "Height",
-                        labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
-                        filled: true,
-                        fillColor: const Color(0xFF1C1C1C),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 20.0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide:
-                              const BorderSide(color: Color(0xFFB7FF00)),
+                  RawKeyboardListener(
+                    focusNode: _heightFocusNode,
+                    onKey: (event) {
+                      if (event is RawKeyDownEvent &&
+                          event.logicalKey == LogicalKeyboardKey.backspace) {
+                        _heightController.clear();
+                      }
+                    },
+                    child: SizedBox(
+                      height: 75,
+                      child: MyTextField(
+                        controller: _heightController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          errorStyle: const TextStyle(height: .8),
+                          hintText: 'ex. 6\' 2',
+                          labelText: "Height",
+                          labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
+                          filled: true,
+                          fillColor: const Color(0xFF1C1C1C),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide:
+                                const BorderSide(color: Color(0xFFB7FF00)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide:
+                                const BorderSide(color: Color(0xFFB7FF00)),
+                          ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide:
-                              const BorderSide(color: Color(0xFFB7FF00)),
-                        ),
+                        obscureText: false,
+                        keyboardType: TextInputType.text,
+                        prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                        errorMsg: _errorMsg,
+                        validator: (val) {
+                          if (val == null || val.trim().isEmpty) {
+                            return 'Please fill in this field';
+                          }
+
+                          // Regex to match formats: 6 2, 6'2", 6'2, 6' 2'', etc.
+                          final regex =
+                              RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})[\']?$");
+                          final match = regex.firstMatch(val.trim());
+
+                          if (match == null) {
+                            return 'Enter height like 6 2 or 6\' 2';
+                          }
+                          return null;
+                        },
+                        onChanged: (val) {
+                          final regex =
+                              RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})[\']?$");
+                          final match = regex.firstMatch(val!.trim());
+
+                          if (match != null) {
+                            final feet = match.group(1);
+                            final inches = match.group(2);
+                            // Reformat to 6' 2"
+                            final formattedHeight = "$feet' $inches\"";
+
+                            _heightController.value = TextEditingValue(
+                                text: formattedHeight,
+                                selection: TextSelection.collapsed(
+                                    offset: formattedHeight.length));
+                          }
+                        },
                       ),
-                      obscureText: false,
-                      keyboardType: TextInputType.visiblePassword,
-                      prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                      errorMsg: _errorMsg,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return 'Please fill in this field';
-                        } else if (!RegExp(r'^[0-9]{1} [0-9]{1,2}$')
-                            .hasMatch(val)) {
-                          return 'Please enter height';
-                        }
-                        return null;
-                      },
                     ),
                   ),
                   verticalSpacing(25),
