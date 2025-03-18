@@ -24,6 +24,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
   final _weightController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _errorMsg;
+  bool _isLoading = false;
   final FocusNode _heightFocusNode = FocusNode();
 
   void dropdownCallback(String? selectedValue) {
@@ -53,7 +54,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: Icon(Icons.electric_bolt_sharp, size: 100),
+              child: const Icon(Icons.electric_bolt_rounded, size: 100),
             ),
           ),
           verticalSpacing(30),
@@ -140,7 +141,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           return null;
                         }),
                   ),
-                  verticalSpacing(25),
+                  verticalSpacing(10),
                   SizedBox(
                     height: 75,
                     child: MyTextField(
@@ -180,7 +181,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                       },
                     ),
                   ),
-                  verticalSpacing(25),
+                  verticalSpacing(10),
                   RawKeyboardListener(
                     focusNode: _heightFocusNode,
                     onKey: (event) {
@@ -225,7 +226,8 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
 
                           // Regex to match formats: 6 2, 6'2", 6'2, 6' 2'', etc.
                           final regex =
-                              RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})[\']?$");
+                          RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})");
+
                           final match = regex.firstMatch(val.trim());
 
                           if (match == null) {
@@ -235,7 +237,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                         },
                         onChanged: (val) {
                           final regex =
-                              RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})[\']?$");
+                              RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})");
                           final match = regex.firstMatch(val!.trim());
 
                           if (match != null) {
@@ -253,7 +255,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                       ),
                     ),
                   ),
-                  verticalSpacing(25),
+                  verticalSpacing(10),
                   SizedBox(
                     height: 75,
                     child: MyTextField(
@@ -293,7 +295,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                       },
                     ),
                   ),
-                  verticalSpacing(25),
+                  verticalSpacing(10),
                   Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -331,7 +333,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               ),
             ),
           ),
-          verticalSpacing(35),
+          verticalSpacing(45),
           SizedBox(
             width: screenWidth * .9,
             height: 70,

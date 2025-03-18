@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
 import 'package:test_app/utils/spacing.dart';
 
+import '../../../auth/google_sign_in/authentication.dart';
 import '../../../components/my_text_field.dart';
 import 'login_screen.dart';
 
@@ -18,40 +18,13 @@ class _SignUnScreenState extends State<SignUnScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _authService = Authentication();
   final _formKey = GlobalKey<FormState>();
   bool loginRequired = false;
   bool obscurePassword = true;
   String? _errorMsg;
   bool isRounded = false;
 
-  Future<bool> signUpUser() async {
-    try {
-      if (_passwordController.text == _confirmPasswordController.text) {
-        final credential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        return true;
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Passwords don't match")),
-        );
-        return false;
-      }
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Signup failed: Please enter Username and Password")),
-      );
-      return false;
-    }
-  }
-
-  Future<bool> googleSignIn() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return true; // Change this based on actual result
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +43,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: const Icon(Icons.electric_bolt_sharp, size: 100),
+              child: const Icon(Icons.electric_bolt_rounded, size: 100),
             ),
           ),
 
@@ -147,14 +120,12 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                 return null;
                               }),
                         ),
-                        verticalSpacing(20),
-                        SizedBox(
-                          height: 90,
-                          child: MyTextField(
+                          verticalSpacing(5),
+                          MyTextField(
                             controller: _passwordController,
                             style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
-                              errorStyle: const TextStyle(height: .85),
+                              errorStyle: const TextStyle(height: .8),
                               hintText: "ex. Test1234!",
                               labelText: "Password",
                               labelStyle:
@@ -219,8 +190,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                               return null; // Return null if password is valid
                             }
                           ),
-                        ),
-                        verticalSpacing(20),
+                        verticalSpacing(25),
                         SizedBox(
                           height: 90,
                           child: MyTextField(
@@ -246,7 +216,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                     const BorderSide(color: Color(0xFFB7FF00)),
                               ),
                             ),
-                            obscureText: obscurePassword,
+                            obscureText: true,
                             keyboardType: TextInputType.visiblePassword,
                             prefixIcon: const Icon(CupertinoIcons.lock_fill),
                             errorMsg: _errorMsg,
@@ -262,14 +232,15 @@ class _SignUnScreenState extends State<SignUnScreen> {
                         ),
                       ],
                     )),
-                verticalSpacing(35),
+                verticalSpacing(25),
                 SizedBox(
                   width: double.infinity,
                   height: 70,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        bool success = await signUpUser();
+                        bool success = await _authService.signUpUser(_emailController.text, _passwordController.text);
+
                         if (success) {
                           Navigator.pushReplacement(
                             context,
@@ -326,11 +297,11 @@ class _SignUnScreenState extends State<SignUnScreen> {
                   isRounded = !isRounded;
                 });
                 // Call your Google sign-in function
-                bool success = await googleSignIn();
+                bool success = await _authService.googleSignIn();
 
                 if (success) {
                   // Navigate to another screen if sign-in is successful
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
@@ -351,7 +322,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                     ),
                     const SizedBox(width: 12),
                     const Text(
-                      "Sign in with Google",
+                      "Sign Up with Google",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,

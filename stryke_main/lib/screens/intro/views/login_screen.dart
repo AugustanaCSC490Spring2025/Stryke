@@ -1,11 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:test_app/auth/google_sign_in/authentication.dart';
 import 'package:test_app/screens/home/home_screen.dart';
 import 'package:test_app/screens/intro/views/sign_up_screen.dart';
 
 import '../../../components/my_text_field.dart';
 import '../../../utils/spacing.dart';
+import 'info_input_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,33 +18,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  final _authService = Authentication();
   final _formKey = GlobalKey<FormState>();
   bool loginRequired = false;
   bool obscurePassword = true;
+  bool isRounded = false;
   String? _errorMsg;
+  String? _loginError;
 
-  Future<bool> loginUser() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
-      setState(() {
-        _errorMsg = "Passwords do not match!";
-      });
-      return false;
-    }
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      return true; // Login successful
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _errorMsg = e.message;
-      });
-      return false; // Login failed
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
               child: const Center(
-                child: Icon(
-                  Icons.electric_bolt_sharp,
-                  size: 100,
-                  color: Colors.black,
+                child: Icon(Icons.electric_bolt_rounded, size: 100,
                 ),
               ),
             ),
@@ -151,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   return null;
                                 }),
                           ),
-                          verticalSpacing(40),
+                          verticalSpacing(20),
                           SizedBox(
                             height: 90,
                             child: MyTextField(
@@ -201,6 +180,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
                                     .hasMatch(val)) {
                                   return 'Please enter a valid password';
+                                } else if (_loginError != null) {
+                                  return 'Invalid credentials. Please try again.';
                                 }
                                 return null;
                               },
@@ -220,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  verticalSpacing(80),
+                  verticalSpacing(55),
 
                   // Login Button
                   SizedBox(
@@ -229,13 +210,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          bool success = await loginUser();
+                          bool success = await _authService.loginUser(_emailController.text, _passwordController.text);
                           if (success) {
+                            setState(() {
+                              _loginError = null;
+                            });
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const HomePage()),
                             );
+                          } else {
+                            setState(() {
+                              _loginError =
+                                  'Invalid';
+                            });
                           }
                         }
                       },
@@ -255,7 +244,80 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  verticalSpacing(90),
+                  verticalSpacing(45),
+
+                  AnimatedContainer(
+                    curve: Curves.ease,
+                    duration: const Duration(milliseconds: 500),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      // Dark background
+                      borderRadius: isRounded
+                          ? BorderRadius.circular(30)
+                          : BorderRadius.circular(0),
+                      border: Border.all(color: Colors.white.withOpacity(0.5)),
+                      // Light border
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        setState(() {
+                          isRounded = !isRounded;
+                        });
+                        bool success = await _authService.googleSignIn();
+
+                        if (success) {
+                          bool userExists = await _authService.checkIfUserExists();
+
+                          if (!userExists) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const InfoInputScreen()),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()),
+                            );
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 16.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              'assets/images/google_logo.png',
+                              // The Google logo asset
+                              width: 24,
+                              height: 24,
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              "Sign In with Google",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors
+                                    .white, // Light text color for dark mode
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  verticalSpacing(45),
 
                   InkWell(
                     onTap: () {
@@ -288,7 +350,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),

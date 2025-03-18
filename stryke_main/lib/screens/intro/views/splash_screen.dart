@@ -28,7 +28,7 @@ class SplashScreen extends StatelessWidget {
                   color: Color(0xFFB7FF00),
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
-                child: const Icon(Icons.electric_bolt_sharp, size: 40),
+                child: const Icon(Icons.electric_bolt_rounded, size: 40),
               ),
               const Text(
                 "STRYKE",
