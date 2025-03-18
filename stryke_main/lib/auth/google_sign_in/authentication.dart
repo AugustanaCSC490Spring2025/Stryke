@@ -6,6 +6,15 @@ class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  getUser() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      return null;
+    } else{
+      return user;
+    }
+  }
+
   // Sign up with email & password
   Future<bool> signUpUser(String email, String password) async {
     try {

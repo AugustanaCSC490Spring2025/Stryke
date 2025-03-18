@@ -4,20 +4,16 @@ import 'package:flutter/cupertino.dart';
 import '../../auth/google_sign_in/authentication.dart';
 import '../intro/views/splash_screen.dart';
 
-
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
   final _authService = Authentication();
-  final String userName = "Tommy"; // replace with actual name from database
+  //final myUser = _authService.getUser();// replace with actual name from database
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +29,11 @@ class _HomePageState extends State<HomePage> {
             expandedHeight: 60.0,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'Welcome, $userName!',
-                style: const TextStyle(color: Color(0xFFB7FF00), fontSize: 20, fontWeight: FontWeight.bold),
+                'Welcome, Tommy!',
+                style: const TextStyle(
+                    color: Color(0xFFB7FF00),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             actions: [
@@ -53,17 +52,24 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     IconButton(
                       onPressed: () async {
-                        await _authService.signOut();  // Call the sign-out method here
+                        await _authService
+                            .signOut(); // Call the sign-out method here
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const SplashScreen()), // Navigate to SplashScreen
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const SplashScreen()), // Navigate to SplashScreen
                         );
                       },
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white),
                     ),
                     const Text(
                       "For Today...",
-                      style: TextStyle(color: Color(0xFFB7FF00), fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Color(0xFFB7FF00),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
                     Container(
@@ -75,9 +81,11 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Select workout", style: TextStyle(color: Color(0xFFB7FF00))),
+                          const Text("Select workout",
+                              style: TextStyle(color: Color(0xFFB7FF00))),
                           IconButton(
-                            icon: const Icon(Icons.add, color: Color(0xFFB7FF00)),
+                            icon:
+                                const Icon(Icons.add, color: Color(0xFFB7FF00)),
                             onPressed: () {},
                           ),
                         ],
@@ -86,7 +94,10 @@ class _HomePageState extends State<HomePage> {
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     const Text(
                       "Performance Data",
-                      style: TextStyle(color: Color(0xFFB7FF00), fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Color(0xFFB7FF00),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                     ),
                     const Padding(padding: EdgeInsets.only(top: 10)),
                     Container(
@@ -100,18 +111,25 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const Padding(padding: EdgeInsets.only(top: 10)),
-                    const Text( // could maybe be bottom navigation bar?
+                    const Text(
+                      // could maybe be bottom navigation bar?
                       "Quick Access",
-                      style: TextStyle(color: Color(0xFFB7FF00), fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Color(0xFFB7FF00),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
                     ),
                     ListTile(
                       leading: const Icon(Icons.flag, color: Color(0xFFB7FF00)),
-                      title: const Text("Goals", style: TextStyle(color: Color(0xFFB7FF00))),
+                      title: const Text("Goals",
+                          style: TextStyle(color: Color(0xFFB7FF00))),
                       onTap: () {},
                     ),
                     ListTile(
-                      leading: const Icon(Icons.bar_chart, color: Color(0xFFB7FF00)),
-                      title: const Text("View Progress", style: TextStyle(color: Color(0xFFB7FF00))),
+                      leading:
+                          const Icon(Icons.bar_chart, color: Color(0xFFB7FF00)),
+                      title: const Text("View Progress",
+                          style: TextStyle(color: Color(0xFFB7FF00))),
                       onTap: () {},
                     ),
                   ],
