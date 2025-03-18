@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../auth/google_sign_in/authentication.dart';
 import '../intro/views/splash_screen.dart';
 
 
@@ -9,12 +10,14 @@ import '../intro/views/splash_screen.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 
 class _HomePageState extends State<HomePage> {
+  final _authService = Authentication();
   final String userName = "Tommy"; // replace with actual name from database
 
   @override
@@ -50,7 +53,13 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     IconButton(
-                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashScreen())),
+                      onPressed: () async {
+                        await _authService.signOut();  // Call the sign-out method here
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SplashScreen()), // Navigate to SplashScreen
+                        );
+                      },
                       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
                     ),
                     const Text(

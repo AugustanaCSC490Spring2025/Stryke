@@ -22,10 +22,6 @@ dependencies:
   equatable: ^2.0.5
   fl_chart: ^0.70.2
 
-#  user_repository:
-#    path: packages/user_repository
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
