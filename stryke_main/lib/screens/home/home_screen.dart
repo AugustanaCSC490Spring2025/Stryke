@@ -1,7 +1,7 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../auth/google_sign_in/authentication.dart';
 import '../intro/views/splash_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,8 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _authService = Authentication();
-  //final myUser = _authService.getUser();// replace with actual name from database
+  final String userName = "Tommy"; // replace with actual name from database
 
   @override
   Widget build(BuildContext context) {
@@ -51,18 +50,8 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     IconButton(
-                      onPressed: () async {
-                        await _authService
-                            .signOut(); // Call the sign-out method here
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const SplashScreen()), // Navigate to SplashScreen
-                        );
-                      },
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white),
+                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashScreen())),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
                     ),
                     const Text(
                       "For Today...",
@@ -103,10 +92,29 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 200,
                       color: const Color(0xFF303030),
-                      child: const Center(
-                        child: Text(
-                          "Graph Placeholder",
-                          style: TextStyle(color: Color(0xFFB7FF00)),
+                      child: LineChart(
+                        LineChartData(
+                          lineBarsData: [
+                            LineChartBarData(
+                              belowBarData: BarAreaData(
+                                show: true,
+                                color: const Color(0x45B7FF00)
+                              ),
+                              color: const Color(0xFFB7FF00),
+                              spots: const[ // insert data from firebase
+                                FlSpot(0, 3),
+                                FlSpot(1, 5),
+                                FlSpot(2, 6),
+                                FlSpot(3, 7),
+                                FlSpot(4, 7),
+                                FlSpot(5, 8),
+                                FlSpot(6, 9),
+                                FlSpot(7, 10),
+                                FlSpot(8, 12),
+                                FlSpot(9, 15),
+                              ]
+                            )
+                          ]
                         ),
                       ),
                     ),

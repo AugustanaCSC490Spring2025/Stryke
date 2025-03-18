@@ -251,6 +251,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                                 selection: TextSelection.collapsed(
                                     offset: formattedHeight.length));
                           }
+                          return null;
                         },
                       ),
                     ),
