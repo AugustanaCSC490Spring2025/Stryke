@@ -224,35 +224,37 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                             return 'Please fill in this field';
                           }
 
-                          // Regex to match formats: 6 2, 6'2", 6'2, 6' 2'', etc.
-                          final regex =
-                          RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})");
+                          // Regex to match formats: 5'10, 5' 10, 5' 2, etc.
+                          final regex = RegExp(r"^(\d{1,2})[' ]?\s?(\d{1,2})$");
 
                           final match = regex.firstMatch(val.trim());
 
                           if (match == null) {
-                            return 'Enter height like 6 2 or 6\' 2';
+                            return 'Enter height like 5\' 10 or 5\' 2';
                           }
                           return null;
                         },
                         onChanged: (val) {
-                          final regex =
-                              RegExp(r"^(\d{1})[' ]?\s?(\d{1,2})");
+                          final regex = RegExp(r"^(\d{1,2})[' ]?\s?(\d{1,2})$");
                           final match = regex.firstMatch(val!.trim());
 
                           if (match != null) {
                             final feet = match.group(1);
                             final inches = match.group(2);
-                            // Reformat to 6' 2"
-                            final formattedHeight = "$feet' $inches\"";
+
+                            // Reformat to 5' 10 or 5' 2 (without any extra quotes)
+                            final formattedHeight = "$feet' $inches";
 
                             _heightController.value = TextEditingValue(
-                                text: formattedHeight,
-                                selection: TextSelection.collapsed(
-                                    offset: formattedHeight.length));
+                              text: formattedHeight,
+                              selection: TextSelection.collapsed(
+                                offset: formattedHeight.length,  // Position the cursor at the end
+                              ),
+                            );
                           }
                           return null;
                         },
+
                       ),
                     ),
                   ),

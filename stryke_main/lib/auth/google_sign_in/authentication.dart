@@ -10,7 +10,7 @@ class Authentication {
     final user = _auth.currentUser;
     if (user == null) {
       return null;
-    } else{
+    } else {
       return user;
     }
   }
@@ -18,7 +18,8 @@ class Authentication {
   // Sign up with email & password
   Future<bool> signUpUser(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       return true;
     } on FirebaseAuthException catch (e) {
       print("SignUp Error: ${e.message}");
@@ -30,9 +31,9 @@ class Authentication {
   Future<bool> loginUser(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return true;  // Success, no error
+      return true; // Success, no error
     } on FirebaseAuthException catch (e) {
-      return false;  // Return error message
+      return false; // Return error message
     }
   }
 
@@ -43,7 +44,8 @@ class Authentication {
 
       if (googleUser == null) return false;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -51,10 +53,8 @@ class Authentication {
       );
 
       await _auth.signInWithCredential(credential);
-      print("Google Sign-In successful.");
       return true;
     } catch (e) {
-      print("Google Sign-In failed: $e");
       return false;
     }
   }
@@ -63,12 +63,10 @@ class Authentication {
   Future<bool> checkIfUserExists() async {
     final user = _auth.currentUser;
     if (user == null) return false;
-
     try {
-      final doc = await _firestore.collection('users').doc(user.uid).get();
-      return doc.exists;
+      await _firestore.collection('users').doc(user.uid).get();
+      return true;
     } catch (e) {
-      print("User existence check failed: $e");
       return false;
     }
   }
@@ -82,5 +80,3 @@ class Authentication {
     }
   }
 }
-
-  

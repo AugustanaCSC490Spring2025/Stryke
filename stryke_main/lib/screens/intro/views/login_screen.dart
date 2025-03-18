@@ -275,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (success) {
                           bool userExists = await _authService.checkIfUserExists();
 
-                          if (!userExists) {
+                          if (userExists == false) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
