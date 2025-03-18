@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Select workout", style: TextStyle(color: Color(0xFFB7FF00))),
+                          const Text("Daily workout", style: TextStyle(color: Color(0xFFB7FF00))),
                           IconButton(
                             icon: const Icon(Icons.add, color: Color(0xFFB7FF00)),
                             onPressed: () {},
@@ -83,10 +84,29 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 200,
                       color: const Color(0xFF303030),
-                      child: const Center(
-                        child: Text(
-                          "Graph Placeholder",
-                          style: TextStyle(color: Color(0xFFB7FF00)),
+                      child: LineChart(
+                        LineChartData(
+                          lineBarsData: [
+                            LineChartBarData(
+                              belowBarData: BarAreaData(
+                                show: true,
+                                color: const Color(0x45B7FF00)
+                              ),
+                              color: const Color(0xFFB7FF00),
+                              spots: const[ // insert data from firebase
+                                FlSpot(0, 3),
+                                FlSpot(1, 5),
+                                FlSpot(2, 6),
+                                FlSpot(3, 7),
+                                FlSpot(4, 7),
+                                FlSpot(5, 8),
+                                FlSpot(6, 9),
+                                FlSpot(7, 10),
+                                FlSpot(8, 12),
+                                FlSpot(9, 15),
+                              ]
+                            )
+                          ]
                         ),
                       ),
                     ),
