@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../auth/google_sign_in/authentication.dart';
 import '../intro/views/splash_screen.dart';
 
 
@@ -14,8 +13,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+
 class _HomePageState extends State<HomePage> {
-  final _authService = Authentication();
   final String userName = "Tommy"; // replace with actual name from database
 
   @override
@@ -51,13 +50,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     IconButton(
-                      onPressed: () async {
-                        await _authService.signOut();  // Call the sign-out method here
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SplashScreen()), // Navigate to SplashScreen
-                        );
-                      },
+                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashScreen())),
                       icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
                     ),
                     const Text(
@@ -74,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Daily workout", style: TextStyle(color: Color(0xFFB7FF00))),
+                          const Text("Select workout", style: TextStyle(color: Color(0xFFB7FF00))),
                           IconButton(
                             icon: const Icon(Icons.add, color: Color(0xFFB7FF00)),
                             onPressed: () {},
