@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:test_app/screens/home/personal_screen.dart';
+import 'package:test_app/screens/home/progress_screen.dart';
 
 import '../intro/views/splash_screen.dart';
 
@@ -13,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final String userName = "Tommy"; // replace with actual name from database
+
 
   @override
   Widget build(BuildContext context) {

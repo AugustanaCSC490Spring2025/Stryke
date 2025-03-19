@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,15 +18,18 @@ class InfoInputScreen extends StatefulWidget {
 }
 
 class _InfoInputScreenState extends State<InfoInputScreen> {
-  String? _dropdownValue;
+  final user = FirebaseAuth.instance.currentUser;
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String? _errorMsg;
-  bool _isLoading = false;
   final FocusNode _heightFocusNode = FocusNode();
+
+  String? _errorMsg;
+  String? _dropdownValue;
+
+
 
   void dropdownCallback(String? selectedValue) {
     if (selectedValue != null) {
@@ -58,27 +62,16 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             ),
           ),
           verticalSpacing(30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  )),
-              const Text(
-                "STRYKE On!",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+          Align(
+            alignment: Alignment.center,
+            child: const Text(
+              "STRYKE On!",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              horizontalSpacing(50)
-            ],
+            ),
           ),
           verticalSpacing(20),
           const Padding(
@@ -352,15 +345,24 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             child: ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // Perform async tasks like sending data
-                    await FirebaseFirestore.instance.collection("users").add({
-                      "first_Name": _nameController.text.split(' ').first,
-                      "last_Name": _nameController.text.split(' ').last,
-                      "age": _ageController.text,
-                      "height": _heightController.text,
-                      "weight": _weightController.text,
-                      "Sex": _dropdownValue,
-                    });
+
+                    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("users")
+                        .doc(user?.uid).get();
+
+                    if (!userDoc.exists) {
+                      // If no data exists for the user, add the user's data
+                      await FirebaseFirestore.instance.collection("users").doc(user?.uid).set({
+                        "first_Name": _nameController.text.split(' ').first,
+                        "last_Name": _nameController.text.split(' ').last,
+                        "age": _ageController.text,
+                        "height": _heightController.text,
+                        "weight": _weightController.text,
+                        "Sex": _dropdownValue,
+                      });
+                    } else {
+                      // User data already exists, handle accordingly (update or skip)
+                      print('User data already exists.');
+                    }
 
                     // Navigate once complete
                     Navigator.pushReplacement(
