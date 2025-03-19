@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/home/home_screen.dart';
-//import 'package:test_app/screens/home/views/home_screen.dart';
 import 'package:test_app/screens/intro/views/splash_screen.dart';
 
 class AuthPage extends StatelessWidget {
