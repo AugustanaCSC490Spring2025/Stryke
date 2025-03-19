@@ -5,9 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final user = FirebaseAuth.instance.currentUser;
 
   getUser() async {
-    final user = _auth.currentUser;
     if (user == null) {
       return null;
     } else {
@@ -61,19 +61,31 @@ class Authentication {
 
   // Check if user exists in Firestore
   Future<bool> checkIfUserExists() async {
-    final user = _auth.currentUser;
     if (user == null) return false;
+
     try {
-      await _firestore.collection('users').doc(user.uid).get();
-      return true;
+      final docSnapshot = await _firestore.collection('users').doc(user?.uid).get();
+
+      if (!docSnapshot.exists) {
+        return false; // Document doesn't exist
+      }
+
+      final data = docSnapshot.data();
+      if (data == null || data.isEmpty) {
+        return false; // Document exists but no data
+      }
+
+      return true; // Document exists and has data
     } catch (e) {
-      return false;
+      return false; // Error occurred
     }
   }
+
 
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().signOut();
       print("User signed out.");
     } catch (e) {
       print("Sign out failed: $e");

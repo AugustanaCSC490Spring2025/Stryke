@@ -202,17 +202,14 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
                           filled: true,
                           fillColor: const Color(0xFF1C1C1C),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 20.0),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20.0),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                                const BorderSide(color: Color(0xFFB7FF00)),
+                            borderSide: const BorderSide(color: Color(0xFFB7FF00)),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide:
-                                const BorderSide(color: Color(0xFFB7FF00)),
+                            borderSide: const BorderSide(color: Color(0xFFB7FF00)),
                           ),
                         ),
                         obscureText: false,
@@ -224,14 +221,28 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                             return 'Please fill in this field';
                           }
 
-                          // Regex to match formats: 5'10, 5' 10, 5' 2, etc.
                           final regex = RegExp(r"^(\d{1,2})[' ]?\s?(\d{1,2})$");
-
                           final match = regex.firstMatch(val.trim());
 
                           if (match == null) {
                             return 'Enter height like 5\' 10 or 5\' 2';
                           }
+
+                          final feet = int.tryParse(match.group(1)!);
+                          final inches = int.tryParse(match.group(2)!);
+
+                          if (feet == null || inches == null) {
+                            return 'Invalid height values';
+                          }
+
+                          if (feet < 4 || feet > 7) {
+                            return 'Feet must be between 4 and 7';
+                          }
+
+                          if (inches < 0 || inches > 11) {
+                            return 'Inches must be between 0 and 11';
+                          }
+
                           return null;
                         },
                         onChanged: (val) {
@@ -241,21 +252,19 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           if (match != null) {
                             final feet = match.group(1);
                             final inches = match.group(2);
-
-                            // Reformat to 5' 10 or 5' 2 (without any extra quotes)
                             final formattedHeight = "$feet' $inches";
 
                             _heightController.value = TextEditingValue(
                               text: formattedHeight,
                               selection: TextSelection.collapsed(
-                                offset: formattedHeight.length,  // Position the cursor at the end
+                                offset: formattedHeight.length,
                               ),
                             );
                           }
                           return null;
                         },
-
                       ),
+
                     ),
                   ),
                   verticalSpacing(10),

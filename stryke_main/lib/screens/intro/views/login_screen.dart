@@ -212,14 +212,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (_formKey.currentState!.validate()) {
                           bool success = await _authService.loginUser(_emailController.text, _passwordController.text);
                           if (success) {
+
                             setState(() {
                               _loginError = null;
                             });
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()),
-                            );
+                            bool userData = await _authService.checkIfUserExists();
+
+                            if (userData == false) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const InfoInputScreen()),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()),
+                              );
+                            }
                           } else {
                             setState(() {
                               _loginError =
@@ -273,9 +284,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         bool success = await _authService.googleSignIn();
 
                         if (success) {
-                          bool userExists = await _authService.checkIfUserExists();
+                          bool userData = await _authService.checkIfUserExists();
 
-                          if (userExists == false) {
+                          if (userData == false) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
