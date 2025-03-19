@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/home/home_screen.dart';
 import 'package:test_app/screens/intro/views/splash_screen.dart';
 
@@ -14,7 +15,7 @@ class AuthPage extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return const HomePage();
+              return const MainNavigation();
             } else {
               return const SplashScreen();
             }
