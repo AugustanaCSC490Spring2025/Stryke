@@ -22,7 +22,7 @@ class _ChartScreenState extends State<ChartScreen> {
           ),
           SizedBox(height: 20), // Adding space between the icon and the text
           Text(
-            'IN PROGRESS', // The text you want to show
+            'YOUR GOALS', // The text you want to show
             style: TextStyle(
               fontSize: 40, // Large font size
               fontWeight: FontWeight.bold, // Bold text

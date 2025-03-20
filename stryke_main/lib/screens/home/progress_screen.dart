@@ -22,7 +22,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           ),
           SizedBox(height: 20), // Adding space between the icon and the text
           Text(
-            'IN PROGRESS', // The text you want to show
+            'YOUR PROGRESS', // The text you want to show
             style: TextStyle(
               fontSize: 40, // Large font size
               fontWeight: FontWeight.bold, // Bold text
