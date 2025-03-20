@@ -1,5 +1,7 @@
 # Stryke App
 
+[Check out our dev logs for more info.](https://sites.google.com/augustana.edu/stryke/home)
+
 ## Abstract  
 Stryke is a mobile application designed for college student-athletes to manage their athletic performance, goals, and personal data in a streamlined, user-friendly way. Built with Flutter and Firebase, Stryke aims to deliver seamless authentication, personalized progress tracking, and goal management — all in one platform.
 
@@ -47,4 +49,3 @@ Stryke is a mobile application designed for college student-athletes to manage t
 - Expanding goal tracking functionality  
 - Adding visual progress analytics  
 
-[Check out our dev log](https://sites.google.com/augustana.edu/stryke/home)
