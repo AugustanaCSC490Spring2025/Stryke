@@ -32,8 +32,9 @@ class _PersonalScreenState extends State<PersonalScreen> {
           //TOP BAR WITH PROFILE ICON AND USER NAME
           SliverAppBar(
             floating: false,
-            pinned: true,
+            pinned: false,
             snap: false,
+            automaticallyImplyLeading: false,
             backgroundColor: const Color(0xFF1C1C1C),
             flexibleSpace: FlexibleSpaceBar(
               background: Padding(
