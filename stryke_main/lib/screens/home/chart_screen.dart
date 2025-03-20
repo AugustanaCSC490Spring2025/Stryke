@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ProgressScreen extends StatefulWidget {
-  const ProgressScreen({super.key});
+class ChartScreen extends StatefulWidget {
+  const ChartScreen({super.key});
 
   @override
-  State<ProgressScreen> createState() => _ProgressScreenState();
+  State<ChartScreen> createState() => _ChartScreenState();
 }
 
-class _ProgressScreenState extends State<ProgressScreen> {
+class _ChartScreenState extends State<ChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -16,7 +16,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
         mainAxisAlignment: MainAxisAlignment.center, // Centering both vertically and horizontally
         children: [
           Icon(
-            Icons.show_chart, // The yield icon
+            Icons.bar_chart, // The yield icon
             size: 100, // Large icon size
             color: Color(0xFFB7FF00), // Icon color (yellow for the yield sign)
           ),

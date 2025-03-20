@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test_app/screens/home/home_screen.dart';
 
+import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
@@ -311,7 +312,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           iconEnabledColor: const Color(0xffb7ff00),
-                          dropdownColor: const Color(0xFF717171),
+                          dropdownColor: const Color(0xFF1C1C1C),
                           style: ThemeTextStyles.textFieldInput,
                           value: _dropdownValue,
                           isExpanded: true,
@@ -367,7 +368,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                     // Navigate once complete
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => const MainNavigation(index: 0)),
                     );
                   }
                 },

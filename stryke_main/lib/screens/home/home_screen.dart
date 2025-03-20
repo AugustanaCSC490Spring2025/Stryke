@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Keep pushing forward, ${myUser?.displayName ?? 'User'}!',
+                    'Keep striving for success,',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -279,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           // Text "Select"
                           const Text(
-                            "Selection: ",
+                            "Value: ",
                             style: TextStyle(color: Colors.white24, fontSize: 18),
                           ),
                           const SizedBox(width: 40),
@@ -291,6 +291,10 @@ class _HomePageState extends State<HomePage> {
                           // DropdownButton for selection with arrow
                           Expanded(
                             child: DropdownButton<String>(
+                              hint: const Text(
+                                "Select: ",
+                                style: TextStyle(color: Colors.white24),
+                              ),
                               underline: SizedBox(),
                               dropdownColor: const Color(0xFF303030),
                               value: _lineChartSelect,
@@ -340,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                             "Period: ",
                             style: TextStyle(color: Colors.white24, fontSize: 18),
                           ),
-                          const SizedBox(width: 63),
+                          const SizedBox(width: 35),
                           Container(
                               width: 2,
                               height: screenWidth * 0.1,
@@ -349,6 +353,10 @@ class _HomePageState extends State<HomePage> {
                           // DropdownButton for selection with arrow
                           Expanded(
                             child: DropdownButton<String>(
+                              hint: const Text(
+                                "Select: ",
+                                style: TextStyle(color: Colors.white24),
+                              ),
                               underline: SizedBox(),
                               dropdownColor: const Color(0xFF303030),
                               value: _lineChartPeriod,
@@ -404,7 +412,7 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => MainNavigation(index: 1)),
+                            MaterialPageRoute(builder: (context) => MainNavigation(index: 2)),
                           );
                         },
                       ),
@@ -416,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: ListTile(
-                        leading: Icon(Icons.bar_chart, color: Color(0xFFB7FF00)),
+                        leading: Icon(Icons.show_chart, color: Color(0xFFB7FF00)),
                         title: Text("View Progress", style: TextStyle(color: Colors.white)),
                         onTap: () {
                           Navigator.push(
@@ -429,7 +437,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              verticalSpacing(screenHeight * .1),
+              verticalSpacing(screenHeight * .05),
             ]),
           ),
         ],

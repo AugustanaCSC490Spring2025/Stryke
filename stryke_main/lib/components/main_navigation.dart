@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/home/chart_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/personal_screen.dart';
 import '../screens/home/progress_screen.dart';
@@ -19,6 +20,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _screens = [
     HomePage(),
     ProgressScreen(),
+    ChartScreen(),
     PersonalScreen(),
   ];
 
@@ -54,6 +56,7 @@ class _MainNavigationState extends State<MainNavigation> {
           ),
         ),
         child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           backgroundColor: const Color(0xFF1C1C1C),
           selectedItemColor: const Color(0xFFB7FF00),
           unselectedItemColor: Colors.white54,
@@ -66,6 +69,10 @@ class _MainNavigationState extends State<MainNavigation> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.show_chart),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart),
               label: '',
             ),
             BottomNavigationBarItem(
