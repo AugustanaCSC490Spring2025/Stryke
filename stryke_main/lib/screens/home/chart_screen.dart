@@ -16,7 +16,7 @@ class _ChartScreenState extends State<ChartScreen> {
         mainAxisAlignment: MainAxisAlignment.center, // Centering both vertically and horizontally
         children: [
           Icon(
-            Icons.bar_chart, // The yield icon
+            Icons.flag, // The yield icon
             size: 100, // Large icon size
             color: Color(0xFFB7FF00), // Icon color (yellow for the yield sign)
           ),

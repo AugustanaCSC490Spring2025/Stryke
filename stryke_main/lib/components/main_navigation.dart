@@ -72,7 +72,7 @@ class _MainNavigationState extends State<MainNavigation> {
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
+              icon: Icon(Icons.flag),
               label: '',
             ),
             BottomNavigationBarItem(
