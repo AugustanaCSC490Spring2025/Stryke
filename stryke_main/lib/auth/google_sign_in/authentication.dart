@@ -5,15 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final user = FirebaseAuth.instance.currentUser;
-
-  getUser() async {
-    if (user == null) {
-      return null;
-    } else {
-      return user;
-    }
-  }
 
   // Sign up with email & password
   Future<bool> signUpUser(String email, String password) async {
@@ -45,7 +36,7 @@ class Authentication {
       if (googleUser == null) return false;
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -59,25 +50,53 @@ class Authentication {
     }
   }
 
-  // Check if user exists in Firestore
-  Future<bool> checkIfUserExists() async {
-    if (user == null) return false;
 
+  Future<bool> checkIfUserHasData() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return false;
+    print("User ID: ${user.uid} + 1");
     try {
-      final docSnapshot = await _firestore.collection('users').doc(user?.uid).get();
+      final docSnapshot = await _firestore.collection('users')
+          .doc(user.uid)
+          .get();
 
       if (!docSnapshot.exists) {
-        return false; // Document doesn't exist
+        print("User ID: ${user.uid} + 2");
+        return false;
       }
 
       final data = docSnapshot.data();
       if (data == null || data.isEmpty) {
-        return false; // Document exists but no data
+        print("User ID: ${user.uid} + 3");
+        return false;
+      }
+      print("User ID: ${user.uid} + 4");
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> checkIfUserExists() async {
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        return false;
       }
 
-      return true; // Document exists and has data
+      final docSnapshot = await FirebaseFirestore.instance.collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (!docSnapshot.exists) {
+        return false;
+      }
+
+      return true;
     } catch (e) {
-      return false; // Error occurred
+      return false;
     }
   }
 
@@ -85,7 +104,6 @@ class Authentication {
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
-      await GoogleSignIn().signOut();
       print("User signed out.");
     } catch (e) {
       print("Sign out failed: $e");

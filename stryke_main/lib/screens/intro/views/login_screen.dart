@@ -4,6 +4,7 @@ import 'package:test_app/auth/google_sign_in/authentication.dart';
 import 'package:test_app/screens/home/home_screen.dart';
 import 'package:test_app/screens/intro/views/sign_up_screen.dart';
 
+import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/spacing.dart';
 import 'info_input_screen.dart';
@@ -216,8 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() {
                               _loginError = null;
                             });
+                            //bool userData = await _authService.checkIfUserHasData();
                             bool userData = await _authService.checkIfUserExists();
-
                             if (userData == false) {
                               Navigator.push(
                                 context,
@@ -284,7 +285,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         bool success = await _authService.googleSignIn();
 
                         if (success) {
+                          //bool userData = await _authService.checkIfUserHasData();
                           bool userData = await _authService.checkIfUserExists();
+                          print(userData);
 
                           if (userData == false) {
                             Navigator.push(
@@ -296,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const HomePage()),
+                                  builder: (context) => const MainNavigation(index: 0)),
                             );
                           }
                         }

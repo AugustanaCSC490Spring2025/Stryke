@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
 import 'package:test_app/utils/spacing.dart';
 
 import '../../../auth/google_sign_in/authentication.dart';
 import '../../../components/my_text_field.dart';
+import '../../home/home_screen.dart';
 import 'login_screen.dart';
 
 class SignUnScreen extends StatefulWidget {
@@ -299,15 +301,25 @@ class _SignUnScreenState extends State<SignUnScreen> {
                   });
                   // Call your Google sign-in function
                   bool success = await _authService.googleSignIn();
-        
+
                   if (success) {
-                    // Navigate to another screen if sign-in is successful
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const InfoInputScreen()), // Replace HomePage with your target screen
-                    );
+                    //bool userData = await _authService.checkIfUserHasData();
+                    bool userData = await _authService.checkIfUserExists();
+                    print(userData);
+
+                    if (userData == false) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const InfoInputScreen()),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainNavigation(index: 0)),
+                      );
+                    }
                   }
                 },
                 child: Padding(

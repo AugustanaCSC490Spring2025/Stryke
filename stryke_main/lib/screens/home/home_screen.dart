@@ -1,10 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:test_app/screens/home/personal_screen.dart';
-import 'package:test_app/screens/home/progress_screen.dart';
-
-import '../intro/views/splash_screen.dart';
+import 'package:test_app/components/main_navigation.dart';
+import '../../utils/spacing.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,67 +13,211 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String userName = "Tommy"; // replace with actual name from database
-
+  final myUser = FirebaseAuth.instance.currentUser;
+  String? _quickAddValue;
+  String? _lineChartSelect;
+  String? _lineChartPeriod;
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(
         slivers: [
+          // HEIGHT BEFORE PROFILE BAR
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
+
+          //TOP BAR WITH PROFILE ICON AND USER NAME
           SliverAppBar(
             floating: false,
             pinned: true,
             snap: false,
             backgroundColor: const Color(0xFF1C1C1C),
-            expandedHeight: 60.0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                'Welcome, Tommy!',
-                style: const TextStyle(
-                    color: Color(0xFFB7FF00),
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+              background: Padding(
+                padding: EdgeInsets.only(top: screenHeight * 0.02),
+                // Reduced padding to bring it closer
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: screenWidth * 0.05),
+                      child: CircleAvatar(
+                        radius: 25.0,
+                        backgroundImage: NetworkImage(myUser!.photoURL ??
+                            'https://example.com/default-avatar.png'),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: screenWidth * 0.03,
+                            right: screenWidth * 0.02),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Welcome!',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            // User's Name (white)
+                            Text(
+                              myUser!.displayName ?? 'User',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: screenWidth * 0.02),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.notifications_outlined,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.notifications, color: Color(0xFFB7FF00)),
-                onPressed: () {},
-              ),
-            ],
           ),
+
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .035)),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Keep pushing forward, ${myUser?.displayName ?? 'User'}!',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  Text(
+                    'Stay Hard!',
+                    style: const TextStyle(
+                      color: Color(0xFFB7FF00),
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .035)),
+
           SliverList(
             delegate: SliverChildListDelegate([
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.only(
+                    left: screenWidth * 0.05, right: screenWidth * 0.05),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SplashScreen())),
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-                    ),
-                    const Text(
-                      "For Today...",
-                      style: TextStyle(
-                          color: Color(0xFFB7FF00),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "For Today...",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                        Text(
+                          "Quick Add",
+                          style: TextStyle(
+                            color: Color(0xFFB7FF00), // bright green for contrast
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 5)),
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(screenWidth * 0.05),
                       decoration: BoxDecoration(
                         color: const Color(0xFF303030),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Select workout",
-                              style: TextStyle(color: Color(0xFFB7FF00))),
+
+                          const SizedBox(width: 5),
+                          // DropdownButton for selection with arrow
+                          Expanded(
+                            child: DropdownButton<String>(
+                              hint: const Text(
+                                "Select: ",
+                                style: TextStyle(color: Colors.white24),
+                              ),
+                              underline: SizedBox(),
+                              dropdownColor: const Color(0xFF303030),
+                              value: _quickAddValue,
+                              icon: const Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.white,
+                              ),
+                              iconSize: 30,
+                              isExpanded: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _quickAddValue = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'Weight',
+                                '3pt %',
+                                '50s Free'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          Container(
+                              width: 1,
+                              height: screenWidth * 0.1,
+                              color: Color(0xFF1C1C1C)),
+                          const SizedBox(width: 5),
+                          // Text "input"
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "input here",
+                                hintStyle: TextStyle(color: Colors.white24),
+                                border: InputBorder
+                                    .none, // No border around the TextField
+                              ),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          // Black line divider
+                          // Plus button at the end
                           IconButton(
                             icon:
                                 const Icon(Icons.add, color: Color(0xFFB7FF00)),
@@ -83,69 +226,209 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
+
+                    Padding(padding: EdgeInsets.only(top: screenHeight * .05)),
+
                     const Text(
                       "Performance Data",
                       style: TextStyle(
-                          color: Color(0xFFB7FF00),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
-                    Container(
-                      height: 200,
-                      color: const Color(0xFF303030),
-                      child: LineChart(
-                        LineChartData(
-                          lineBarsData: [
-                            LineChartBarData(
-                              belowBarData: BarAreaData(
-                                show: true,
-                                color: const Color(0x45B7FF00)
-                              ),
-                              color: const Color(0xFFB7FF00),
-                              spots: const[ // insert data from firebase
-                                FlSpot(0, 3),
-                                FlSpot(1, 5),
-                                FlSpot(2, 6),
-                                FlSpot(3, 7),
-                                FlSpot(4, 7),
-                                FlSpot(5, 8),
-                                FlSpot(6, 9),
-                                FlSpot(7, 10),
-                                FlSpot(8, 12),
-                                FlSpot(9, 15),
-                              ]
-                            )
-                          ]
-                        ),
+                        color: Colors.white,
+                        fontSize: 20,
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 10)),
+                    const Padding(padding: EdgeInsets.only(top: 5)),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF303030),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      height: screenHeight * .30,
+                      child: LineChart(
+                        LineChartData(lineBarsData: [
+                          LineChartBarData(
+                            belowBarData: BarAreaData(
+                                show: true, color: const Color(0x45B7FF00)),
+                            color: const Color(0xFFB7FF00),
+                            spots: const [
+                              FlSpot(0, 3),
+                              FlSpot(1, 5),
+                              FlSpot(2, 6),
+                              FlSpot(3, 7),
+                              FlSpot(4, 7),
+                              FlSpot(5, 8),
+                              FlSpot(6, 9),
+                              FlSpot(7, 10),
+                              FlSpot(8, 12),
+                              FlSpot(9, 15),
+                            ],
+                          ),
+                        ]),
+                      ),
+                    ),
+                    verticalSpacing(2),
+                    Container(
+                      padding: EdgeInsets.all(screenWidth * 0.05),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF303030),
+                      ),
+                      child: Row(
+                        children: [
+                          // Text "Select"
+                          const Text(
+                            "Selection: ",
+                            style: TextStyle(color: Colors.white24, fontSize: 18),
+                          ),
+                          const SizedBox(width: 40),
+                          Container(
+                              width: 1,
+                              height: screenWidth * 0.1,
+                              color: Color(0xFF1C1C1C)),
+                          const SizedBox(width: 40),
+                          // DropdownButton for selection with arrow
+                          Expanded(
+                            child: DropdownButton<String>(
+                              underline: SizedBox(),
+                              dropdownColor: const Color(0xFF303030),
+                              value: _lineChartSelect,
+                              icon: const Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.white,
+                              ),
+                              iconSize: 30,
+                              isExpanded: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _lineChartSelect = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'Weight',
+                                '3pt %',
+                                '50s Free'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    verticalSpacing(2),
+                    Container(
+                      padding: EdgeInsets.all(screenWidth * 0.05),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF303030),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          // Text "Select"
+                          const Text(
+                            "Period: ",
+                            style: TextStyle(color: Colors.white24, fontSize: 18),
+                          ),
+                          const SizedBox(width: 63),
+                          Container(
+                              width: 1,
+                              height: screenWidth * 0.1,
+                              color: Color(0xFF1C1C1C)),
+                          const SizedBox(width: 40),
+                          // DropdownButton for selection with arrow
+                          Expanded(
+                            child: DropdownButton<String>(
+                              underline: SizedBox(),
+                              dropdownColor: const Color(0xFF303030),
+                              value: _lineChartPeriod,
+                              icon: const Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.white,
+                              ),
+                              iconSize: 30,
+                              isExpanded: true,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _lineChartPeriod = newValue;
+                                });
+                              },
+                              items: <String>[
+                                '3 Days',
+                                'Week',
+                                'Month'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Padding(padding: EdgeInsets.only(top: screenHeight * .05)),
+
+                    // MAKE THE THINGS IN SMALL NICE BOXES
                     const Text(
-                      // could maybe be bottom navigation bar?
                       "Quick Access",
                       style: TextStyle(
-                          color: Color(0xFFB7FF00),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.flag, color: Color(0xFFB7FF00)),
-                      title: const Text("Goals",
-                          style: TextStyle(color: Color(0xFFB7FF00))),
-                      onTap: () {},
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF303030),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                        leading: Icon(Icons.flag, color: Color(0xFFB7FF00)),
+                        title: Text("Goals", style: TextStyle(color: Color(0xFFB7FF00))),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainNavigation(index: 1)),
+                          );
+                        },
+                      ),
                     ),
-                    ListTile(
-                      leading:
-                          const Icon(Icons.bar_chart, color: Color(0xFFB7FF00)),
-                      title: const Text("View Progress",
-                          style: TextStyle(color: Color(0xFFB7FF00))),
-                      onTap: () {},
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF303030),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                        leading: Icon(Icons.bar_chart, color: Color(0xFFB7FF00)),
+                        title: Text("View Progress", style: TextStyle(color: Color(0xFFB7FF00))),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainNavigation(index: 1)),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
+              verticalSpacing(screenHeight * .2),
             ]),
           ),
         ],

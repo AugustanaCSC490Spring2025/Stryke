@@ -15,7 +15,7 @@ class AuthPage extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return const MainNavigation();
+              return const MainNavigation(index: 0);
             } else {
               return const SplashScreen();
             }
