@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(width: 40),
                           Container(
-                              width: 1,
+                              width: 2,
                               height: screenWidth * 0.1,
                               color: Color(0xFF1C1C1C)),
                           const SizedBox(width: 40),
@@ -341,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           const SizedBox(width: 63),
                           Container(
-                              width: 1,
+                              width: 2,
                               height: screenWidth * 0.1,
                               color: Color(0xFF1C1C1C)),
                           const SizedBox(width: 40),
@@ -399,7 +399,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: ListTile(
                         leading: Icon(Icons.flag, color: Color(0xFFB7FF00)),
-                        title: Text("Goals", style: TextStyle(color: Color(0xFFB7FF00))),
+                        title: Text("Goals", style: TextStyle(color: Colors.white)),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -416,7 +416,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: ListTile(
                         leading: Icon(Icons.bar_chart, color: Color(0xFFB7FF00)),
-                        title: Text("View Progress", style: TextStyle(color: Color(0xFFB7FF00))),
+                        title: Text("View Progress", style: TextStyle(color: Colors.white)),
                         onTap: () {
                           Navigator.push(
                             context,
