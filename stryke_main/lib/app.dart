@@ -1,11 +1,7 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/intro/views/splash_screen.dart';
-
-import 'auth_page.dart';
 import 'components/main_navigation.dart';
 
 class MyApp extends StatelessWidget {
@@ -14,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "STRYKE",
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),  // Listen to auth changes

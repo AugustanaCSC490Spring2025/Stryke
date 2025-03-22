@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
 import 'package:test_app/utils/spacing.dart';
-
 import '../../../auth/google_sign_in/authentication.dart';
 import '../../../components/my_text_field.dart';
-import '../../home/home_screen.dart';
 import 'login_screen.dart';
 
 class SignUnScreen extends StatefulWidget {

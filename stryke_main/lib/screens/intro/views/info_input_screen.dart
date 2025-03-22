@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:test_app/screens/home/home_screen.dart';
-
 import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';

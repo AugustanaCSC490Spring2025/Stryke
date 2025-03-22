@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "430644823856-ob06cgavhddf414t7i1b8q8gqursnhb6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.stryke_main",
+            "certificate_hash": "855ec406ae08b9cea40a8cbc28cdedee6b306c56"
+          }
+        },
+        {
           "client_id": "430644823856-jthb9mpqm8irh0j9u50n5jktb290rrp0.apps.googleusercontent.com",
           "client_type": 3
         }

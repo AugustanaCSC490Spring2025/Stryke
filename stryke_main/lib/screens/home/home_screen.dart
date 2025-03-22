@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final myUser = FirebaseAuth.instance.currentUser;
+  User? myUser = FirebaseAuth.instance.currentUser;
   String? _quickAddValue;
   String? _lineChartSelect;
   String? _lineChartPeriod;
+  String? name;
+  bool isLoading = true;
+
+  
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData(); 
+  }
+
+  Future<void> _loadUserData() async {
+    setState(() => isLoading = true);
+    
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('users') 
+        .doc(myUser!.uid)
+        .get();
+
+    if (userDoc.exists) {
+      setState(() {
+        name = userDoc['first_Name']; 
+      });
+    } else {
+      setState(() {
+        name = "Unknown User"; 
+      });
+    }
+
+    setState(() => isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +79,8 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.only(left: screenWidth * 0.05),
                       child: CircleAvatar(
                         radius: 25.0,
-                        backgroundImage: NetworkImage(myUser!.photoURL ??
-                            'https://example.com/default-avatar.png'),
+                        backgroundImage: NetworkImage(myUser!.photoURL ?? // maybe the png in the app folders?
+                            'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'),
                       ),
                     ),
                     Expanded(
@@ -61,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Welcome!',
+                              'Welcome,',
                               style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 16,
@@ -70,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             // User's Name (white)
                             Text(
-                              myUser!.displayName ?? 'User',
+                              '$name!',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,

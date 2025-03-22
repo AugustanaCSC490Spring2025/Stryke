@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer';
 
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -24,6 +25,7 @@ class Authentication {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return true; // Success, no error
     } on FirebaseAuthException catch (e) {
+      log("Error: \n $e");
       return false; // Return error message
     }
   }

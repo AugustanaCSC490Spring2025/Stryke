@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:test_app/auth/google_sign_in/authentication.dart';
 import 'package:test_app/screens/home/home_screen.dart';
 import 'package:test_app/screens/intro/views/sign_up_screen.dart';
-
 import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/spacing.dart';
@@ -31,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
