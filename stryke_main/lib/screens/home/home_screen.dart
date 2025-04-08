@@ -28,6 +28,38 @@ class _HomePageState extends State<HomePage> {
     _loadGlobalExercises();
   }
 
+  // Function to create metric box based on user input
+  Widget _buildMetricBox(String metricType, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      height: 150,
+      decoration: BoxDecoration(
+        color: const Color(0xFF303030),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(metricType, style: TextStyle(color: Colors.white)),
+                SizedBox(height: 8),
+                Text(value,
+                    style: TextStyle(color: Colors.white, fontSize: 28)),
+              ],
+            ),
+            Text("Date", style: TextStyle(color: Colors.white70)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Function to load user data from Firestore
   Future<void> _loadUserData() async {
     setState(() => isLoading = true);
 
@@ -107,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            '$name! You are $weight pounds', // getting data from firebase and
+                            '$name! You are $weight pounds',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: screenWidth * 0.045,
@@ -122,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                         Icons.notifications_outlined,
                         color: Colors.white,
                       ),
-                      iconSize: 26, // Slightly smaller icon
+                      iconSize: 26,
                       onPressed: () {},
                     ),
                   ],
@@ -160,7 +192,6 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           const SizedBox(width: 5),
-                          // DropdownButton for selection with arrow
                           Expanded(
                             child: DropdownButton<ExerciseDropdownItem>(
                               hint: const Text(
@@ -194,29 +225,25 @@ class _HomePageState extends State<HomePage> {
                               height: screenWidth * 0.1,
                               color: Color(0xFF1C1C1C)),
                           const SizedBox(width: 5),
-                          // Text "input"
                           Expanded(
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "input here",
                                 hintStyle: TextStyle(color: Colors.white24),
-                                border: InputBorder
-                                    .none, // No border around the TextField
+                                border: InputBorder.none,
                               ),
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
-                          // Black line divider
-                          // Plus button at the end
                           IconButton(
-                            icon:
-                                const Icon(Icons.add, color: Color(0xFFB7FF00)),
-                            onPressed: () {},
+                            icon: const Icon(
+                                Icons.add, color: Color(0xFFB7FF00)), onPressed: () {  },
                           ),
                         ],
                       ),
                     ),
                     verticalSpacing(screenHeight * .02),
+
                     Container(
                       height: 3,
                       decoration: BoxDecoration(
@@ -224,6 +251,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     verticalSpacing(screenHeight * .02),
+
                     const Text(
                       "Your Metrics",
                       style: TextStyle(
@@ -231,31 +259,95 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 15,
                       ),
                     ),
+
                     verticalSpacing(screenHeight * .02),
-                    Container(
-                      height: screenHeight * .15,
-                      width: screenWidth,
-                      // ignore: sort_child_properties_last
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double containerHeight = constraints.maxHeight;
-                          return Column(
-                            children: [
-                              Text('weight'),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      top: containerHeight * .2)),
-                              SizedBox(
-                                height: containerHeight * .3,
-                              ),
-                              Text('Weight')
-                            ],
+
+                    // Dynamically add the metric boxes here
+                    ...metricBoxes,
+
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFB7FF00),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                        ),
+                        onPressed: () {
+                          String inputValue = '';
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: const Color(0xFF303030),
+                                title: Text(
+                                  'Add New Metric',
+                                  style: TextStyle(color: Colors.white, fontSize: 24),
+                                ),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    DropdownButton<String>(
+                                      hint: const Text(
+                                        'Select Metric...',
+                                        style: TextStyle(color: Colors.white24),
+                                      ),
+                                      underline: SizedBox(),
+                                      dropdownColor: const Color(0xFF303030),
+                                      value: _selectedMetric,
+                                      icon: const Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.white,
+                                      ),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedMetric = newValue;
+                                        });
+                                      },
+                                      items: ['Weight', '3pt %', '50s Free']
+                                          .map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(hintText: 'Enter value'),
+                                      onChanged: (text) {
+                                        inputValue = text;
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      if (_selectedMetric != null && inputValue.isNotEmpty) {
+                                        setState(() {
+                                          metricBoxes.add(_buildMetricBox(_selectedMetric!, inputValue));
+                                        });
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    child: Text('Add'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF303030),
-                        borderRadius: BorderRadius.circular(20),
+                        child: const Text("Add Metric Box"),
                       ),
                     ),
                   ],
