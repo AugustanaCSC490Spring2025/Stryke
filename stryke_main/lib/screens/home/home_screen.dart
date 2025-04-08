@@ -237,35 +237,46 @@ class _HomePageState extends State<HomePage> {
                           double containerWidth = constraints.maxWidth;
                           double containerHeight = constraints.maxHeight;
                           return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: containerWidth * .02,
-                                    top: containerHeight * .02),
+                                    top: containerHeight * .05,
+                                    left: containerWidth * .03),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text('weight'),
-                                    Padding(
-                                        padding: EdgeInsets.only(
-                                            top: containerHeight * .2)),
+                                    Text(
+                                      'Weight',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: const Color(0xFFB7FF00)),
+                                    ),
                                     SizedBox(
                                       height: containerHeight * .3,
                                     ),
                                     Text(
                                       '$weight lbs',
-                                      style: TextStyle(fontSize: 30),
+                                      style: TextStyle(
+                                          fontSize: 30, color: Colors.white),
                                     )
                                   ],
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: containerWidth * .5,
-                                    top: containerHeight * .02),
+                                    left: containerWidth * .43,
+                                    right: containerWidth * .03,
+                                    top: containerHeight * .05),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
-                                      'Date',
+                                      'Current Date',
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.white),
                                     ),
                                     Padding(
                                         padding: EdgeInsets.only(
@@ -273,7 +284,10 @@ class _HomePageState extends State<HomePage> {
                                     SizedBox(
                                       height: containerHeight * .3,
                                     ),
-                                    Text('Arrow')
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.white,
+                                    )
                                   ],
                                 ),
                               )
