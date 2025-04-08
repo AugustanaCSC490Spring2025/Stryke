@@ -81,8 +81,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
@@ -125,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            '$name! You are $weight pounds', // getting data from firebase and
+                            '$name! You are $weight pounds',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: screenWidth * 0.045,
@@ -140,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                         Icons.notifications_outlined,
                         color: Colors.white,
                       ),
-                      iconSize: 26, // Slightly smaller icon
+                      iconSize: 26,
                       onPressed: () {},
                     ),
                   ],
@@ -178,7 +184,6 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           const SizedBox(width: 5),
-                          // DropdownButton for selection with arrow
                           Expanded(
                             child: DropdownButton<String>(
                               hint: const Text(
@@ -199,11 +204,9 @@ class _HomePageState extends State<HomePage> {
                                   _quickAddValue = newValue;
                                 });
                               },
-                              items: <String>[
-                                'Weight',
-                                '3pt %',
-                                '50s Free'
-                              ].map<DropdownMenuItem<String>>((String value) {
+                              items: <String>['Weight', '3pt %', '50s Free']
+                                  .map<DropdownMenuItem<String>>((
+                                  String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
@@ -219,23 +222,19 @@ class _HomePageState extends State<HomePage> {
                               height: screenWidth * 0.1,
                               color: Color(0xFF1C1C1C)),
                           const SizedBox(width: 5),
-                          // Text "input"
                           Expanded(
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: "input here",
                                 hintStyle: TextStyle(color: Colors.white24),
-                                border: InputBorder
-                                    .none, // No border around the TextField
+                                border: InputBorder.none,
                               ),
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
-                          // Black line divider
-                          // Plus button at the end
                           IconButton(
-                            icon:
-                                const Icon(Icons.add, color: Color(0xFFB7FF00)),
+                            icon: const Icon(
+                                Icons.add, color: Color(0xFFB7FF00)),
                             onPressed: () {},
                           ),
                         ],
@@ -243,7 +242,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     verticalSpacing(screenHeight * .02),
 
-                    //Line Divider
                     Container(
                       height: 3,
                       decoration: BoxDecoration(
@@ -252,7 +250,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     verticalSpacing(screenHeight * .02),
 
-                    //Text
                     const Text(
                       "Your Metrics",
                       style: TextStyle(
@@ -261,16 +258,20 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
-                    //Metric Display Boxes
                     verticalSpacing(screenHeight * .02),
+
+                    // Dynamically add the metric boxes here
                     ...metricBoxes,
+
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFB7FF00),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 16),
                         ),
                         onPressed: () {
                           setState(() {
