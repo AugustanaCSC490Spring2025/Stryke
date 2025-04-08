@@ -228,27 +228,58 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: screenHeight * .15,
                       width: screenWidth,
-                      // ignore: sort_child_properties_last
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double containerHeight = constraints.maxHeight;
-                          return Column(
-                            children: [
-                              Text('weight'),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      top: containerHeight * .2)),
-                              SizedBox(
-                                height: containerHeight * .3,
-                              ),
-                              Text('Weight')
-                            ],
-                          );
-                        },
-                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF303030),
                         borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double containerWidth = constraints.maxWidth;
+                          double containerHeight = constraints.maxHeight;
+                          return Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: containerWidth * .02,
+                                    top: containerHeight * .02),
+                                child: Column(
+                                  children: [
+                                    Text('weight'),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            top: containerHeight * .2)),
+                                    SizedBox(
+                                      height: containerHeight * .3,
+                                    ),
+                                    Text(
+                                      '$weight lbs',
+                                      style: TextStyle(fontSize: 30),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: containerWidth * .5,
+                                    top: containerHeight * .02),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Date',
+                                    ),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            top: containerHeight * .2)),
+                                    SizedBox(
+                                      height: containerHeight * .3,
+                                    ),
+                                    Text('Arrow')
+                                  ],
+                                ),
+                              )
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ],
