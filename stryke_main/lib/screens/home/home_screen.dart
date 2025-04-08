@@ -183,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Container(
-                              width: 1,
+                              width: 2,
                               height: screenWidth * 0.1,
                               color: Color(0xFF1C1C1C)),
                           const SizedBox(width: 5),
