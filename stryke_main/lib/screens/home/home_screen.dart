@@ -278,9 +278,6 @@ class _HomePageState extends State<HomePage> {
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.white),
                                     ),
-                                    Padding(
-                                        padding: EdgeInsets.only(
-                                            top: containerHeight * .2)),
                                     SizedBox(
                                       height: containerHeight * .3,
                                     ),
