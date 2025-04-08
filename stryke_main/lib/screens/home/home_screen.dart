@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:test_app/utils/exerciseDropDown.dart';
 import '../../utils/spacing.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,15 +15,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
-  String? _quickAddValue;
   String? name;
   String? weight;
   bool isLoading = true;
+  List<ExerciseDropdownItem> _exerciseOptions = [];
+  ExerciseDropdownItem? _selectedExercise;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _loadGlobalExercises();
   }
 
   Future<void> _loadUserData() async {
@@ -45,6 +48,17 @@ class _HomePageState extends State<HomePage> {
     }
 
     setState(() => isLoading = false);
+  }
+
+  Future<void> _loadGlobalExercises() async{
+    final snapshot = await FirebaseFirestore.instance.collection('exercises').get();
+
+    setState(() {
+      _exerciseOptions = snapshot.docs.map((doc){
+        return ExerciseDropdownItem(id: doc.id, name: doc['name'],
+        );
+      }).toList();
+    });
   }
 
   @override
@@ -148,36 +162,29 @@ class _HomePageState extends State<HomePage> {
                           const SizedBox(width: 5),
                           // DropdownButton for selection with arrow
                           Expanded(
-                            child: DropdownButton<String>(
+                            child: DropdownButton<ExerciseDropdownItem>(
                               hint: const Text(
-                                "Select: ",
+                                "Select Exercise: ",
                                 style: TextStyle(color: Colors.white24),
                               ),
                               underline: SizedBox(),
                               dropdownColor: const Color(0xFF303030),
-                              value: _quickAddValue,
+                              value: _selectedExercise,
                               icon: const Icon(
                                 Icons.arrow_drop_down,
                                 color: Colors.white,
                               ),
                               iconSize: 30,
                               isExpanded: true,
-                              onChanged: (String? newValue) {
+                              onChanged: (ExerciseDropdownItem? newValue) {
                                 setState(() {
-                                  _quickAddValue = newValue;
+                                  _selectedExercise = newValue;
                                 });
                               },
-                              items: <String>[
-                                'Weight',
-                                '3pt %',
-                                '50s Free'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
+                              items: _exerciseOptions.map((exercise) {
+                                return DropdownMenuItem<ExerciseDropdownItem>(
+                                  value: exercise,
+                                  child: Text(exercise.name, style: const TextStyle(color: Colors.white)),
                                 );
                               }).toList(),
                             ),
