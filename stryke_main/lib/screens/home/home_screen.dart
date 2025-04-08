@@ -18,11 +18,43 @@ class _HomePageState extends State<HomePage> {
   String? name;
   String? weight;
   bool isLoading = true;
+  List metricBoxes = [];
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    metricBoxes.add(_buildMetricBox());
+  }
+
+  Widget _buildMetricBox() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      height: 150,
+      decoration: BoxDecoration(
+        color: const Color(0xFF303030),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Metric Name", style: TextStyle(color: Colors.white)),
+                SizedBox(height: 8),
+                Text("123",
+                    style: TextStyle(color: Colors.white, fontSize: 28)),
+              ],
+            ),
+            Text("Date", style: TextStyle(color: Colors.white70)),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _loadUserData() async {
@@ -210,6 +242,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     verticalSpacing(screenHeight * .02),
+
+                    //Line Divider
                     Container(
                       height: 3,
                       decoration: BoxDecoration(
@@ -217,6 +251,8 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     verticalSpacing(screenHeight * .02),
+
+                    //Text
                     const Text(
                       "Your Metrics",
                       style: TextStyle(
@@ -224,62 +260,24 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 15,
                       ),
                     ),
+
+                    //Metric Display Boxes
                     verticalSpacing(screenHeight * .02),
-                    Container(
-                      height: screenHeight * .15,
-                      width: screenWidth,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF303030),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double containerWidth = constraints.maxWidth;
-                          double containerHeight = constraints.maxHeight;
-                          return Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: containerWidth * .02,
-                                    top: containerHeight * .02),
-                                child: Column(
-                                  children: [
-                                    Text('weight'),
-                                    Padding(
-                                        padding: EdgeInsets.only(
-                                            top: containerHeight * .2)),
-                                    SizedBox(
-                                      height: containerHeight * .3,
-                                    ),
-                                    Text(
-                                      '$weight lbs',
-                                      style: TextStyle(fontSize: 30),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: containerWidth * .5,
-                                    top: containerHeight * .02),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'Date',
-                                    ),
-                                    Padding(
-                                        padding: EdgeInsets.only(
-                                            top: containerHeight * .2)),
-                                    SizedBox(
-                                      height: containerHeight * .3,
-                                    ),
-                                    Text('Arrow')
-                                  ],
-                                ),
-                              )
-                            ],
-                          );
+                    ...metricBoxes,
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFB7FF00),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            metricBoxes.add(_buildMetricBox());
+                          });
                         },
+                        child: const Text("Add Metric Box"),
                       ),
                     ),
                   ],
