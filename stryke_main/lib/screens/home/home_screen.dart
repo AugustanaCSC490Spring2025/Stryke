@@ -19,15 +19,17 @@ class _HomePageState extends State<HomePage> {
   String? weight;
   bool isLoading = true;
   List metricBoxes = [];
+  String? _selectedMetric;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
-    metricBoxes.add(_buildMetricBox());
+    metricBoxes.add(_buildMetricBox("Weight", "123"));
   }
 
-  Widget _buildMetricBox() {
+  // Function to create metric box based on user input
+  Widget _buildMetricBox(String metricType, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       height: 150,
@@ -39,14 +41,14 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Metric Name", style: TextStyle(color: Colors.white)),
+                Text(metricType, style: TextStyle(color: Colors.white)),
                 SizedBox(height: 8),
-                Text("123",
+                Text(value,
                     style: TextStyle(color: Colors.white, fontSize: 28)),
               ],
             ),
@@ -57,6 +59,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Function to load user data from Firestore
   Future<void> _loadUserData() async {
     setState(() => isLoading = true);
 
@@ -81,14 +84,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
@@ -205,8 +202,7 @@ class _HomePageState extends State<HomePage> {
                                 });
                               },
                               items: <String>['Weight', '3pt %', '50s Free']
-                                  .map<DropdownMenuItem<String>>((
-                                  String value) {
+                                  .map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
@@ -234,8 +230,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           IconButton(
                             icon: const Icon(
-                                Icons.add, color: Color(0xFFB7FF00)),
-                            onPressed: () {},
+                                Icons.add, color: Color(0xFFB7FF00)), onPressed: () {  },
                           ),
                         ],
                       ),
@@ -268,15 +263,82 @@ class _HomePageState extends State<HomePage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFB7FF00),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                         ),
                         onPressed: () {
-                          setState(() {
-                            metricBoxes.add(_buildMetricBox());
-                          });
+                          String inputValue = '';
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: const Color(0xFF303030),
+                                title: Text(
+                                  'Add New Metric',
+                                  style: TextStyle(color: Colors.white, fontSize: 24),
+                                ),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    DropdownButton<String>(
+                                      hint: const Text(
+                                        'Select Metric...',
+                                        style: TextStyle(color: Colors.white24),
+                                      ),
+                                      underline: SizedBox(),
+                                      dropdownColor: const Color(0xFF303030),
+                                      value: _selectedMetric,
+                                      icon: const Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Colors.white,
+                                      ),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          _selectedMetric = newValue;
+                                        });
+                                      },
+                                      items: ['Weight', '3pt %', '50s Free']
+                                          .map<DropdownMenuItem<String>>((String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(hintText: 'Enter value'),
+                                      onChanged: (text) {
+                                        inputValue = text;
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      if (_selectedMetric != null && inputValue.isNotEmpty) {
+                                        setState(() {
+                                          metricBoxes.add(_buildMetricBox(_selectedMetric!, inputValue));
+                                        });
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    child: Text('Add'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         child: const Text("Add Metric Box"),
                       ),
