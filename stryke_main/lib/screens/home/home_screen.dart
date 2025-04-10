@@ -73,10 +73,17 @@ class _HomePageState extends State<HomePage> {
         .collection('users')
         .doc(myUser!.uid)
         .get();
+      
+    DocumentSnapshot weightDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myUser!.uid)
+        .collection('weight')
+        .doc(myUser!.uid)
+        .get();
 
     if (userDoc.exists) {
       setState(() {
-        weight = userDoc['weight'];
+        weight = weightDoc['weight'];
         name = userDoc['first_Name'];
       });
     } else {
