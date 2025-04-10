@@ -344,10 +344,10 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             child: ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-
+                    
                     DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("users")
                         .doc(user?.uid).get();
-
+                    
                     if (!userDoc.exists) {
                       // If no data exists for the user, add the user's data
                       await FirebaseFirestore.instance.collection("users").doc(user?.uid).set({

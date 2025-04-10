@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:test_app/utils/exerciseDropDown.dart';
 import '../../utils/spacing.dart';
+import 'package:test_app/database_services/exerciseService.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,12 +20,17 @@ class _HomePageState extends State<HomePage> {
   String? weight;
   bool isLoading = true;
   List<ExerciseDropdownItem> _exerciseOptions = [];
-  ExerciseDropdownItem? _selectedExercise;
+  ExerciseDropdownItem? _quickAddValue;
+  List metricBoxes = [];
+  String? _selectedMetric;
 
   @override
   void initState() {
     super.initState();
+    print('User is signed in: ${FirebaseAuth.instance.currentUser != null}');
+
     _loadUserData();
+    metricBoxes.add(_buildMetricBox("Weight", "123"));
     _loadGlobalExercises();
   }
 
@@ -83,13 +89,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadGlobalExercises() async{
-    final snapshot = await FirebaseFirestore.instance.collection('exercises').get();
+    final exercises = await ExerciseServices().fetchGlobalQuickAddData();
 
     setState(() {
-      _exerciseOptions = snapshot.docs.map((doc){
-        return ExerciseDropdownItem(id: doc.id, name: doc['name'],
-        );
-      }).toList();
+      _exerciseOptions = exercises;
     });
   }
 
@@ -200,7 +203,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               underline: SizedBox(),
                               dropdownColor: const Color(0xFF303030),
-                              value: _selectedExercise,
+                              value: _quickAddValue,
                               icon: const Icon(
                                 Icons.arrow_drop_down,
                                 color: Colors.white,
@@ -209,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                               isExpanded: true,
                               onChanged: (ExerciseDropdownItem? newValue) {
                                 setState(() {
-                                  _selectedExercise = newValue;
+                                  _quickAddValue = newValue;
                                 });
                               },
                               items: _exerciseOptions.map((exercise) {
