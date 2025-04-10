@@ -355,8 +355,11 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                         "last_Name": _nameController.text.split(' ').last,
                         "age": _ageController.text,
                         "height": _heightController.text,
-                        "weight": _weightController.text,
                         "Sex": _dropdownValue,
+                      });
+                      await FirebaseFirestore.instance.collection("users").doc(user?.uid).collection("weights").doc().set({
+                        "weight": _weightController.text,
+                        "timestamp": DateTime.now(),
                       });
                     } else {
                       // User data already exists, handle accordingly (update or skip)
