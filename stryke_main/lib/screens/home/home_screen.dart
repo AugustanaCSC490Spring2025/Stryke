@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   ExerciseDropdownItem? _quickAddValue;
   List metricBoxes = [];
   String? _selectedMetric;
+  Set<String> addedMetrics = {};
 
   @override
   void initState() {
@@ -328,16 +329,22 @@ class _HomePageState extends State<HomePage> {
                                     actions: [
                                       TextButton(
                                         onPressed: () {
-                                          if (selectedMetric != null &&
-                                              inputValue.isNotEmpty) {
+                                          if (selectedMetric != null && inputValue.isNotEmpty) {
+                                            if (addedMetrics.contains(selectedMetric)) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text("You already have a $selectedMetric metric displayed."),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                              return; // Prevent adding duplicate
+                                            }
+
                                             Navigator.of(context).pop();
+
                                             this.setState(() {
-                                              if (metricBoxes
-                                                  .contains(inputValue)) {
-                                                metricBoxes.add(buildMetricBox(
-                                                    selectedMetric!,
-                                                    inputValue));
-                                              }
+                                              addedMetrics.add(selectedMetric!);
+                                              metricBoxes.add(buildMetricBox(selectedMetric!, inputValue));
                                             });
                                           }
                                         },
