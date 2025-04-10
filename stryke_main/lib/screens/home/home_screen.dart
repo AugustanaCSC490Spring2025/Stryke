@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:test_app/utils/exerciseDropDown.dart';
+import '../../helpers/metric_box_builder.dart';
 import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
 
@@ -30,39 +31,8 @@ class _HomePageState extends State<HomePage> {
     print('User is signed in: ${FirebaseAuth.instance.currentUser != null}');
 
     _loadUserData();
-    metricBoxes.add(_buildMetricBox("Weight", "123"));
+    metricBoxes.add(buildMetricBox("Weight", "123"));
     _loadGlobalExercises();
-  }
-
-  // Function to create metric box based on user input
-  Widget _buildMetricBox(String metricType, String value) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      height: 150,
-      decoration: BoxDecoration(
-        color: const Color(0xFF303030),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(metricType, style: TextStyle(color: Colors.white)),
-                SizedBox(height: 8),
-                Text(value,
-                    style: TextStyle(color: Colors.white, fontSize: 28)),
-              ],
-            ),
-            Text("Date", style: TextStyle(color: Colors.white70)),
-          ],
-        ),
-      ),
-    );
   }
 
   // Function to load user data from Firestore
@@ -73,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         .collection('users')
         .doc(myUser!.uid)
         .get();
-      
+
     DocumentSnapshot weightDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
@@ -362,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                                             this.setState(() {
                                               if (metricBoxes
                                                   .contains(inputValue)) {
-                                                metricBoxes.add(_buildMetricBox(
+                                                metricBoxes.add(buildMetricBox(
                                                     selectedMetric!,
                                                     inputValue));
                                               }
