@@ -23,10 +23,10 @@ class _HomePageState extends State<HomePage> {
   List<ExerciseDropdownItem> _exerciseOptions = [];
   ExerciseDropdownItem? _quickAddValue;
   List metricBoxes = [];
-  String? _selectedMetric;
   List metricBoxExercises = [];
   List<String> trackedFields = [];
   Map<String, String> fieldValues = {};
+  Set<String> addedMetrics = {};
 
   @override
   void initState() {
@@ -321,6 +321,7 @@ class _HomePageState extends State<HomePage> {
                                           }).toList(),
                                         ),
 
+                                        //Dynamic Fields Values Based on 
                                         const SizedBox(height: 10),
                                         ...trackedFields.map((fieldName){
                                           return Padding(
@@ -347,16 +348,32 @@ class _HomePageState extends State<HomePage> {
                                     actions: [
                                       TextButton(
                                         onPressed: () {
-                                          if (selectedMetric != null &&
-                                              inputValue.isNotEmpty) {
+                                          if (selectedMetric != null) {
+                                            if (addedMetrics.contains(selectedMetric)) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text("You already have a $selectedMetric metric displayed."),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                              return; // Prevent adding duplicate
+                                            }
+                                            final allFieldsFilled = fieldValues.values.every((value) => value.isNotEmpty);
+                                            //Check If All Fields Are Filled In
+                                            if(!allFieldsFilled){
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(
+                                                  content: Text('You have not filled out $selectedMetric'),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                            }
                                             Navigator.of(context).pop();
+
                                             this.setState(() {
-                                              if (metricBoxes
-                                                  .contains(inputValue)) {
-                                                metricBoxes.add(buildMetricBox(
-                                                    selectedMetric!,
-                                                    inputValue));
-                                              }
+                                              addedMetrics.add(selectedMetric!);
+                                              metricBoxes.add(buildMetricBox(selectedMetric!, 
+                                              fieldValues.entries.map((e) => "${e.key}: ${e.value}").join("  •  ")));
                                             });
                                           }
                                         },
