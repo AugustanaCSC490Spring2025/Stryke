@@ -24,12 +24,13 @@ class _HomePageState extends State<HomePage> {
   ExerciseDropdownItem? _quickAddValue;
   List metricBoxes = [];
   String? _selectedMetric;
+  List metricBoxExercises = [];
+  List<String> trackedFields = [];
+  Map<String, String> fieldValues = {};
 
   @override
   void initState() {
     super.initState();
-    print('User is signed in: ${FirebaseAuth.instance.currentUser != null}');
-
     _loadUserData();
     metricBoxes.add(buildMetricBox("Weight", "123"));
     _loadGlobalExercises();
@@ -44,18 +45,18 @@ class _HomePageState extends State<HomePage> {
         .doc(myUser!.uid)
         .get();
       
-    QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
+    /* QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
         .collection('weight')
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
-    DocumentSnapshot weightDoc = weightSnapshot.docs.first;
+    DocumentSnapshot weightDoc = weightSnapshot.docs.first; */
 
     if (userDoc.exists) {
       setState(() {
-        weight = weightDoc['weight'];
+        //weight = weightDoc['weight'];
         name = userDoc['first_Name'];
       });
     } else {
@@ -68,10 +69,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadGlobalExercises() async {
-    final exercises = await ExerciseServices().fetchGlobalQuickAddData();
+    final exercises = await ExerciseServices().fetchGlobalExercises();
+    ExerciseServices().fetchGlobalExerciseNames().then((exerciseNames){
 
-    setState(() {
-      _exerciseOptions = exercises;
+      setState(() {
+        _exerciseOptions = exercises;
+        metricBoxExercises = exerciseNames;
+      });
     });
   }
 
@@ -222,7 +226,8 @@ class _HomePageState extends State<HomePage> {
                           IconButton(
                             icon:
                                 const Icon(Icons.add, color: Color(0xFFB7FF00)),
-                            onPressed: () {},
+                            onPressed: () async {
+                            },
                           ),
                         ],
                       ),
@@ -293,36 +298,50 @@ class _HomePageState extends State<HomePage> {
                                             Icons.arrow_drop_down,
                                             color: Colors.white,
                                           ),
-                                          onChanged: (String? newValue) {
+                                          onChanged: (String? newValue) async{
                                             setState(() {
                                               selectedMetric = newValue;
+                                              trackedFields = [];
+                                              fieldValues.clear();
+                                            });
+                                            final fields = await ExerciseServices().fetchGloabalExerciseTrackedFields(newValue!);
+
+                                            setState((){
+                                              trackedFields = fields;
+                                              fieldValues = {for (var field in fields) field: ''};
                                             });
                                           },
-                                          items: ['Weight', '3pt %', '50s Free']
-                                              .map<DropdownMenuItem<String>>(
-                                                  (String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(
-                                                value,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
+                                          items: metricBoxExercises.map<DropdownMenuItem<String>>((name){
+                                            return DropdownMenuItem(
+                                              value: name,
+                                              child: Text(name,
+                                              style: TextStyle(color: Colors.white),
                                               ),
                                             );
                                           }).toList(),
                                         ),
-                                        TextField(
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                          decoration: const InputDecoration(
-                                            hintText: 'Enter value',
-                                            hintStyle: TextStyle(
-                                                color: Colors.white24),
-                                          ),
-                                          onChanged: (text) {
-                                            inputValue = text;
-                                          },
-                                        ),
+
+                                        const SizedBox(height: 10),
+                                        ...trackedFields.map((fieldName){
+                                          return Padding(
+                                            padding: const EdgeInsets.only(bottom: 8.0),
+                                            child: TextField(
+                                              style: const TextStyle(color: Colors.white),
+                                              decoration: InputDecoration(
+                                                hintText: 'Enter $fieldName',
+                                                hintStyle: TextStyle(color: Colors.white24),
+                                                enabledBorder: const UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: Colors.white24)
+                                                )
+                                              ),
+                                            onChanged: (value){
+                                              setState((){
+                                                fieldValues[fieldName] = value;
+                                              });
+                                            }
+                                            ),
+                                          );
+                                        }).toList(),                                        
                                       ],
                                     ),
                                     actions: [
@@ -354,7 +373,12 @@ class _HomePageState extends State<HomePage> {
                                 },
                               );
                             },
-                          );
+                          ).then((_){
+                            setState(() {
+                              trackedFields = [];
+                              fieldValues.clear();
+                            });
+                          });
                         },
                         child: const Text("Add Metric Box"),
                       ),
