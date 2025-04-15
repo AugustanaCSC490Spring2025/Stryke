@@ -44,18 +44,18 @@ class _HomePageState extends State<HomePage> {
         .doc(myUser!.uid)
         .get();
       
-    QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(myUser!.uid)
-        .collection('weight')
-        .orderBy('timestamp', descending: true)
-        .limit(1)
-        .get();
-    DocumentSnapshot weightDoc = weightSnapshot.docs.first;
+    // QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
+    //     .collection('users')
+    //     .doc(myUser!.uid)
+    //     .collection('weight')
+    //     .orderBy('timestamp', descending: true)
+    //     .limit(1)
+    //     .get();
+    // DocumentSnapshot weightDoc = weightSnapshot.docs.first;
 
     if (userDoc.exists) {
       setState(() {
-        weight = weightDoc['weight'];
+        // weight = weightDoc['weight'];
         name = userDoc['first_Name'];
       });
     } else {
