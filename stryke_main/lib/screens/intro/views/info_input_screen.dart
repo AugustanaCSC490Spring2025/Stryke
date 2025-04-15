@@ -28,13 +28,10 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
   String? _errorMsg;
   String? _dropdownValue;
 
-
-
   void dropdownCallback(String? selectedValue) {
     if (selectedValue != null) {
       setState(() {
         _dropdownValue = selectedValue;
-        print(_dropdownValue);
       });
     }
   }
@@ -194,14 +191,17 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           labelStyle: const TextStyle(color: Color(0xFFB7FF00)),
                           filled: true,
                           fillColor: const Color(0xFF1C1C1C),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20.0),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20.0),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Color(0xFFB7FF00)),
+                            borderSide:
+                                const BorderSide(color: Color(0xFFB7FF00)),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Color(0xFFB7FF00)),
+                            borderSide:
+                                const BorderSide(color: Color(0xFFB7FF00)),
                           ),
                         ),
                         obscureText: false,
@@ -256,7 +256,6 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           return null;
                         },
                       ),
-
                     ),
                   ),
                   verticalSpacing(10),
@@ -344,19 +343,26 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
             child: ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-
-                    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("users")
-                        .doc(user?.uid).get();
+                    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(user?.uid)
+                        .get();
 
                     if (!userDoc.exists) {
                       // If no data exists for the user, add the user's data
-                      await FirebaseFirestore.instance.collection("users").doc(user?.uid).set({
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(user?.uid)
+                          .set({
                         "first_Name": _nameController.text.split(' ').first,
                         "last_Name": _nameController.text.split(' ').last,
                         "age": _ageController.text,
                         "height": _heightController.text,
-                        "weight": _weightController.text,
                         "Sex": _dropdownValue,
+                      });
+                      await FirebaseFirestore.instance.collection("users").doc(user?.uid).collection("weights").doc().set({
+                        "weight": _weightController.text,
+                        "timestamp": DateTime.now(),
                       });
                     } else {
                       // User data already exists, handle accordingly (update or skip)
@@ -366,7 +372,8 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                     // Navigate once complete
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const MainNavigation(index: 0)),
+                      MaterialPageRoute(
+                          builder: (context) => const MainNavigation(index: 0)),
                     );
                   }
                 },
