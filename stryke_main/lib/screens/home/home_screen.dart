@@ -61,7 +61,6 @@ class _HomePageState extends State<HomePage> {
 
     if (userDoc.exists) {
       setState(() {
-        //weight = weightDoc['weight'];
         name = userDoc['first_Name'];
       });
     } else {
