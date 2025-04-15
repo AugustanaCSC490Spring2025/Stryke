@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadUserData();
-    metricBoxes.add(buildMetricBox("Weight", "123","4/15/2025")); //get date again
     _loadGlobalExercises();
   }
 
@@ -45,14 +44,20 @@ class _HomePageState extends State<HomePage> {
         .doc(myUser!.uid)
         .get();
       
-    /* QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
+    QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
-        .collection('weight')
+        .collection('weights')
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
-    DocumentSnapshot weightDoc = weightSnapshot.docs.first; */
+    
+    DocumentSnapshot weightDoc = weightSnapshot.docs.first;
+    setState(() {
+      weight = weightDoc['weight'].toString();
+      metricBoxes.add(buildMetricBox("Weight", weight!, 'date'));
+    });
+
 
     if (userDoc.exists) {
       setState(() {
