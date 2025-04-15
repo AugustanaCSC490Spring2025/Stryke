@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadUserData();
-    metricBoxes.add(buildMetricBox("Weight", "123"));
+    metricBoxes.add(buildMetricBox("Weight", "123","4/15/2025")); //get date again
     _loadGlobalExercises();
   }
 
@@ -373,7 +373,8 @@ class _HomePageState extends State<HomePage> {
                                             this.setState(() {
                                               addedMetrics.add(selectedMetric!);
                                               metricBoxes.add(buildMetricBox(selectedMetric!, 
-                                              fieldValues.entries.map((e) => "${e.key}: ${e.value}").join("  •  ")));
+                                              fieldValues.entries.map((e) => "${e.key}: ${e.value}").join("  •  "),
+                                              "4/4/2025")); // Get the date of the value
                                             });
                                           }
                                         },
