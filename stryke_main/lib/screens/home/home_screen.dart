@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:test_app/utils/exerciseDropDown.dart';
-import '../../helpers/metric_box_builder.dart';
+import '../../widgets/metric_box_builder.dart';
 import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
 
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     DocumentSnapshot weightDoc = weightSnapshot.docs.first;
     setState(() {
       weight = weightDoc['weight'].toString();
-      metricBoxes.add(buildMetricBox("Weight", weight!, 'date'));
+      metricBoxes.add(buildMetricBox(context, "Weight", weight!, 'date'));
     });
 
 
@@ -377,7 +377,7 @@ class _HomePageState extends State<HomePage> {
 
                                             this.setState(() {
                                               addedMetrics.add(selectedMetric!);
-                                              metricBoxes.add(buildMetricBox(selectedMetric!, 
+                                              metricBoxes.add(buildMetricBox(context, selectedMetric!, 
                                               fieldValues.entries.map((e) => "${e.key}: ${e.value}").join("  •  "),
                                               "4/4/2025")); // Get the date of the value
                                             });

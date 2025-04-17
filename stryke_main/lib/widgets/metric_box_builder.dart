@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/screens/home/input_screen.dart';
 
-Widget buildMetricBox(String metricType, String value, String date) {
+
+Widget buildMetricBox(BuildContext context, metricType, String value, String date) {
   return GestureDetector(
-    // onTap: () => , Make this go to the new screen
+    onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => InputScreen()),
+  );
+},
     child: Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       height: 150,
