@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            '$name! You are $weight pounds',
+                            '$name!',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: screenWidth * 0.045,
@@ -240,9 +240,9 @@ class _HomePageState extends State<HomePage> {
                     verticalSpacing(screenHeight * .02),
 
                     Container(
-                      height: 3,
+                      height: 2,
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.white24,
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     verticalSpacing(screenHeight * .02),
