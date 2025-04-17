@@ -360,7 +360,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                         "height": _heightController.text,
                         "Sex": _dropdownValue,
                       });
-                      await FirebaseFirestore.instance.collection("users").doc(user?.uid).collection("weights").doc().set({
+                      await FirebaseFirestore.instance.collection("users").doc(user?.uid).collection("weight").doc().set({
                         "weight": _weightController.text,
                         "timestamp": DateTime.now(),
                       });

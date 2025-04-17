@@ -35,11 +35,9 @@ class ExerciseServices{
   Future<void> addUserExercise({required String userID, required String exerciseID, required Map<String, dynamic> metrics}) async{
     final globalExerciseRef = await FirebaseFirestore.instance.collection('exercises').doc(exerciseID);
 
-    final userExercisesRef = await FirebaseFirestore.instance.collection('exercises');
+    final userExercisesRef = await FirebaseFirestore.instance.collection(exerciseID);
 
     await userExercisesRef.add({
-      'exerciseRef': globalExerciseRef,   
-      'exerciseID' : exerciseID,
       'metrics' : metrics,
       'timestamp' : DateTime.now()
     });

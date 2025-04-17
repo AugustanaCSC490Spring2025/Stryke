@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
     QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
-        .collection('weights')
+        .collection('weight')
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
