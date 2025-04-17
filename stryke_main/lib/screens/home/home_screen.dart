@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:test_app/utils/exerciseDropDown.dart';
-import '../../helpers/metric_box_builder.dart';
+import '../../widgets/metric_box_builder.dart';
 import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
 
