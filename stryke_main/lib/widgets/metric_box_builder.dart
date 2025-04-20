@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:test_app/screens/home/input_screen.dart';
 
 
-Widget buildMetricBox(BuildContext context, metricType, String value, String date) {
+Widget buildMetricBox(BuildContext context, String metricType, String value, String date) {
   return GestureDetector(
     onTap: () {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => InputScreen()),
+    MaterialPageRoute(
+        builder: (context) => InputScreen(metricName: metricType,)
+    ),
   );
 },
     child: Container(
