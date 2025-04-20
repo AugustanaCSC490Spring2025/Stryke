@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
@@ -8,13 +9,23 @@ class Authentication {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Sign up with email & password
-  Future<bool> signUpUser(String email, String password) async {
+  Future<bool> signUpUser(String email, String password, BuildContext context) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
       return true;
     } on FirebaseAuthException catch (e) {
       print("SignUp Error: ${e.message}");
+
+      if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("This email is already registered. Try logging in."),
+            backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+
       return false;
     }
   }

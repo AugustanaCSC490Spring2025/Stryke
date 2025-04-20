@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         .collection('users')
         .doc(myUser!.uid)
         .get();
-      
+
     QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
@@ -57,7 +57,6 @@ class _HomePageState extends State<HomePage> {
       weight = weightDoc['weight'].toString();
       metricBoxes.add(buildMetricBox(context, "Weight", weight!, 'date'));
     });
-
 
     if (userDoc.exists) {
       setState(() {
@@ -75,8 +74,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadGlobalExercises() async {
     final exercises = await ExerciseServices().fetchGlobalExercises();
-    ExerciseServices().fetchGlobalExerciseNames().then((exerciseNames){
-
+    ExerciseServices().fetchGlobalExerciseNames().then((exerciseNames) {
       setState(() {
         _exerciseOptions = exercises;
         metricBoxExercises = exerciseNames;
@@ -115,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                       backgroundImage: NetworkImage(myUser?.photoURL ??
                           'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'),
                     ),
-                    SizedBox(width: screenWidth * 0.02),
+                    SizedBox(width: screenWidth * 0.03),
                     Expanded(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -231,8 +229,7 @@ class _HomePageState extends State<HomePage> {
                           IconButton(
                             icon:
                                 const Icon(Icons.add, color: Color(0xFFB7FF00)),
-                            onPressed: () async {
-                            },
+                            onPressed: () async {},
                           ),
                         ],
                       ),
@@ -240,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                     verticalSpacing(screenHeight * .02),
 
                     Container(
-                      height: 2,
+                      height: 1,
                       decoration: BoxDecoration(
                           color: Colors.white24,
                           borderRadius: BorderRadius.circular(10)),
@@ -248,14 +245,14 @@ class _HomePageState extends State<HomePage> {
                     verticalSpacing(screenHeight * .02),
 
                     const Text(
-                      "Your Metrics",
+                      "Your Metrics...",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
                       ),
                     ),
 
-                    verticalSpacing(screenHeight * .02),
+                    verticalSpacing(screenHeight * .01),
 
                     // Dynamically add the metric boxes here
                     ...metricBoxes,
@@ -263,12 +260,17 @@ class _HomePageState extends State<HomePage> {
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFB7FF00),
+                          backgroundColor: const Color(0x80B7FF00),
+                          // 50% opacity
                           foregroundColor: Colors.black,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * .25,
+                              vertical: screenHeight * .02),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 16),
+                            borderRadius: BorderRadius.circular(20),
+                            side: const BorderSide(
+                                color: Color(0xFFB7FF00), width: 2),
+                          ),
                         ),
                         onPressed: () {
                           showDialog(
@@ -303,72 +305,94 @@ class _HomePageState extends State<HomePage> {
                                             Icons.arrow_drop_down,
                                             color: Colors.white,
                                           ),
-                                          onChanged: (String? newValue) async{
+                                          onChanged: (String? newValue) async {
                                             setState(() {
                                               selectedMetric = newValue;
                                               trackedFields = [];
                                               fieldValues.clear();
                                             });
-                                            final fields = await ExerciseServices().fetchGloabalExerciseTrackedFields(newValue!);
+                                            final fields = await ExerciseServices()
+                                                .fetchGloabalExerciseTrackedFields(
+                                                    newValue!);
 
-                                            setState((){
+                                            setState(() {
                                               trackedFields = fields;
-                                              fieldValues = {for (var field in fields) field: ''};
+                                              fieldValues = {
+                                                for (var field in fields)
+                                                  field: ''
+                                              };
                                             });
                                           },
-                                          items: metricBoxExercises.map<DropdownMenuItem<String>>((name){
+                                          items: metricBoxExercises
+                                              .map<DropdownMenuItem<String>>(
+                                                  (name) {
                                             return DropdownMenuItem(
                                               value: name,
-                                              child: Text(name,
-                                              style: TextStyle(color: Colors.white),
+                                              child: Text(
+                                                name,
+                                                style: TextStyle(
+                                                    color: Colors.white),
                                               ),
                                             );
                                           }).toList(),
                                         ),
 
-                                        //Dynamic Fields Values Based on 
+                                        //Dynamic Fields Values Based on
                                         const SizedBox(height: 10),
-                                        ...trackedFields.map((fieldName){
+                                        ...trackedFields.map((fieldName) {
                                           return Padding(
-                                            padding: const EdgeInsets.only(bottom: 8.0),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
                                             child: TextField(
-                                              style: const TextStyle(color: Colors.white),
-                                              decoration: InputDecoration(
-                                                hintText: 'Enter $fieldName',
-                                                hintStyle: TextStyle(color: Colors.white24),
-                                                enabledBorder: const UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.white24)
-                                                )
-                                              ),
-                                            onChanged: (value){
-                                              setState((){
-                                                fieldValues[fieldName] = value;
-                                              });
-                                            }
-                                            ),
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                decoration: InputDecoration(
+                                                    hintText:
+                                                        'Enter $fieldName',
+                                                    hintStyle: TextStyle(
+                                                        color: Colors.white24),
+                                                    enabledBorder:
+                                                        const UnderlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Colors
+                                                                    .white24))),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    fieldValues[fieldName] =
+                                                        value;
+                                                  });
+                                                }),
                                           );
-                                        }).toList(),                                        
+                                        }).toList(),
                                       ],
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: () {
                                           if (selectedMetric != null) {
-                                            if (addedMetrics.contains(selectedMetric)) {
-                                              ScaffoldMessenger.of(context).showSnackBar(
+                                            if (addedMetrics
+                                                .contains(selectedMetric)) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
                                                 SnackBar(
-                                                  content: Text("You already have a $selectedMetric metric displayed."),
+                                                  content: Text(
+                                                      "You already have a $selectedMetric metric displayed."),
                                                   backgroundColor: Colors.red,
                                                 ),
                                               );
                                               return; // Prevent adding duplicate
                                             }
-                                            final allFieldsFilled = fieldValues.values.every((value) => value.isNotEmpty);
+                                            final allFieldsFilled = fieldValues
+                                                .values
+                                                .every((value) =>
+                                                    value.isNotEmpty);
                                             //Check If All Fields Are Filled In
-                                            if(!allFieldsFilled){
-                                              ScaffoldMessenger.of(context).showSnackBar(
+                                            if (!allFieldsFilled) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
                                                 SnackBar(
-                                                  content: Text('You have not filled out $selectedMetric'),
+                                                  content: Text(
+                                                      'You have not filled out $selectedMetric'),
                                                   backgroundColor: Colors.red,
                                                 ),
                                               );
@@ -377,9 +401,14 @@ class _HomePageState extends State<HomePage> {
 
                                             this.setState(() {
                                               addedMetrics.add(selectedMetric!);
-                                              metricBoxes.add(buildMetricBox(context, selectedMetric!, 
-                                              fieldValues.entries.map((e) => "${e.key}: ${e.value}").join("  •  "),
-                                              "4/4/2025")); // Get the date of the value
+                                              metricBoxes.add(buildMetricBox(
+                                                  context,
+                                                  selectedMetric!,
+                                                  fieldValues.entries
+                                                      .map((e) =>
+                                                          "${e.key}: ${e.value}")
+                                                      .join("  •  "),
+                                                  "4/4/2025")); // Get the date of the value
                                             });
                                           }
                                         },
@@ -396,14 +425,20 @@ class _HomePageState extends State<HomePage> {
                                 },
                               );
                             },
-                          ).then((_){
+                          ).then((_) {
                             setState(() {
                               trackedFields = [];
                               fieldValues.clear();
                             });
                           });
                         },
-                        child: const Text("Add Metric Box"),
+                        child: const Text(
+                          "Add Metric",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],
