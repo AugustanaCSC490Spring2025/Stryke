@@ -29,7 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double buttonWidth = screenWidth * 0.8;
     double screenHeight = MediaQuery.of(context).size.height;
+
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
@@ -45,13 +48,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: const Center(
-                child: Icon(Icons.electric_bolt_rounded, size: 100,
-                ),
+          child: Center(
+            child: Icon(Icons.electric_bolt_rounded, size: screenHeight * 0.12),
               ),
             ),
 
-            const SizedBox(height: 40),
+            verticalSpacing(screenHeight * 0.04),
 
             // Back Button & Title
 
@@ -68,11 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            const SizedBox(height: 45),
+            verticalSpacing(screenHeight * 0.045),
 
             // Form Fields
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
               child: Column(
                 children: [
                   const Text(
@@ -84,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 65),
+                  verticalSpacing(screenHeight * 0.06),
 
                   Form(
                       key: _formKey,
@@ -105,12 +107,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 22.5, horizontal: 20.0),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: const BorderSide(
                                         color: Color(0xFFB7FF00)),
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: const BorderSide(
                                         color: Color(0xFFB7FF00)),
                                   ),
@@ -129,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   return null;
                                 }),
                           ),
-                          verticalSpacing(20),
+                          verticalSpacing(screenHeight * 0.02),
                           SizedBox(
                             height: 90,
                             child: MyTextField(
@@ -143,14 +145,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 filled: true,
                                 fillColor: const Color(0xFF1C1C1C),
                                 contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 22.5, horizontal: 20.0),
+                                    vertical: 22.5, horizontal: 22.0),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(10),
                                   borderSide: const BorderSide(
                                       color: Color(0xFFB7FF00)),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(10),
                                   borderSide: const BorderSide(
                                       color: Color(0xFFB7FF00)),
                                 ),
@@ -200,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  verticalSpacing(55),
+                  verticalSpacing(screenHeight * 0.05),
 
                   // Login Button
                   SizedBox(
@@ -227,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const HomePage()),
+                                    builder: (context) => const MainNavigation(index: 0)),
                               );
                             }
                           } else {
@@ -241,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB7FF00),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(50),
                         ),
                       ),
                       child: const Text(
@@ -254,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  verticalSpacing(45),
+                  verticalSpacing(screenHeight * 0.05),
 
                   AnimatedContainer(
                     curve: Curves.ease,
@@ -329,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  verticalSpacing(45),
+                  verticalSpacing(screenHeight * 0.06),
 
                   InkWell(
                     onTap: () {

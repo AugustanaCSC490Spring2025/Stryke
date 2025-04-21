@@ -14,28 +14,67 @@ Widget buildMetricBox(BuildContext context, String metricType, String value, Str
 },
     child: Container(
       margin: const EdgeInsets.only(bottom: 16.0),
-      height: 150,
+      height: 120,
       decoration: BoxDecoration(
         color: const Color(0xFF303030),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+            // Top row: Metric name + Date
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(metricType, style: TextStyle(color: Colors.white)),
-                SizedBox(height: 8),
-                Text(value,
-                    style: TextStyle(color: Colors.white, fontSize: 28)),
+                Text(
+                  metricType, // e.g. "Weight"
+                  style: const TextStyle(
+                    color: Color(0xFFB7FF00), // neon green
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  date, // e.g. "April 4, 2025"
+                  style: const TextStyle(
+                    color: Colors.white54,
+                    fontSize: 12,
+                  ),
+                ),
               ],
             ),
-            Text(date, style: TextStyle(color: Colors.white70)),
-          ], 
+            const Spacer(),
+            // Bottom row: Value + Icon
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: value.replaceAll(RegExp(r'[^\d]'), ''),// e.g. "170"
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const TextSpan(
+                        text: ' lbs',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white60,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: Colors.white),
+              ],
+            ),
+          ],
         ),
       ),
     ),

@@ -16,7 +16,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonWidth = screenWidth * 0.7;
+    double buttonWidth = screenWidth * 0.8;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -32,10 +32,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                   color: Color(0xFFB7FF00),
                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
                 ),
-                child: const Icon(Icons.electric_bolt_rounded, size: 300),
+                child: Icon(Icons.electric_bolt_rounded, size: screenHeight * 0.3),
               ),
             ),
-            verticalSpacing(30),
+            verticalSpacing(screenHeight * 0.03),
             Center(
               child: Text(
                 "Say Hello to \n The STRYKE App",
@@ -43,7 +43,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                 textAlign: TextAlign.center,
               ),
             ),
-            verticalSpacing(50),
+            verticalSpacing(screenHeight * 0.03),
             Center(
               child: Text(
                 "Join your team to track your metrics \n and see the progress you have made in season!",
@@ -51,12 +51,13 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                 textAlign: TextAlign.center,
               ),
             ),
-            verticalSpacing(40),
+            verticalSpacing(screenHeight * 0.045),
             Center(
               child: Column(
                 children: [
                   SizedBox(
                     width: buttonWidth,
+                    height: 70,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -75,9 +76,10 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                       child: const Text("Sign Up"),
                     ),
                   ),
-                  verticalSpacing(24),
+                  verticalSpacing(screenHeight * 0.025),
                   SizedBox(
                     width: buttonWidth,
+                    height: 70,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.push(

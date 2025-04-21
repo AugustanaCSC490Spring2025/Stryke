@@ -28,6 +28,8 @@ class _SignUnScreenState extends State<SignUnScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double buttonWidth = screenWidth * 0.8;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -44,12 +46,12 @@ class _SignUnScreenState extends State<SignUnScreen> {
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(40)),
                 ),
-                child: const Icon(Icons.electric_bolt_rounded, size: 100),
+                child: Icon(Icons.electric_bolt_rounded, size: screenHeight * 0.12),
               ),
             ),
-        
-            const SizedBox(height: 40),
-        
+
+            verticalSpacing(screenHeight * 0.04),
+
             const Align(
               alignment: Alignment.center,
               child: Text(
@@ -62,11 +64,11 @@ class _SignUnScreenState extends State<SignUnScreen> {
                 ),
               ),
             ),
-        
-            const SizedBox(height: 30),
+
+            verticalSpacing(screenHeight * 0.03),
         
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
               child: Column(
                 children: [
                   const Text(
@@ -77,7 +79,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                       color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 50),
+                  verticalSpacing(screenHeight * 0.05),
                   Form(
                       key: _formKey,
                       child: Column(
@@ -97,12 +99,12 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 22.5, horizontal: 20.0),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: const BorderSide(
                                         color: Color(0xFFB7FF00)),
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(10),
                                     borderSide: const BorderSide(
                                         color: Color(0xFFB7FF00)),
                                   ),
@@ -121,7 +123,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                   return null;
                                 }),
                           ),
-                            verticalSpacing(5),
+                          verticalSpacing(screenHeight * 0.005),
                             MyTextField(
                               controller: _passwordController,
                               style: const TextStyle(color: Colors.white),
@@ -136,12 +138,12 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 22.5, horizontal: 20.0),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       const BorderSide(color: Color(0xFFB7FF00)),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       const BorderSide(color: Color(0xFFB7FF00)),
                                 ),
@@ -191,7 +193,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                 return null; // Return null if password is valid
                               }
                             ),
-                          verticalSpacing(25),
+                          verticalSpacing(screenHeight * 0.025),
                           SizedBox(
                             height: 90,
                             child: MyTextField(
@@ -207,12 +209,12 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 22.5, horizontal: 20.0),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       const BorderSide(color: Color(0xFFB7FF00)),
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       const BorderSide(color: Color(0xFFB7FF00)),
                                 ),
@@ -233,14 +235,14 @@ class _SignUnScreenState extends State<SignUnScreen> {
                           ),
                         ],
                       )),
-                  verticalSpacing(25),
+                  verticalSpacing(screenHeight * 0.025),
                   SizedBox(
                     width: double.infinity,
                     height: 70,
                     child: ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          bool success = await _authService.signUpUser(_emailController.text, _passwordController.text);
+                          bool success = await _authService.signUpUser(_emailController.text, _passwordController.text, context);
         
                           if (success) {
                             Navigator.pushReplacement(
@@ -271,7 +273,7 @@ class _SignUnScreenState extends State<SignUnScreen> {
             ),
         
             //sign in with google
-            verticalSpacing(30),
+            verticalSpacing(screenHeight * 0.035),
         
             AnimatedContainer(
               curve: Curves.ease,
@@ -308,14 +310,19 @@ class _SignUnScreenState extends State<SignUnScreen> {
                     if (userData == false) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const InfoInputScreen()),
+                        MaterialPageRoute(builder: (context) => const InfoInputScreen()),
                       );
                     } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Welcome back! You're already signed up."),
+                          backgroundColor: Color(0xFFB7FF00),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainNavigation(index: 0)),
+                        MaterialPageRoute(builder: (context) => const MainNavigation(index: 0)),
                       );
                     }
                   }
@@ -345,8 +352,8 @@ class _SignUnScreenState extends State<SignUnScreen> {
                 ),
               ),
             ),
-        
-            verticalSpacing(50),
+
+            verticalSpacing(screenHeight * 0.055),
         
             InkWell(
               onTap: () {

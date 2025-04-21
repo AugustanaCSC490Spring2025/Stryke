@@ -38,8 +38,9 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+    double buttonWidth = screenWidth * 0.8;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
@@ -54,10 +55,10 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: const Icon(Icons.electric_bolt_rounded, size: 100),
+              child: Icon(Icons.electric_bolt_rounded, size: screenHeight * 0.12),
             ),
           ),
-          verticalSpacing(30),
+          verticalSpacing(screenHeight * 0.03),
           Align(
             alignment: Alignment.center,
             child: const Text(
@@ -69,10 +70,10 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               ),
             ),
           ),
-          verticalSpacing(20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 50),
-            child: Column(
+          verticalSpacing(screenHeight * 0.02),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
+            child: const Column(
               children: [
                 Text(
                   "Now input some basic information about yourself to finish joining STRYKE!",
@@ -85,9 +86,9 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               ],
             ),
           ),
-          verticalSpacing(30),
+          verticalSpacing(screenHeight * 0.03),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
             child: Form(
               key: _formKey,
               child: Column(
@@ -107,12 +108,12 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 20.0),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Color(0xFFB7FF00)),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Color(0xFFB7FF00)),
                           ),
@@ -130,7 +131,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           return null;
                         }),
                   ),
-                  verticalSpacing(10),
+                  verticalSpacing(screenHeight * 0.01),
                   SizedBox(
                     height: 75,
                     child: MyTextField(
@@ -146,12 +147,12 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 20, horizontal: 20.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(10),
                           borderSide:
                               const BorderSide(color: Color(0xFFB7FF00)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(10),
                           borderSide:
                               const BorderSide(color: Color(0xFFB7FF00)),
                         ),
@@ -170,7 +171,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                       },
                     ),
                   ),
-                  verticalSpacing(10),
+                  verticalSpacing(screenHeight * 0.01),
                   RawKeyboardListener(
                     focusNode: _heightFocusNode,
                     onKey: (event) {
@@ -194,12 +195,12 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 20.0),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Color(0xFFB7FF00)),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Color(0xFFB7FF00)),
                           ),
@@ -258,7 +259,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                       ),
                     ),
                   ),
-                  verticalSpacing(10),
+                  verticalSpacing(screenHeight * 0.01),
                   SizedBox(
                     height: 75,
                     child: MyTextField(
@@ -274,12 +275,12 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 20, horizontal: 20.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(10),
                           borderSide:
                               const BorderSide(color: Color(0xFFB7FF00)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(10),
                           borderSide:
                               const BorderSide(color: Color(0xFFB7FF00)),
                         ),
@@ -298,10 +299,10 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                       },
                     ),
                   ),
-                  verticalSpacing(10),
+                  verticalSpacing(screenHeight * 0.01),
                   Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: const Color(0xffb7ff00))),
                       padding: const EdgeInsets.only(left: 20),
                       width: screenWidth * .9,
@@ -336,7 +337,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
               ),
             ),
           ),
-          verticalSpacing(45),
+          verticalSpacing(screenHeight * 0.05),
           SizedBox(
             width: screenWidth * .9,
             height: 70,
@@ -384,7 +385,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                     fontSize: 20),
                 child: const Text("Join STRYKE")),
           ),
-          verticalSpacing(5),
+          verticalSpacing(screenHeight * 0.005),
           RichText(
             text: const TextSpan(
               children: [
