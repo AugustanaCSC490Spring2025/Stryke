@@ -12,6 +12,7 @@ dependencies:
   cloud_firestore: ^5.6.5
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.1
+  fl_chart: ^0.71.0
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
@@ -20,7 +21,7 @@ dependencies:
   bloc: ^9.0.0
   flutter_bloc: ^9.1.0
   equatable: ^2.0.5
-  fl_chart: ^0.70.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

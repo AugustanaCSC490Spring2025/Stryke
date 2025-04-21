@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_app/utils/exerciseDropDown.dart';
+import 'package:test_app/components/exerciseDropDown.dart';
 
 class ExerciseServices{
   
@@ -32,18 +32,21 @@ class ExerciseServices{
     }).toList();
   }
 
-  Future<void> addUserExercise({required String userID, required String exerciseID, required Map<String, dynamic> metrics}) async{
-    final globalExerciseRef = await FirebaseFirestore.instance.collection('exercises').doc(exerciseID);
+  Future<void> addUserExercise({required String userID, required String exerciseName, required Map<String, dynamic> metrics}) async{
+    final userExerciseRef = FirebaseFirestore.instance.collection('users').doc(userID).collection(exerciseName);
 
-    final userExercisesRef = await FirebaseFirestore.instance.collection('exercises');
-
-    await userExercisesRef.add({
-      'exerciseRef': globalExerciseRef,   
-      'exerciseID' : exerciseID,
-      'metrics' : metrics,
+    await userExerciseRef.add({
+      'metricValues' : metrics,
       'timestamp' : DateTime.now()
     });
   }
 
-  
+  Future <void> addUserWeight({required String userID, required String weight, required DateTime date})async{
+    final userWeightRef = FirebaseFirestore.instance.collection('users').doc(userID).collection('Weight');
+
+    await userWeightRef.add({
+      'timestamp' : Timestamp.fromDate(date),
+      'weight' : weight
+    });
+  }
 } 

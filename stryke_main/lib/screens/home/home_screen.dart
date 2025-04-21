@@ -3,10 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-import 'package:test_app/utils/exerciseDropDown.dart';
-import '../../helpers/metric_box_builder.dart';
+import 'package:test_app/components/exerciseDropDown.dart';
+import '../../widgets/metric_box_builder.dart';
 import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,15 +48,17 @@ class _HomePageState extends State<HomePage> {
     QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
-        .collection('weights')
+        .collection('weight')
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
 
     DocumentSnapshot weightDoc = weightSnapshot.docs.first;
+    Timestamp timestamp = weightDoc.get('timestamp');
+    String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
     setState(() {
       weight = weightDoc['weight'].toString();
-      metricBoxes.add(buildMetricBox("Weight", weight!, 'date'));
+      metricBoxes.add(buildMetricBox(context, "Weight", weight!, date));
     });
 
 
@@ -129,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Text(
-                            '$name! You are $weight pounds',
+                            '$name!',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: screenWidth * 0.045,
@@ -239,9 +242,9 @@ class _HomePageState extends State<HomePage> {
                     verticalSpacing(screenHeight * .02),
 
                     Container(
-                      height: 3,
+                      height: 2,
                       decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.white24,
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     verticalSpacing(screenHeight * .02),
@@ -351,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     actions: [
                                       TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           if (selectedMetric != null) {
                                             if (addedMetrics.contains(selectedMetric)) {
                                               ScaffoldMessenger.of(context).showSnackBar(
@@ -371,14 +374,24 @@ class _HomePageState extends State<HomePage> {
                                                   backgroundColor: Colors.red,
                                                 ),
                                               );
+                                              return;
                                             }
+                                            ExerciseServices().addUserExercise(
+                                              userID: myUser!.uid, 
+                                              exerciseName: selectedMetric!, 
+                                              metrics: fieldValues
+                                            );
+                                            QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
+                                              .collection(selectedMetric!).orderBy('timestamp', descending: true).limit(1).get();
+                                            
+                                            Timestamp timestamp = snapshot.docs.first.get('timestamp');
+                                            String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
                                             Navigator.of(context).pop();
-
                                             this.setState(() {
                                               addedMetrics.add(selectedMetric!);
-                                              metricBoxes.add(buildMetricBox(selectedMetric!, 
+                                              metricBoxes.add(buildMetricBox(context, selectedMetric!, 
                                               fieldValues.entries.map((e) => "${e.key}: ${e.value}").join("  •  "),
-                                              "4/4/2025")); // Get the date of the value
+                                              date)); // Get the date of the value
                                             });
                                           }
                                         },
