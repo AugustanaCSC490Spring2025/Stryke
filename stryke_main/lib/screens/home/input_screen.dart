@@ -19,12 +19,15 @@ class _InputScreenState extends State<InputScreen> {
   late Future<List<StatPoint>> _statData;
   DateTime? selectedDate;
   final myUser = FirebaseAuth.instance.currentUser;
-  TextEditingController? valueController;
+  final valueController = TextEditingController();
+  Map<String, String>? fieldValues;
 
   @override
   void initState() {
     super.initState();
-    _statData = FirestoreService().fetchStatData(widget.metricName);
+    if(widget.metricName == 'Weight'){
+      _statData = FirestoreService().fetchStatData(widget.metricName);
+    }
   }
 
   @override
@@ -187,7 +190,7 @@ class _InputScreenState extends State<InputScreen> {
                                   selectedDate = date;
                                 });
                               },
-                              LabelText: "Select workout date",
+                              labelText: "Select workout date",
                             ),
                           ],
                         ),
@@ -213,20 +216,18 @@ class _InputScreenState extends State<InputScreen> {
                             GestureDetector(
                               onTap: () {
                                 // handle add
-                                if(valueController!.text.isNotEmpty){
+                                if(valueController.text.isNotEmpty && selectedDate != null){
                                   if(widget.metricName == 'Weight'){
                                   ExerciseServices().addUserWeight(
                                     userID: myUser!.uid, 
-                                    weight: valueController!.text, 
+                                    weight: valueController.text, 
                                     date: selectedDate!
                                   );
                                   }else{
-                                    /* ExerciseServices().addUserExercise(
-                                      userID: myUser!.uid, 
-                                      exerciseName: widget.metricName, 
-                                      metrics: metrics
-                                    ); */
+
                                   }
+                                }else{
+
                                 }
                               },
                               child: Container(

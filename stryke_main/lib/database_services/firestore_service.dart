@@ -12,8 +12,6 @@ class FirestoreService {
     final userId = user.uid;
     QuerySnapshot snapshot;
 
-    print(metricName);
-
     snapshot = await FirebaseFirestore.instance.collection('users').doc(userId).collection(metricName).get();
 
     return snapshot.docs.map((doc) {
@@ -23,6 +21,7 @@ class FirestoreService {
 
       final timestamp = data['timestamp'];
       final value = data[metricName];
+      print(value);
 
       if (timestamp == null || value == null) {
         throw Exception("Missing 'timestamp' or 'weight' field in: $data");

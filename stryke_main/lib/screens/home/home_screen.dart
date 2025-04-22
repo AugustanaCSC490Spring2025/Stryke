@@ -279,7 +279,6 @@ class _HomePageState extends State<HomePage> {
                             context: context,
                             builder: (context) {
                               String? selectedMetric;
-                              String inputValue = '';
 
                               return StatefulBuilder(
                                 builder: (context, setState) {
