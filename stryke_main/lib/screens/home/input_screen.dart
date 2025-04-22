@@ -28,9 +28,7 @@ class _InputScreenState extends State<InputScreen> {
   @override
   void initState() {
     super.initState();
-    if(widget.metricName == 'Weight'){
-      _statData = FirestoreService().fetchStatData(widget.metricName);
-    }
+    _statData = FirestoreService().fetchStatData(widget.metricName);
   }
 
   double goalValue = 170;
