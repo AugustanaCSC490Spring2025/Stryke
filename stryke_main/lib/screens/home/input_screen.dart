@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:test_app/database_services/exerciseService.dart';
 import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/widgets/date_picker_widget.dart';
 import 'package:test_app/widgets/line_chart_widget.dart';
@@ -131,7 +132,6 @@ class _InputScreenState extends State<InputScreen> {
               ),
             ),
           ),
-
 
           SliverToBoxAdapter(
             child: Padding(
@@ -309,35 +309,62 @@ class _InputScreenState extends State<InputScreen> {
                           alignment: Alignment.center,
                           child: TextField(
                             controller: valueController,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*\.?\d{0,2}')),
                             ],
                             style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
                               hintText: "input here...",
                               hintStyle: TextStyle(color: Colors.white70),
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 16),
                             ),
                           ),
                         ),
                       ),
 
-
-
                       // Add Icon
-                      Container(
-                        height: 60,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.limeAccent,
-                          border: Border.all(color: Color(0xFF3A3A3A)),
-                          borderRadius: const BorderRadius.only(
-                              bottomRight: Radius.circular(16)),
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          child: Container(
+                            height: 60,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.limeAccent,
+                              border: Border.all(color: Color(0xFF3A3A3A)),
+                              borderRadius: const BorderRadius.only(
+                                  bottomRight: Radius.circular(16)),
+                            ),
+                            child: const Icon(Icons.add, size: 20, color: Colors.black),
+                          ),
+                          onTap: () {
+                            if (valueController.text.isNotEmpty && selectedDate != null) {
+                              if (widget.metricName == 'Weight') {
+                                ExerciseServices().addUserWeight(
+                                    userID: myUser!.uid,
+                                    weight: valueController.text,
+                                    date: selectedDate!);
+                              } else {
+                              }
+                              setState(() {
+                                valueController.clear();
+                                selectedDate = null;
+                              });
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Missing date or value"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
                         ),
-                        child: const Icon(Icons.add,
-                            size: 20, color: Colors.black),
                       ),
                     ],
                   ),
