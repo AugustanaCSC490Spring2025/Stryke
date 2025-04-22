@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,38 @@ class PersonalScreen extends StatefulWidget {
   State<PersonalScreen> createState() => _PersonalScreenState();
 }
 
+
+
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
+
+  String age = '';
+  String height = '';
+  String weight = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  void fetchUserData() async {
+    if (myUser != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(myUser!.uid)
+          .get();
+      final data = doc.data();
+      if (data != null) {
+        setState(() {
+          age = data['age'] ?? '';
+          height = data['height'] ?? '';
+          weight = data['weight'] ?? '';
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +58,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
-
           //TOP BAR WITH PROFILE ICON AND USER NAME
           SliverAppBar(
             floating: false,
@@ -92,8 +121,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                double screenWidth = MediaQuery.of(context).size.width;
+                  (BuildContext context, int index) {
                 return Padding(
                   padding: EdgeInsets.all(screenWidth * 0.05),
                   child: Column(
@@ -132,7 +160,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '21',
+                                  age,
                                   style: const TextStyle(
                                     color: Color(0xFFB7FF00),
                                     fontSize: 20,
@@ -150,7 +178,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "5'10''",
+                                  height,
                                   style: const TextStyle(
                                     color: Color(0xFFB7FF00),
                                     fontSize: 20,
@@ -168,7 +196,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '165 lbs',
+                                  '$weight lbs',
                                   style: const TextStyle(
                                     color: Color(0xFFB7FF00),
                                     fontSize: 20,
@@ -185,6 +213,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                           ],
                         ),
                       ),
+
                       verticalSpacing(screenHeight * .025),
 
                       // PERSONAL PROGRESS
