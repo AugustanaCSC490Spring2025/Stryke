@@ -131,42 +131,6 @@ class _InputScreenState extends State<InputScreen> {
             ),
           ),
 
-          // GRAPH
-          SliverToBoxAdapter(
-            child: FutureBuilder<List<StatPoint>>(
-              future: _statData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (snapshot.hasError) {
-                  print("Snapshot Error: ${snapshot.error}");
-                  return Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text(
-                      'Error loading data: ${snapshot.error}',
-                      style: TextStyle(color: Colors.red.shade200),
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text(
-                      'No data available yet.',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  );
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: LineChartWidget(data: snapshot.data!),
-                  );
-                }
-              },
-            ),
-          ),
 
           SliverToBoxAdapter(
             child: Padding(
