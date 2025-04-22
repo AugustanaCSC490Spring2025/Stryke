@@ -16,6 +16,18 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+class MetricEntry {
+  final String metricType;
+  final String value;
+  final String date;
+
+  MetricEntry({
+    required this.metricType,
+    required this.value,
+    required this.date,
+  });
+}
+
 class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
   String? name;
@@ -23,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = true;
   List<ExerciseDropdownItem> _exerciseOptions = [];
   ExerciseDropdownItem? _quickAddValue;
-  List metricBoxes = [];
+  List<MetricEntry> metricEntries = [];
   List metricBoxExercises = [];
   List<String> trackedFields = [];
   Map<String, String> fieldValues = {};
@@ -53,13 +65,19 @@ class _HomePageState extends State<HomePage> {
         .limit(1)
         .get();
 
-    DocumentSnapshot weightDoc = weightSnapshot.docs.first;
-    Timestamp timestamp = weightDoc.get('timestamp');
-    String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
-    setState(() {
-      weight = weightDoc['weight'].toString();
-      metricBoxes.add(buildMetricBox(context, "Weight", weight!, date));
-    });
+    if (weightSnapshot.docs.isNotEmpty) {
+      DocumentSnapshot weightDoc = weightSnapshot.docs.first;
+      Timestamp timestamp = weightDoc.get('timestamp');
+      String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
+      setState(() {
+        weight = weightDoc['weight'].toString();
+        metricEntries.add(MetricEntry(
+          metricType: "Weight",
+          value: weight!,
+          date: date,
+        ));
+      });
+    }
 
     if (userDoc.exists) {
       setState(() {
@@ -256,9 +274,11 @@ class _HomePageState extends State<HomePage> {
 
                     verticalSpacing(screenHeight * .01),
 
+                    ...metricEntries
+                        .map((entry) => buildMetricBox(
+                            context, entry.metricType, entry.value, entry.date))
+                        .toList(),
                     // Dynamically add the metric boxes here
-                    ...metricBoxes,
-
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -401,21 +421,49 @@ class _HomePageState extends State<HomePage> {
                                               return;
                                             }
                                             ExerciseServices().addUserExercise(
-                                              userID: myUser!.uid, 
-                                              exerciseName: selectedMetric!, 
-                                              metrics: fieldValues
-                                            );
-                                            QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
-                                              .collection(selectedMetric!).orderBy('timestamp', descending: true).limit(1).get();
-                                            
-                                            Timestamp timestamp = snapshot.docs.first.get('timestamp');
-                                            String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
+                                                userID: myUser!.uid,
+                                                exerciseName: selectedMetric!,
+                                                metrics: fieldValues);
+                                            QuerySnapshot snapshot =
+                                                await FirebaseFirestore.instance
+                                                    .collection('users')
+                                                    .doc(myUser!.uid)
+                                                    .collection(selectedMetric!)
+                                                    .orderBy('timestamp',
+                                                        descending: true)
+                                                    .limit(1)
+                                                    .get();
+
+                                            Timestamp timestamp = snapshot
+                                                .docs.first
+                                                .get('timestamp');
+                                            String date =
+                                                DateFormat('MM/dd/yyyy')
+                                                    .format(timestamp.toDate());
+
+                                            final box = buildMetricBox(
+                                                context,
+                                                selectedMetric!,
+                                                fieldValues.entries
+                                                    .map((e) =>
+                                                        "${e.key}: ${e.value}")
+                                                    .join("  •  "),
+                                                date);
                                             Navigator.of(context).pop();
-                                            this.setState(() {
+
+                                            String valueString = fieldValues
+                                                .entries
+                                                .map((e) =>
+                                                    "${e.key}: ${e.value}")
+                                                .join(" • ");
+
+                                            setState(() {
                                               addedMetrics.add(selectedMetric!);
-                                              metricBoxes.add(buildMetricBox(context, selectedMetric!, 
-                                              fieldValues.entries.map((e) => "${e.key}: ${e.value}").join("  •  "),
-                                              date)); // Get the date of the value
+                                              metricEntries.add(MetricEntry(
+                                                metricType: selectedMetric!,
+                                                value: valueString,
+                                                date: date,
+                                              ));
                                             });
                                           }
                                         },

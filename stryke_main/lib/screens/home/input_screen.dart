@@ -24,6 +24,7 @@ class _InputScreenState extends State<InputScreen> {
   @override
   void initState() {
     super.initState();
+    valueController = TextEditingController();
     _statData = FirestoreService().fetchStatData(widget.metricName);
   }
 

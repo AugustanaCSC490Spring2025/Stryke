@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/home/input_screen.dart';
 
-
-Widget buildMetricBox(BuildContext context, String metricType, String value, String date) {
+Widget buildMetricBox(BuildContext context, String? metricType, String value, String date) {
   return GestureDetector(
     onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-        builder: (context) => InputScreen(metricName: metricType,)
-    ),
-  );
-},
+      final safeMetric = metricType ?? 'Unknown';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InputScreen(metricName: safeMetric),
+        ),
+      );
+      });
+    },
     child: Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       height: 120,
@@ -29,15 +31,15 @@ Widget buildMetricBox(BuildContext context, String metricType, String value, Str
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  metricType, // e.g. "Weight"
+                  metricType ?? 'Unknown',
                   style: const TextStyle(
-                    color: Color(0xFFB7FF00), // neon green
+                    color: Color(0xFFB7FF00),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
-                  date, // e.g. "April 4, 2025"
+                  date,
                   style: const TextStyle(
                     color: Colors.white54,
                     fontSize: 12,
@@ -54,7 +56,7 @@ Widget buildMetricBox(BuildContext context, String metricType, String value, Str
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: value.replaceAll(RegExp(r'[^\d]'), ''),// e.g. "170"
+                        text: value.replaceAll(RegExp(r'[^\d]'), ''),
                         style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
