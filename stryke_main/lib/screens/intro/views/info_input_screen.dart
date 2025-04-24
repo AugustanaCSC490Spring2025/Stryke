@@ -8,6 +8,7 @@ import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
 import '../../../utils/text_styles.dart';
+import '../../intro/views/team_input.dart';
 
 class InfoInputScreen extends StatefulWidget {
   const InfoInputScreen({super.key});
@@ -374,7 +375,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MainNavigation(index: 0)),
+                          builder: (context) => TeamInputScreen()),
                     );
                   }
                 },

@@ -25,6 +25,7 @@ class _InputScreenState extends State<InputScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final valueController = TextEditingController();
   Map<String, String>? fieldValues;
+  String selectedFilter = 'W';
 
   @override
   void initState() {
@@ -162,43 +163,31 @@ class _InputScreenState extends State<InputScreen> {
                     ),
                     child: Column(
                       children: [
+
                         // Time Filter Row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: ['D', 'W', 'M', '3M', 'Y'].map((e) {
-                            final isSelected = e == 'W';
-                            return Text(
-                              e,
-                              style: TextStyle(
-                                color: isSelected
-                                    ? Color(0xFFB7FF00)
-                                    : Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: screenWidth * 0.04,
+                            final isSelected = e == selectedFilter;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedFilter = e;
+                                });
+                              },
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  color: isSelected ? Colors.limeAccent : Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: screenWidth * 0.04,
+                                ),
                               ),
                             );
                           }).toList(),
                         ),
-                        verticalSpacing(screenHeight * 0.015),
 
-                        // Avg. Label
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Avg. ${widget.metricName}: ",
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                            const Text(
-                              "165.0",
-                              style: TextStyle(
-                                  color: Color(0xFFB7FF00),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
+                        verticalSpacing(screenHeight * 0.015),
 
                         verticalSpacing(screenHeight * 0.01),
 
@@ -206,16 +195,12 @@ class _InputScreenState extends State<InputScreen> {
                         FutureBuilder<List<StatPoint>>(
                           future: _statData,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 40.0),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
+                                child: Center(child: CircularProgressIndicator()),
                               );
-                            } else if (snapshot.hasError ||
-                                !snapshot.hasData ||
-                                snapshot.data!.isEmpty) {
+                            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20.0),
                                 child: Text(
@@ -224,7 +209,78 @@ class _InputScreenState extends State<InputScreen> {
                                 ),
                               );
                             } else {
-                              return LineChartWidget(data: snapshot.data!);
+                              final dataPoints = snapshot.data!;
+
+                              // 1. Filter Data Based on Selected Time Range
+                              final now = DateTime.now();
+                              DateTime rangeStart;
+
+                              switch (selectedFilter) {
+                                case 'D':
+                                  rangeStart = now.subtract(Duration(days: 1));
+                                  break;
+                                case 'W':
+                                  rangeStart = now.subtract(Duration(days: 7));
+                                  break;
+                                case 'M':
+                                  rangeStart = now.subtract(Duration(days: 30));
+                                  break;
+                                case '3M':
+                                  rangeStart = now.subtract(Duration(days: 90));
+                                  break;
+                                case 'Y':
+                                  rangeStart = now.subtract(Duration(days: 365));
+                                  break;
+                                default:
+                                  rangeStart = now.subtract(Duration(days: 7)); // Default to Week
+                              }
+
+                              final filteredDataPoints = dataPoints
+                                  .where((point) => point.date.isAfter(rangeStart))
+                                  .toList();
+
+                              if (filteredDataPoints.isEmpty) {
+                                return const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                                  child: Text(
+                                    'No data for this period',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                );
+                              }
+
+                              // 2. Calculate Average for Filtered Data
+                              final average = filteredDataPoints
+                                  .map((e) => e.value)
+                                  .reduce((a, b) => a + b) / filteredDataPoints.length;
+
+                              return Column(
+                                children: [
+                                  // Avg. Label
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Avg. ${widget.metricName}: ",
+                                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      ),
+                                      Text(
+                                        average.toStringAsFixed(1),  // Show 1 decimal place
+                                        style: const TextStyle(
+                                          color: Colors.limeAccent,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  verticalSpacing(10),
+
+                                  // Graph
+                                  LineChartWidget(data: filteredDataPoints, selectedFilter: selectedFilter),
+                                ],
+                              );
                             }
                           },
                         ),
@@ -337,14 +393,26 @@ class _InputScreenState extends State<InputScreen> {
                           ),
                           onTap: () {
                             if (valueController.text.isNotEmpty && selectedDate != null) {
+                              final now = DateTime.now();
+                              final adjustedDate = DateTime(
+                                selectedDate!.year,
+                                selectedDate!.month,
+                                selectedDate!.day,
+                                now.hour,
+                                now.minute,
+                                now.second,
+                              );
+
                               if (widget.metricName == 'Weight') {
                                 ExerciseServices().addUserWeight(
-                                    userID: myUser!.uid,
-                                    weight: valueController.text,
-                                    date: selectedDate!);
-                              } else {
+                                  userID: myUser!.uid,
+                                  weight: valueController.text,
+                                  date: adjustedDate,  // Use date with auto-assigned time
+                                );
                               }
+
                               setState(() {
+                                _statData = FirestoreService().fetchStatData(widget.metricName);
                                 valueController.clear();
                                 selectedDate = null;
                               });
@@ -357,6 +425,7 @@ class _InputScreenState extends State<InputScreen> {
                               );
                             }
                           },
+
                         ),
                       ),
                     ],
