@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:test_app/auth/google_sign_in/authentication.dart';
-import 'package:test_app/screens/home/home_screen.dart';
 import 'package:test_app/screens/intro/views/sign_up_screen.dart';
 import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
@@ -30,7 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonWidth = screenWidth * 0.8;
     double screenHeight = MediaQuery.of(context).size.height;
 
 
