@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';
@@ -22,7 +20,46 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
 
   String? _errorMsg;
 
-  Future<void> _joinTeam({bool addAnother = false}) async {
+  Future<void> _goNext() async {
+    setState(() {
+      _errorMsg = null;
+    });
+    try {
+      DocumentSnapshot teamsQuery = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user!.uid)
+      .get();
+      List<String> teamIDs = List.from(teamsQuery['team_IDs']);
+
+       if (teamIDs.isNotEmpty) {
+      // Navigate to the next screen or show success message
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MainNavigation(index: 0),
+        ),
+      );
+      } else {
+        setState(() {
+          _errorMsg = "Please add a team code first";
+        });
+      }
+      _formKey.currentState!.validate();
+    }catch (e) {
+      setState(() {
+        _errorMsg = "Please add a team code first";
+      });
+      _formKey.currentState!.validate();
+
+    }
+
+
+
+   
+
+  }
+
+  Future<void> _joinTeam() async {
       setState(() {
         _errorMsg = null;
       });
@@ -52,7 +89,13 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
             .doc(teamDoc.id)
             .update({
           'athlete_IDs': FieldValue.arrayUnion([userId]),
-        });
+          });
+          await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .update({
+          'team_IDs': FieldValue.arrayUnion([teamDoc.id]),
+          });
         }
 
       // Navigate to the next screen or show success message
@@ -170,21 +213,20 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                         width: screenWidth * .45,
                         height: 70,
                         child: ElevatedButton(
-                          onPressed: () => _joinTeam(addAnother: true), 
+                          onPressed: () => _joinTeam(), 
                           style: ButtonStyles.colorButton(
                             backgroundColor: const Color(0xffb7ff00),
                             textColor: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 20),
-                          child: const Text("Add Another Team"),),
+                          child: const Text("Add Team"),),
                       ),
                       horizontalSpacing(20),
                       SizedBox(
                         width: screenWidth * .45,
                         height: 70,
                         child: ElevatedButton(
-                          onPressed: () => Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => const MainNavigation(index: 0))), 
+                          onPressed: () => _goNext(),
                           style: ButtonStyles.colorButton(
                             backgroundColor: const Color(0xffb7ff00),
                             textColor: Colors.black,
