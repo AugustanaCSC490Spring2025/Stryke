@@ -1,20 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
 import 'package:test_app/utils/spacing.dart';
+import 'package:test_app/widgets/text_input/text_input.dart';
 import '../../../auth/google_sign_in/authentication.dart';
-import '../../../components/my_text_field.dart';
 import 'login_screen.dart';
 
-class SignUnScreen extends StatefulWidget {
-  const SignUnScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignUnScreen> createState() => _SignUnScreenState();
+  State<SignUpScreen> createState() => _SignUnScreenState();
 }
 
-class _SignUnScreenState extends State<SignUnScreen> {
+class _SignUnScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -22,14 +21,12 @@ class _SignUnScreenState extends State<SignUnScreen> {
   final _formKey = GlobalKey<FormState>();
   bool loginRequired = false;
   bool obscurePassword = true;
-  String? _errorMsg;
   bool isRounded = false;
 
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonWidth = screenWidth * 0.8;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -86,33 +83,11 @@ class _SignUnScreenState extends State<SignUnScreen> {
                         children: [
                           SizedBox(
                             height: 90,
-                            child: MyTextField(
-                                controller: _emailController,
-                                style: const TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                  hintText: "ex. user@gmail.com",
-                                  labelText: "Email",
-                                  labelStyle:
-                                      const TextStyle(color: Color(0xFFB7FF00)),
-                                  filled: true,
-                                  fillColor: const Color(0xFF1C1C1C),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 22.5, horizontal: 20.0),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color(0xFFB7FF00)),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color(0xFFB7FF00)),
-                                  ),
-                                ),
-                                obscureText: false,
-                                keyboardType: TextInputType.emailAddress,
-                                errorMsg: _errorMsg,
-                                validator: (val) {
+                            child: buildTextInput(
+                              label: "Email", 
+                              hint: "ex. user@gmail.com", 
+                              controller: _emailController,
+                               validator:  (val) {
                                   if (val!.isEmpty) {
                                     return 'Please fill in this field';
                                   } else if (!RegExp(
@@ -121,51 +96,14 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                     return 'Please enter a valid email';
                                   }
                                   return null;
-                                }),
+                                })
                           ),
                           verticalSpacing(screenHeight * 0.005),
-                            MyTextField(
-                              controller: _passwordController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                errorStyle: const TextStyle(height: .8),
-                                hintText: "ex. Test1234!",
-                                labelText: "Password",
-                                labelStyle:
-                                    const TextStyle(color: Color(0xFFB7FF00)),
-                                filled: true,
-                                fillColor: const Color(0xFF1C1C1C),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 22.5, horizontal: 20.0),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Color(0xFFB7FF00)),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Color(0xFFB7FF00)),
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    obscurePassword
-                                        ? CupertinoIcons.eye_fill
-                                        : CupertinoIcons.eye_slash_fill,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      obscurePassword = !obscurePassword;
-                                    });
-                                  },
-                                ),
-                              ),
-                              obscureText: obscurePassword,
-                              keyboardType: TextInputType.visiblePassword,
-                              prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                              errorMsg: _errorMsg,
-                              validator: (val) {
+                          buildTextInput(
+                            label: "Password", 
+                            hint: "ex. Test1234!", 
+                            controller: _passwordController,
+                            validator: (val) {
                                 if (val!.isEmpty) {
                                   return 'Please fill in this field';
                                 }
@@ -191,48 +129,22 @@ class _SignUnScreenState extends State<SignUnScreen> {
                                   return 'Password must contain:\n$errorMessage';
                                 }
                                 return null; // Return null if password is valid
-                              }
-                            ),
+                              }),
                           verticalSpacing(screenHeight * 0.025),
                           SizedBox(
                             height: 90,
-                            child: MyTextField(
-                              controller: _confirmPasswordController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                labelText: "Confirm Password",
-                                hintText: 'ex. Test1234!',
-                                labelStyle:
-                                    const TextStyle(color: Color(0xFFB7FF00)),
-                                filled: true,
-                                fillColor: const Color(0xFF1C1C1C),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 22.5, horizontal: 20.0),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Color(0xFFB7FF00)),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Color(0xFFB7FF00)),
-                                ),
-                              ),
-                              obscureText: true,
-                              keyboardType: TextInputType.visiblePassword,
-                              prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                              errorMsg: _errorMsg,
-                              validator: (val) {
+                            child: buildTextInput(
+                            label: "Confirm Password", 
+                            hint: 'ex. Test1234!', 
+                            controller: _confirmPasswordController, 
+                            validator: (val) {
                                 if (val!.isEmpty) {
                                   return 'Please fill in this field';
                                 } else if (val != _passwordController.text) {
                                   return 'Please enter a correct password';
                                 }
                                 return null;
-                              },
-                            ),
-                          ),
+                              },)),
                         ],
                       )),
                   verticalSpacing(screenHeight * 0.025),
@@ -386,4 +298,12 @@ class _SignUnScreenState extends State<SignUnScreen> {
       ),
     );
   }
+
+@override // Prevent memory leaks and help run smoother
+void dispose() {
+  _emailController.dispose();
+  _passwordController.dispose();
+  _confirmPasswordController.dispose();
+  super.dispose();
+}
 }

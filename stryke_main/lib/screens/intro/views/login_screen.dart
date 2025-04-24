@@ -338,7 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SignUnScreen()),
+                            builder: (context) => const SignUpScreen()),
                       );
                     },
                     child: RichText(
