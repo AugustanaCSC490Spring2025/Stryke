@@ -99,7 +99,7 @@ class _InputScreenState extends State<InputScreen> {
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: EdgeInsets.zero,
               title: Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -136,7 +136,7 @@ class _InputScreenState extends State<InputScreen> {
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -152,7 +152,7 @@ class _InputScreenState extends State<InputScreen> {
                     ],
                   ),
 
-                  verticalSpacing(screenHeight * 0.015),
+                  verticalSpacing(screenHeight * 0.005),
 
                   // Graph Container
                   Container(
@@ -178,7 +178,7 @@ class _InputScreenState extends State<InputScreen> {
                               child: Text(
                                 e,
                                 style: TextStyle(
-                                  color: isSelected ? Colors.limeAccent : Colors.white,
+                                  color: isSelected ? Color(0xFFB7FF00) : Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: screenWidth * 0.04,
                                 ),
@@ -189,7 +189,6 @@ class _InputScreenState extends State<InputScreen> {
 
                         verticalSpacing(screenHeight * 0.015),
 
-                        verticalSpacing(screenHeight * 0.01),
 
                         // Graph Widget
                         FutureBuilder<List<StatPoint>>(
@@ -267,7 +266,7 @@ class _InputScreenState extends State<InputScreen> {
                                       Text(
                                         average.toStringAsFixed(1),  // Show 1 decimal place
                                         style: const TextStyle(
-                                          color: Colors.limeAccent,
+                                          color: Color(0xFFB7FF00),
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -311,7 +310,7 @@ class _InputScreenState extends State<InputScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text("Date:",
-                                    style: TextStyle(color: Colors.white)),
+                                    style: TextStyle(color: Colors.white, fontSize: 15)),
                                 DatePickerDropdown(
                                   selectedDate: selectedDate,
                                   onDatePicked: (date) {
@@ -343,7 +342,7 @@ class _InputScreenState extends State<InputScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           alignment: Alignment.centerLeft,
                           child: const Text("Value:",
-                              style: TextStyle(color: Colors.white)),
+                              style: TextStyle(color: Colors.white, fontSize: 15)),
                         ),
                       ),
 
