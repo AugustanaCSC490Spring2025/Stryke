@@ -19,8 +19,6 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _screens = [
     HomePage(),
-    ProgressScreen(),
-    ChartScreen(),
     PersonalScreen(),
   ];
 
@@ -65,14 +63,6 @@ class _MainNavigationState extends State<MainNavigation> {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.show_chart),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.flag),
               label: '',
             ),
             BottomNavigationBarItem(

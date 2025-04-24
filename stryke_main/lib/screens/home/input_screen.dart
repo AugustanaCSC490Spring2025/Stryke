@@ -148,13 +148,6 @@ class _InputScreenState extends State<InputScreen> {
                         "Your Progress Below...",
                         style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
-                      Text(
-                        "edit",
-                        style: TextStyle(
-                          color: Colors.limeAccent,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ],
                   ),
 
@@ -178,7 +171,7 @@ class _InputScreenState extends State<InputScreen> {
                               e,
                               style: TextStyle(
                                 color: isSelected
-                                    ? Colors.limeAccent
+                                    ? Color(0xFFB7FF00)
                                     : Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: screenWidth * 0.04,
@@ -200,7 +193,7 @@ class _InputScreenState extends State<InputScreen> {
                             const Text(
                               "165.0",
                               style: TextStyle(
-                                  color: Colors.limeAccent,
+                                  color: Color(0xFFB7FF00),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -335,7 +328,7 @@ class _InputScreenState extends State<InputScreen> {
                             height: 60,
                             width: 50,
                             decoration: BoxDecoration(
-                              color: Colors.limeAccent,
+                              color:  Color(0xFFB7FF00),
                               border: Border.all(color: Color(0xFF3A3A3A)),
                               borderRadius: const BorderRadius.only(
                                   bottomRight: Radius.circular(16)),
