@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 class DatePickerDropdown extends StatelessWidget {
   final DateTime? selectedDate;
   final Function(DateTime) onDatePicked;
-  final String LabelText;
+  final String labelText;
 
 
   const DatePickerDropdown({super.key, 
     required this.selectedDate, 
     required this.onDatePicked, 
-    this.LabelText = "Select a date"
+    this.labelText = "Select a date"
   });
 
   @override
@@ -52,7 +52,7 @@ class DatePickerDropdown extends StatelessWidget {
             Text(
               selectedDate != null
                 ? DateFormat('MM/dd/yyyy').format(selectedDate!)
-                : LabelText,
+                : labelText,
               style: TextStyle(color: Colors.white),
             ),
             Icon(Icons.arrow_drop_down, color: Colors.white),
