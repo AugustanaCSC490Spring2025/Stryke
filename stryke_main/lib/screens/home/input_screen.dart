@@ -7,8 +7,9 @@ import 'package:test_app/widgets/date_picker_widget.dart';
 import 'package:test_app/widgets/line_chart_widget.dart';
 import 'package:test_app/database_services/firestore_service.dart';
 import 'package:test_app/models/stat_point.dart';
-
 import '../../widgets/goal_card.dart';
+import 'package:test_app/data_filters_players/filter_manager.dart';
+
 
 class InputScreen extends StatefulWidget {
   final String metricName;
@@ -174,7 +175,7 @@ class _InputScreenState extends State<InputScreen> {
                         // Time Filter Row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: ['D', 'W', 'M', '3M', 'Y'].map((e) {
+                          children: ['D', 'W', 'M', 'Y'].map((e) {
                             final isSelected = e == selectedFilter;
                             return GestureDetector(
                               onTap: () {
@@ -219,35 +220,9 @@ class _InputScreenState extends State<InputScreen> {
                             } else {
                               final dataPoints = snapshot.data!;
 
-                              // 1. Filter Data Based on Selected Time Range
-                              final now = DateTime.now();
-                              DateTime rangeStart;
+                              final filteredSpots = getSpotsForFilter(selectedFilter, dataPoints);
 
-                              switch (selectedFilter) {
-                                case 'D':
-                                  rangeStart = now.subtract(Duration(days: 1));
-                                  break;
-                                case 'W':
-                                  rangeStart = now.subtract(Duration(days: 7));
-                                  break;
-                                case 'M':
-                                  rangeStart = now.subtract(Duration(days: 30));
-                                  break;
-                                case '3M':
-                                  rangeStart = now.subtract(Duration(days: 90));
-                                  break;
-                                case 'Y':
-                                  rangeStart = now.subtract(Duration(days: 365));
-                                  break;
-                                default:
-                                  rangeStart = now.subtract(Duration(days: 7)); // Default to Week
-                              }
-
-                              final filteredDataPoints = dataPoints
-                                  .where((point) => point.date.isAfter(rangeStart))
-                                  .toList();
-
-                              if (filteredDataPoints.isEmpty) {
+                              if (filteredSpots.isEmpty) {
                                 return const Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20.0),
                                   child: Text(
@@ -257,14 +232,14 @@ class _InputScreenState extends State<InputScreen> {
                                 );
                               }
 
-                              // 2. Calculate Average for Filtered Data
-                              final average = filteredDataPoints
-                                  .map((e) => e.value)
-                                  .reduce((a, b) => a + b) / filteredDataPoints.length;
+                              final filteredYValues = filteredSpots.map((e) => e.y).toList();
+
+                              final average = filteredYValues.isNotEmpty
+                                  ? filteredYValues.reduce((a, b) => a + b) / filteredYValues.length
+                                  : 0.0;
 
                               return Column(
                                 children: [
-                                  // Avg. Label
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -286,7 +261,7 @@ class _InputScreenState extends State<InputScreen> {
                                   verticalSpacing(10),
 
                                   // Graph
-                                  LineChartWidget(data: filteredDataPoints, selectedFilter: selectedFilter),
+                                  LineChartWidget(spots: filteredSpots, selectedFilter: selectedFilter),
                                 ],
                               );
                             }
