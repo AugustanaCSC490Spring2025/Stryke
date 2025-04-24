@@ -12,6 +12,7 @@ class GoalProgressWidget extends StatelessWidget {
     required this.onEdit,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     // Determine if it's a weight gain or loss goal
@@ -81,7 +82,7 @@ class GoalProgressWidget extends StatelessWidget {
               Text(
                 "Your Goal",
                 style: TextStyle(
-                  color: Colors.limeAccent,
+                  color:  Color(0xFFB7FF00),
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600,
                 ),
@@ -121,7 +122,7 @@ class GoalProgressWidget extends StatelessWidget {
               child: const Text(
                 "edit goal",
                 style: TextStyle(
-                  color: Colors.limeAccent,
+                  color:  Color(0xFFB7FF00),
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),
