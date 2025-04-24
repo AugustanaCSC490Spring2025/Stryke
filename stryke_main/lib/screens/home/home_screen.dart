@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/rendering.dart';
 import 'package:test_app/components/exerciseDropDown.dart';
+import '../../widgets/add_metric_dialog.dart';
 import '../../widgets/metric_box_builder.dart';
 import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
@@ -278,12 +277,13 @@ class _HomePageState extends State<HomePage> {
                         .map((entry) => buildMetricBox(
                             context, entry.metricType, entry.value, entry.date))
                         .toList(),
+
                     // Dynamically add the metric boxes here
+
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0x80B7FF00),
-                          // 50% opacity
                           foregroundColor: Colors.black,
                           padding: EdgeInsets.symmetric(
                               horizontal: screenWidth * .25,
@@ -295,203 +295,20 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         onPressed: () {
-                          showDialog(
+                          showAddMetricDialog(
                             context: context,
-                            builder: (context) {
-                              String? selectedMetric;
-
-                              return StatefulBuilder(
-                                builder: (context, setState) {
-                                  return AlertDialog(
-                                    backgroundColor: const Color(0xFF303030),
-                                    title: const Text(
-                                      'Add New Metric',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 24),
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        DropdownButton<String>(
-                                          hint: const Text(
-                                            'Select Metric...',
-                                            style: TextStyle(
-                                                color: Colors.white24),
-                                          ),
-                                          underline: const SizedBox(),
-                                          dropdownColor:
-                                              const Color(0xFF303030),
-                                          value: selectedMetric,
-                                          icon: const Icon(
-                                            Icons.arrow_drop_down,
-                                            color: Colors.white,
-                                          ),
-                                          onChanged: (String? newValue) async {
-                                            setState(() {
-                                              selectedMetric = newValue;
-                                              trackedFields = [];
-                                              fieldValues.clear();
-                                            });
-                                            final fields = await ExerciseServices()
-                                                .fetchGloabalExerciseTrackedFields(
-                                                    newValue!);
-
-                                            setState(() {
-                                              trackedFields = fields;
-                                              fieldValues = {
-                                                for (var field in fields)
-                                                  field: ''
-                                              };
-                                            });
-                                          },
-                                          items: metricBoxExercises
-                                              .map<DropdownMenuItem<String>>(
-                                                  (name) {
-                                            return DropdownMenuItem(
-                                              value: name,
-                                              child: Text(
-                                                name,
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            );
-                                          }).toList(),
-                                        ),
-
-                                        //Dynamic Fields Values Based on
-                                        const SizedBox(height: 10),
-                                        ...trackedFields.map((fieldName) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: TextField(
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                decoration: InputDecoration(
-                                                    hintText:
-                                                        'Enter $fieldName',
-                                                    hintStyle: TextStyle(
-                                                        color: Colors.white24),
-                                                    enabledBorder:
-                                                        const UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .white24))),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    fieldValues[fieldName] =
-                                                        value;
-                                                  });
-                                                }),
-                                          );
-                                        }).toList(),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () async {
-                                          if (selectedMetric != null) {
-                                            if (addedMetrics
-                                                .contains(selectedMetric)) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                      "You already have a $selectedMetric metric displayed."),
-                                                  backgroundColor: Colors.red,
-                                                ),
-                                              );
-                                              return; // Prevent adding duplicate
-                                            }
-                                            final allFieldsFilled = fieldValues
-                                                .values
-                                                .every((value) =>
-                                                    value.isNotEmpty);
-                                            //Check If All Fields Are Filled In
-                                            if (!allFieldsFilled) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                      'You have not filled out $selectedMetric'),
-                                                  backgroundColor: Colors.red,
-                                                ),
-                                              );
-                                              return;
-                                            }
-                                            ExerciseServices().addUserExercise(
-                                                userID: myUser!.uid,
-                                                exerciseName: selectedMetric!,
-                                                metrics: fieldValues);
-                                            QuerySnapshot snapshot =
-                                                await FirebaseFirestore.instance
-                                                    .collection('users')
-                                                    .doc(myUser!.uid)
-                                                    .collection(selectedMetric!)
-                                                    .orderBy('timestamp',
-                                                        descending: true)
-                                                    .limit(1)
-                                                    .get();
-
-                                            Timestamp timestamp = snapshot
-                                                .docs.first
-                                                .get('timestamp');
-                                            String date =
-                                                DateFormat('MM/dd/yyyy')
-                                                    .format(timestamp.toDate());
-
-                                            final box = buildMetricBox(
-                                                context,
-                                                selectedMetric!,
-                                                fieldValues.entries
-                                                    .map((e) =>
-                                                        "${e.key}: ${e.value}")
-                                                    .join("  •  "),
-                                                date);
-                                            Navigator.of(context).pop();
-
-                                            String valueString = fieldValues
-                                                .entries
-                                                .map((e) =>
-                                                    "${e.key}: ${e.value}")
-                                                .join(" • ");
-
-                                            setState(() {
-                                              addedMetrics.add(selectedMetric!);
-                                              metricEntries.add(MetricEntry(
-                                                metricType: selectedMetric!,
-                                                value: valueString,
-                                                date: date,
-                                              ));
-                                            });
-                                          }
-                                        },
-                                        child: const Text('Add'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Cancel'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ).then((_) {
-                            setState(() {
-                              trackedFields = [];
-                              fieldValues.clear();
-                            });
-                          });
+                            metricBoxExercises: metricBoxExercises,
+                            addedMetrics: addedMetrics,
+                            metricEntries: metricEntries,
+                            userID: myUser!.uid,
+                            refreshState: () => setState(() {}),
+                          );
                         },
                         child: const Text(
                           "Add Metric",
                           style: TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),

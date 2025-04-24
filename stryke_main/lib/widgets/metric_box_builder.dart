@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:test_app/screens/home/input_screen.dart';
 
 Widget buildMetricBox(BuildContext context, String? metricType, String value, String date) {
-  return GestureDetector(
-    onTap: () {
+  return Material(
+    color: Colors.transparent,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(20),
+   onTap: () {
       final safeMetric = metricType ?? 'Unknown';
       WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.push(
@@ -80,5 +83,6 @@ Widget buildMetricBox(BuildContext context, String? metricType, String value, St
         ),
       ),
     ),
+    )
   );
 }
