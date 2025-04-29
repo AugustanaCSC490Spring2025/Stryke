@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/utils/date_getter.dart';
 
 class LineChartWidget extends StatelessWidget {
   final List<FlSpot> spots;
@@ -15,6 +16,9 @@ class LineChartWidget extends StatelessWidget {
     final minX = xValues.reduce((a, b) => a < b ? a : b);
     final maxX = xValues.reduce((a, b) => a > b ? a : b);
 
+    int daysInMonth(DateTime date) => DateUtils.getDaysInMonth(date.year, date.month);
+
+
     double minXOverride = minX;
     double maxXOverride = maxX;
 
@@ -24,6 +28,15 @@ class LineChartWidget extends StatelessWidget {
     } else if (selectedFilter == 'Y') {
       minXOverride = 0;
       maxXOverride = 11;
+    } else if (selectedFilter == 'M') {
+      minXOverride = 0;
+      maxXOverride = daysInMonth(DateTime.now()).toDouble() - 1;
+    } else if (selectedFilter == 'D') {
+      final earliest = spots.map((s) => s.x).reduce((a, b) => a < b ? a : b);
+      final latest = spots.map((s) => s.x).reduce((a, b) => a > b ? a : b);
+
+      minXOverride = (earliest - 5).clamp(0, 1440);
+      maxXOverride = (latest + 5).clamp(0, 1440);
     }
 
     final yValues = spots.map((s) => s.y).toList();
@@ -32,6 +45,14 @@ class LineChartWidget extends StatelessWidget {
 
     final minY = (rawMinY - 10).floorToDouble();
     final maxY = (rawMaxY + 10).ceilToDouble();
+
+    final dynamicInterval = (selectedFilter == 'D' || selectedFilter == 'M') && spots.length <= 5
+        ? 1.0
+        : selectedFilter == 'D' ? 10.0
+        : selectedFilter == 'M' ? 5.0
+        : selectedFilter == 'W' ? 1.0
+        : selectedFilter == 'Y' ? 1.0
+        : null;
 
     return SizedBox(
       height: 250,
@@ -47,51 +68,66 @@ class LineChartWidget extends StatelessWidget {
             drawHorizontalLine: true,
             drawVerticalLine: true,
             horizontalInterval: 5,
-            verticalInterval: selectedFilter == 'D' ? 10.0 : selectedFilter == 'W' ? 1.0 : selectedFilter == 'M' ? 5.0 : selectedFilter == 'Y' ? 1.0 : null,
+            verticalInterval: dynamicInterval,
             getDrawingHorizontalLine: (value) => FlLine(
               color: Colors.white24,
               strokeWidth: 0.5,
             ),
-            getDrawingVerticalLine: (value) => FlLine(
-              color: Colors.white30,
-              strokeWidth: 1,
-              dashArray: [2, 12],
-            ),
+            getDrawingVerticalLine: (value) {
+              if (selectedFilter == 'D') {
+                final int x = value.toInt();
+                final hasTick = spots.any((spot) => spot.x.toInt() == x);
+                return hasTick
+                    ? FlLine(color: Colors.white30, strokeWidth: 1, dashArray: [2, 12])
+                    : FlLine(color: Colors.transparent, strokeWidth: 0);
+              }
+
+              return FlLine(color: Colors.white30, strokeWidth: 1, dashArray: [2, 12]);
+            },
+
           ),
           borderData: FlBorderData(show: false),
           titlesData: FlTitlesData(
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: selectedFilter == 'Y' ? 1.0 : selectedFilter == 'M' ? 5.0 : selectedFilter == 'W' ? 1.0 : selectedFilter == 'D' ? 10.0 : null,
+                interval: dynamicInterval,
                 getTitlesWidget: (value, _) {
                   String label;
+
                   switch (selectedFilter) {
                     case 'D':
-                      int totalMinutes = value.toInt();
-                      int hours24 = totalMinutes ~/ 60;
-                      int minutes = totalMinutes % 60;
+                      int minutes = value.toInt();
+                      int hours24 = minutes ~/ 60;
+                      int mins = minutes % 60;
                       int hours12 = hours24 % 12 == 0 ? 12 : hours24 % 12;
                       String period = hours24 >= 12 ? 'PM' : 'AM';
 
-                      if (minutes % 10 == 0) {
-                        label = '$hours12:${minutes.toString().padLeft(2, '0')} $period';
-                      } else {
+                      bool hasDataAtThisMinute = spots.any((spot) => spot.x.toInt() == minutes);
+
+                      if (!hasDataAtThisMinute) {
                         return const SizedBox.shrink();
                       }
+
+                      label = '$hours12:${mins.toString().padLeft(2, '0')} $period';
                       break;
+
                     case 'W':
                       label = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][value.toInt().clamp(0, 6)];
                       break;
+
                     case 'M':
                       int dayOfMonth = value.toInt() + 1;
-                      DateTime now = DateTime.now();
+                      if (value.toInt() % dynamicInterval! != 0) {
+                        return const SizedBox.shrink();
+                      }
                       String monthName = [
-                        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                      ][now.month - 1];
-                      label = '$monthName $dayOfMonth';
+                        '1', '2', '3', '4', '5', '6',
+                        '7', '8', '9', '10', '11', '12'
+                      ][DateTime.now().month - 1];
+                      label = '$monthName/$dayOfMonth';
                       break;
+
                     case 'Y':
                       label = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][value.toInt().clamp(0, 11)];
@@ -100,9 +136,13 @@ class LineChartWidget extends StatelessWidget {
                     default:
                       label = value.toString();
                   }
-                  return Text(
-                    label,
-                    style: const TextStyle(color: Colors.white, fontSize: 10),
+
+                  return Transform.rotate(
+                    angle: -0.8,
+                    child: Text(
+                      label,
+                      style: const TextStyle(color: Colors.white, fontSize: 8),
+                    ),
                   );
                 },
               ),
@@ -130,7 +170,7 @@ class LineChartWidget extends StatelessWidget {
               barWidth: 3,
               isStrokeCapRound: true,
               belowBarData: BarAreaData(
-                show: false,  // Clean look like Apple Health
+                show: false,
               ),
               dotData: FlDotData(
                 show: true,
