@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/intro/views/splash_screen.dart';

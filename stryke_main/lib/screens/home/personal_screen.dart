@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../auth/google_sign_in/authentication.dart';
@@ -33,16 +32,21 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
   void fetchUserData() async {
     if (myUser != null) {
-      final doc = await FirebaseFirestore.instance
+      final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(myUser!.uid)
           .get();
-      final data = doc.data();
+        final weightQuery = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
+          .collection('Weight').
+          orderBy('timestamp', descending: true)
+          .limit(1).get();
+        final weightDoc = weightQuery.docs.first;
+      final data = userDoc.data();
       if (data != null) {
         setState(() {
           age = data['age'] ?? '';
           height = data['height'] ?? '';
-          weight = data['weight'] ?? '';
+          weight = weightDoc.get('value');
         });
       }
     }

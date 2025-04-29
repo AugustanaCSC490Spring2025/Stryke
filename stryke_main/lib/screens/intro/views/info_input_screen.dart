@@ -326,8 +326,8 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                               value: "Female",
                             ),
                             DropdownMenuItem(
-                              child: Text("Other"),
                               value: "Other",
+                              child: Text("Other"),
                             ),
                           ],
                         ),
@@ -361,7 +361,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                         "Sex": _dropdownValue,
                       });
                       await FirebaseFirestore.instance.collection("users").doc(user?.uid).collection("Weight").doc().set({
-                        "weight": _weightController.text,
+                        "value": _weightController.text,
                         "timestamp": DateTime.now(),
                       });
                     } else {

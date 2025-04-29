@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class GoalProgressWidget extends StatelessWidget {
-  final double currentWeight;
-  final double goalWeight;
+  final double currentGoal;
+  final double goalValue;
   final VoidCallback onEdit;
 
   const GoalProgressWidget({
     Key? key,
-    required this.currentWeight,
-    required this.goalWeight,
+    required this.currentGoal,
+    required this.goalValue,
     required this.onEdit,
   }) : super(key: key);
 
@@ -16,18 +16,18 @@ class GoalProgressWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Determine if it's a weight gain or loss goal
-    bool isGainGoal = goalWeight >= currentWeight;
+    bool isGainGoal = goalValue >= currentGoal;
     // Check if goal is achieved based on direction
     bool goalAchieved = isGainGoal
-        ? currentWeight >= goalWeight
-        : currentWeight <= goalWeight;
+        ? currentGoal >= goalValue
+        : currentGoal <= goalValue;
 
     // Calculate progress fraction (0.0 to 1.0) for the bar
     double progressFraction;
     if (isGainGoal) {
-      progressFraction = currentWeight / goalWeight;
+      progressFraction = currentGoal / goalValue;
     } else {
-      progressFraction = goalWeight / currentWeight;
+      progressFraction = goalValue / currentGoal;
     }
     // Clamp the progress to a maximum of 1.0
     if (progressFraction > 1.0) {
@@ -42,14 +42,14 @@ class GoalProgressWidget extends StatelessWidget {
     } else {
       if (isGainGoal) {
         // Gain goal: check how far below goal
-        if (currentWeight < 0.85 * goalWeight) {
+        if (currentGoal < 0.85 * goalValue) {
           progressColor = Colors.red;
         } else {
           progressColor = Colors.orange;
         }
       } else {
         // Loss goal: check how far above goal
-        if (currentWeight > 1.15 * goalWeight) {
+        if (currentGoal > 1.15 * goalValue) {
           progressColor = Colors.red;
         } else {
           progressColor = Colors.orange;
@@ -58,12 +58,12 @@ class GoalProgressWidget extends StatelessWidget {
     }
 
     // Format the weight values for display (no trailing .0 if not needed)
-    String currentStr = currentWeight % 1 == 0
-        ? currentWeight.toInt().toString()
-        : currentWeight.toStringAsFixed(1);
-    String goalStr = goalWeight % 1 == 0
-        ? goalWeight.toInt().toString()
-        : goalWeight.toStringAsFixed(1);
+    String currentStr = currentGoal % 1 == 0
+        ? currentGoal.toInt().toString()
+        : currentGoal.toStringAsFixed(1);
+    String goalStr = goalValue % 1 == 0
+        ? goalValue.toInt().toString()
+        : goalValue.toStringAsFixed(1);
 
     return Container(
       width: double.infinity,
@@ -129,7 +129,6 @@ class GoalProgressWidget extends StatelessWidget {
               ),
             ),
           ),
-
           // Optionally, one could place an "edit goal" button or other footer here.
         ],
       ),

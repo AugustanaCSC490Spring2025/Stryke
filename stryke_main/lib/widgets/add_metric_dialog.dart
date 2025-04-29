@@ -15,8 +15,8 @@ Future<void> showAddMetricDialog({
   required Function refreshState,
 }) async {
   String? selectedMetric;
-  List<String> trackedFields = [];
-  Map<String, String> fieldValues = {};
+  String? trackedField;
+  String? fieldValue;
 
   await showDialog(
     context: context,
@@ -25,12 +25,14 @@ Future<void> showAddMetricDialog({
         builder: (context, setState) {
           return AlertDialog(
             backgroundColor: const Color(0xFF303030),
-            title: const Text('Add New Metric', style: TextStyle(color: Colors.white, fontSize: 24)),
+            title: const Text('Add New Metric',
+                style: TextStyle(color: Colors.white, fontSize: 24)),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButton<String>(
-                  hint: const Text('Select Metric...', style: TextStyle(color: Colors.white24)),
+                  hint: const Text('Select Metric...',
+                      style: TextStyle(color: Colors.white24)),
                   dropdownColor: const Color(0xFF303030),
                   value: selectedMetric,
                   icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
@@ -38,38 +40,42 @@ Future<void> showAddMetricDialog({
                   onChanged: (newValue) async {
                     setState(() {
                       selectedMetric = newValue;
-                      trackedFields = [];
-                      fieldValues.clear();
+                      trackedField = '';
+                      fieldValue = '';
                     });
-                    final fields = await ExerciseServices().fetchGloabalExerciseTrackedFields(newValue!);
+                    final field = await ExerciseServices().fetchGloabalExerciseTrackedField(newValue!);
                     setState(() {
-                      trackedFields = fields;
-                      fieldValues = {for (var field in fields) field: ''};
+                      trackedField = field;
                     });
                   },
-                  items: metricBoxExercises.map<DropdownMenuItem<String>>((name) {
-                    return DropdownMenuItem(value: name, child: Text(name, style: const TextStyle(color: Colors.white)));
+                  items:
+                      metricBoxExercises.map<DropdownMenuItem<String>>((name) {
+                    return DropdownMenuItem(
+                        value: name,
+                        child: Text(name,
+                            style: const TextStyle(color: Colors.white)));
                   }).toList(),
                 ),
                 const SizedBox(height: 10),
-                ...trackedFields.map((fieldName) {
-                  return Padding(
+                if(selectedMetric != null)
+                  Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: TextField(
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        hintText: 'Enter $fieldName',
+                        hintText: 'Enter $trackedField',
                         hintStyle: const TextStyle(color: Colors.white24),
-                        enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+                        enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white24)),
                       ),
                       onChanged: (value) {
                         setState(() {
-                          fieldValues[fieldName] = value;
+                          fieldValue = value;
                         });
                       },
                     ),
-                  );
-                }).toList(),
+                  ),
+                
               ],
             ),
             actions: [
@@ -78,14 +84,19 @@ Future<void> showAddMetricDialog({
                   if (selectedMetric != null) {
                     if (addedMetrics.contains(selectedMetric)) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("You already have this metric."), backgroundColor: Colors.red),
+                        const SnackBar(
+                            content: Text("You already have this metric."),
+                            backgroundColor: Colors.red),
                       );
                       return;
                     }
-                    final allFieldsFilled = fieldValues.values.every((v) => v.isNotEmpty);
+                    final allFieldsFilled = fieldValue!.isNotEmpty;
                     if (!allFieldsFilled) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Fill out all fields for $selectedMetric'), backgroundColor: Colors.red),
+                        SnackBar(
+                            content:
+                                Text('Fill out all fields for $selectedMetric'),
+                            backgroundColor: Colors.red),
                       );
                       return;
                     }
@@ -93,7 +104,7 @@ Future<void> showAddMetricDialog({
                     await ExerciseServices().addUserExercise(
                       userID: userID,
                       exerciseName: selectedMetric!,
-                      metrics: fieldValues,
+                      value: fieldValue!,
                     );
 
                     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -107,12 +118,13 @@ Future<void> showAddMetricDialog({
                     Timestamp timestamp = snapshot.docs.first.get('timestamp');
                     String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
 
-                    String valueString = fieldValues.entries.map((e) => "${e.key}: ${e.value}").join(" • ");
-
                     addedMetrics.add(selectedMetric!);
-                    metricEntries.add(MetricEntry(metricType: selectedMetric!, value: valueString, date: date));
+                    metricEntries.add(MetricEntry(
+                        metricType: selectedMetric!,
+                        value: fieldValue!,
+                        date: date));
 
-                    refreshState();  // Trigger setState in parent
+                    refreshState(); // Trigger setState in parent
                     Navigator.of(context).pop();
                   }
                 },

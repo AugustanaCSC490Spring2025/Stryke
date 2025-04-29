@@ -11,16 +11,16 @@ class ExerciseServices{
     }).toList();
   }
 
-  Future<List<String>> fetchGloabalExerciseTrackedFields(String exerciseName) async{
+  Future <String> fetchGloabalExerciseTrackedField(String exerciseName) async{
     final snapshot = await FirebaseFirestore.instance.collection('exercises')
       .where('name', isEqualTo: exerciseName)
       .limit(1)
       .get();
 
     if(snapshot.docs.isNotEmpty){
-      return List<String>.from(snapshot.docs.first.get('trackedFields'));
+      return snapshot.docs.first.get('trackedField');
     }else{
-      return [];
+      return '';
     }
   }
 
@@ -32,11 +32,11 @@ class ExerciseServices{
     }).toList();
   }
 
-  Future<void> addUserExercise({required String userID, required String exerciseName, required Map<String, dynamic> metrics}) async{
+  Future<void> addUserExercise({required String userID, required String exerciseName, required String value}) async{
     final userExerciseRef = FirebaseFirestore.instance.collection('users').doc(userID).collection(exerciseName);
 
     await userExerciseRef.add({
-      'metricValues' : metrics,
+      'value' : value,
       'timestamp' : DateTime.now()
     });
   }
@@ -46,7 +46,25 @@ class ExerciseServices{
 
     await userWeightRef.add({
       'timestamp' : Timestamp.fromDate(date),
-      'weight' : weight
+      'value' : weight
+    });
+  }
+
+  Future <double> fetchGoal({required String userID, required String goalName}) async{
+    final goalDoc = await FirebaseFirestore.instance.collection('users').doc(userID)
+      .collection('goals').doc(goalName).get();
+
+    final rawData = goalDoc.data()?['goalValue'];
+    return double.tryParse(rawData ?? '') ?? 0;
+  }
+
+  Future <void> addGoal({required String userID, required String goalAmount, required String goalName}) async {
+    final goalDoc = FirebaseFirestore.instance.collection('users').doc(userID).collection('goals').doc(goalName);
+
+    await goalDoc.set({
+      'timestamp' : DateTime.now(),
+      'goalValue' : goalAmount,
+      'trackedGoal' : goalName
     });
   }
 } 

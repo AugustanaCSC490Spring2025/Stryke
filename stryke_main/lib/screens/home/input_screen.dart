@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,14 +28,34 @@ class _InputScreenState extends State<InputScreen> {
   final valueController = TextEditingController();
   Map<String, String>? fieldValues;
   String selectedFilter = 'W';
+  double goalValue = 0;
+  double currentValue = 0;
+  bool isGoalLoaded = true;
 
   @override
   void initState() {
     super.initState();
     _statData = FirestoreService().fetchStatData(widget.metricName);
+    loadGoalAndCurrentValue();
   }
 
-  double goalValue = 170;
+  void loadGoalAndCurrentValue() async{
+    final fetchedGoal = await ExerciseServices().fetchGoal(userID: myUser!.uid, goalName: widget.metricName);
+
+    QuerySnapshot recentDoc = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
+      .collection(widget.metricName).orderBy('timestamp', descending: true)
+      .limit(1).get();
+
+    String rawVal = recentDoc.docs.first['value'];
+    double current = double.tryParse(rawVal) ?? 0;
+
+     //create fetchRecentDoc method?
+    setState(() {
+      goalValue = fetchedGoal;
+      currentValue = current;
+      isGoalLoaded = false;
+    });
+  }
 
   void _showEditGoalDialog() {
     TextEditingController controller =
@@ -67,6 +88,7 @@ class _InputScreenState extends State<InputScreen> {
                 setState(() {
                   goalValue = input;
                 });
+                ExerciseServices().addGoal(userID: myUser!.uid, goalAmount: goalValue.toString(), goalName: widget.metricName);
                 Navigator.pop(context); // Close the dialog if you're using one
               } else {
                 // Optionally show an error or ignore
@@ -381,7 +403,13 @@ class _InputScreenState extends State<InputScreen> {
                                 ExerciseServices().addUserWeight(
                                   userID: myUser!.uid,
                                   weight: valueController.text,
-                                  date: adjustedDate,  // Use date with auto-assigned time
+                                  date: adjustedDate,  
+                                );
+                              }else{
+                                ExerciseServices().addUserExercise(
+                                  userID: myUser!.uid, 
+                                  exerciseName: widget.metricName, 
+                                  value: valueController.text
                                 );
                               }
 
@@ -409,12 +437,14 @@ class _InputScreenState extends State<InputScreen> {
                   const Text("delete", style: TextStyle(color: Colors.red)),
 
                   verticalSpacing(screenHeight * 0.03),
-
-                  GoalProgressWidget(
-                    currentWeight: 120,
-                    goalWeight: goalValue,
-                    onEdit: _showEditGoalDialog,
-                  )
+                  //Goal Piece 
+                  isGoalLoaded
+                    ? const CircularProgressIndicator() //if goal not loaded 
+                    : GoalProgressWidget(
+                        currentGoal: currentValue,
+                        goalValue: goalValue,
+                        onEdit: _showEditGoalDialog,
+                      )
                 ],
               ),
             ),

@@ -25,7 +25,7 @@ class FirestoreService {
       final data = doc.data() as Map<String, dynamic>;
 
       final timestamp = data['timestamp'];
-      final value = data[fieldName];
+      final value = data['value'];
 
       print("Fetched timestamp: $timestamp, value: $value");
 

@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/components/exerciseDropDown.dart';
@@ -36,8 +36,6 @@ class _HomePageState extends State<HomePage> {
   ExerciseDropdownItem? _quickAddValue;
   List<MetricEntry> metricEntries = [];
   List metricBoxExercises = [];
-  List<String> trackedFields = [];
-  Map<String, String> fieldValues = {};
   Set<String> addedMetrics = {};
 
   @override
@@ -69,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       Timestamp timestamp = weightDoc.get('timestamp');
       String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
       setState(() {
-        weight = weightDoc['weight'].toString();
+        weight = weightDoc['value'].toString();
         metricEntries.add(MetricEntry(
           metricType: "Weight",
           value: weight!,
@@ -275,8 +273,7 @@ class _HomePageState extends State<HomePage> {
 
                     ...metricEntries
                         .map((entry) => buildMetricBox(
-                            context, entry.metricType, entry.value, entry.date))
-                        .toList(),
+                            context, entry.metricType, entry.value, entry.date)),
 
                     // Dynamically add the metric boxes here
 
