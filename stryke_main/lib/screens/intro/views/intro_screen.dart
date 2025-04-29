@@ -64,7 +64,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                           context,
                           MaterialPageRoute<void>(
                               builder: (context) =>
-                              const SignUnScreen()),
+                              const SignUpScreen()),
                         );
                       },
                       style: ButtonStyles.colorButton(
