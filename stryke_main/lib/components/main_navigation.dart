@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../screens/home/goal_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/personal_screen.dart';
-import '../screens/home/progress_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   final int index;
