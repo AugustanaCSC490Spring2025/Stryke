@@ -6,6 +6,7 @@ import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/spacing.dart';
 import 'info_input_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -189,14 +190,49 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       )),
 
-                  const Align(
+                  Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFB7FF00)),
+                    child: GestureDetector(
+                      onTap: () async {
+                        final email = _emailController.text.trim();
+                        final messenger = ScaffoldMessenger.of(context);
+                        final nav = Navigator.of(context);
+                        if (email.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please enter your email first")),
+                          );
+                          return;
+                        }
+                              try {
+                                await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                                if (!mounted) return;
+                                showDialog(
+                                // ignore: use_build_context_synchronously
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                title: const Text('Email Sent'),
+                               content: Text('A reset link has been sent to $email.'),
+                                actions: [
+                                 TextButton(
+                                   onPressed: () => nav.pop(context),
+                                       child: const Text('OK'),
+                                    ),
+                                 ],
+                                ),
+                              );
+                              } on FirebaseAuthException catch (e) {
+                                if (!mounted) return;
+                                messenger.showSnackBar(SnackBar(content: Text(e.message ?? 'Failed to send email')),
+                                );
+                                        }
+                                },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFB7FF00)),
+                      ),
                     ),
                   ),
 
@@ -207,37 +243,30 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 70,
                     child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          bool success = await _authService.loginUser(_emailController.text, _passwordController.text);
-                          if (success) {
+                    onPressed: () async {
+                      if (!_formKey.currentState!.validate()) return;
+                      final nav = Navigator.of(context);
+                      bool success = await _authService.loginUser(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+                      if (!success) {
+                        setState(() => _loginError = 'Invalid');
+                        return;
+                      }
+                      setState(() => _loginError = null);
+                      bool userData = await _authService.checkIfUserExists();
+                      if (userData) {
+                        nav.push(
+                          MaterialPageRoute(builder: (_) => const MainNavigation(index: 0)),
+                        );
+                      } else {
+                        nav.push(
+                          MaterialPageRoute(builder: (_) => const InfoInputScreen()),
+                        );
+                      }
+                    },
 
-                            setState(() {
-                              _loginError = null;
-                            });
-                            //bool userData = await _authService.checkIfUserHasData();
-                            bool userData = await _authService.checkIfUserExists();
-                            if (userData == false) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const InfoInputScreen()),
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const MainNavigation(index: 0)),
-                              );
-                            }
-                          } else {
-                            setState(() {
-                              _loginError =
-                                  'Invalid';
-                            });
-                          }
-                        }
-                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB7FF00),
                         shape: RoundedRectangleBorder(
@@ -265,11 +294,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: isRounded
                           ? BorderRadius.circular(30)
                           : BorderRadius.circular(0),
-                      border: Border.all(color: Colors.white.withOpacity(0.5)),
+                      border: Border.all(color: Color.fromARGB(125, 255, 255, 255)),
                       // Light border
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: const Color.fromARGB(32, 0, 0, 0),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -280,24 +309,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         setState(() {
                           isRounded = !isRounded;
                         });
+
+                        final nav = Navigator.of(context);
+
                         bool success = await _authService.googleSignIn();
 
                         if (success) {
                           //bool userData = await _authService.checkIfUserHasData();
                           bool userData = await _authService.checkIfUserExists();
-                          print(userData);
-
+                          if (!mounted) return;
                           if (userData == false) {
-                            Navigator.push(
-                              context,
+                            nav.push(
                               MaterialPageRoute(
-                                  builder: (context) => const InfoInputScreen()),
+                                  builder: (_) => const InfoInputScreen()),
                             );
                           } else {
-                            Navigator.push(
-                              context,
+                            nav.push(
                               MaterialPageRoute(
-                                  builder: (context) => const MainNavigation(index: 0)),
+                                  builder: (_) => const MainNavigation(index: 0)),
                             );
                           }
                         }

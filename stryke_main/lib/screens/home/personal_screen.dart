@@ -15,8 +15,6 @@ class PersonalScreen extends StatefulWidget {
   State<PersonalScreen> createState() => _PersonalScreenState();
 }
 
-
-
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
@@ -42,7 +40,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
         setState(() {
           age = data['age'] ?? '';
           height = data['height'] ?? '';
-          weight = data['weight'] ?? '';
+          weight = data['Weight'] ?? '';
         });
       }
     }

@@ -411,7 +411,7 @@ class _InputScreenState extends State<InputScreen> {
                   verticalSpacing(screenHeight * 0.03),
 
                   GoalProgressWidget(
-                    currentWeight: 120,
+                    currentWeight: 170,
                     goalWeight: goalValue,
                     onEdit: _showEditGoalDialog,
                   )

@@ -304,11 +304,12 @@ class _HomePageState extends State<HomePage> {
                             refreshState: () => setState(() {}),
                           );
                         },
-                        child: const Text(
-                          "Add Metric",
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.add, color: Colors.white70, size: 25),
+                            SizedBox(width: 8),  // Space between icon and text
+                          ],
                         ),
                       ),
                     ),
