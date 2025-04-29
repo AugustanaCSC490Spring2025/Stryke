@@ -15,8 +15,6 @@ class PersonalScreen extends StatefulWidget {
   State<PersonalScreen> createState() => _PersonalScreenState();
 }
 
-
-
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
