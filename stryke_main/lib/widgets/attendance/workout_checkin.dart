@@ -65,8 +65,8 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      const double gymLat = 41.5031;
-      const double gymLng = 90.5506;
+      const double gymLat = 41.50314;
+      const double gymLng = -90.55042;
       const double maxDistanceMeters = 100;
 
       final distance = Geolocator.distanceBetween(
