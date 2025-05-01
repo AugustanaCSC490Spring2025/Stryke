@@ -398,20 +398,13 @@ class _InputScreenState extends State<InputScreen> {
                                 now.minute,
                                 now.second,
                               );
-
-                              if (widget.metricName == 'Weight') {
-                                ExerciseServices().addUserWeight(
-                                  userID: myUser!.uid,
-                                  weight: valueController.text,
-                                  date: adjustedDate,  
-                                );
-                              }else{
+                           
                                 ExerciseServices().addUserExercise(
                                   userID: myUser!.uid, 
                                   exerciseName: widget.metricName, 
-                                  value: valueController.text
+                                  value: valueController.text,
+                                  date: adjustedDate
                                 );
-                              }
 
                               setState(() {
                                 _statData = FirestoreService().fetchStatData(widget.metricName);

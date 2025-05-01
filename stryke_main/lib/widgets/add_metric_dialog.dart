@@ -19,6 +19,7 @@ Future<void> showAddMetricDialog({
   String? trackedField;
   String? fieldValue;
   DateTime? selectedDate;
+  bool isLoadingMetric = false;
 
   await showDialog(
     context: context,
@@ -44,13 +45,32 @@ Future<void> showAddMetricDialog({
                       selectedMetric = newValue;
                       trackedField = '';
                       fieldValue = '';
+                      isLoadingMetric = true;
                     });
                     final field = await ExerciseServices().fetchGloabalExerciseTrackedField(newValue!);
                     setState(() {
                       trackedField = field;
                     });
 
-                    final snapshot = ExerciseServices().checkEntry(userID: userID, String: String)
+                     //check if user has existing date 
+                    final snapshot = await ExerciseServices().checkEntry(userID: userID, metricName: selectedMetric!);
+                    if(snapshot.docs.isNotEmpty){
+                      final doc = snapshot.docs.first;
+                      final value = doc.get('value');
+                      final timestamp = doc.get('timestamp') as Timestamp;
+                      final date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
+
+                      //build metric box of existing exercise 
+                      addedMetrics.add(selectedMetric!);
+                      metricEntries.add(MetricEntry(
+                        metricType: selectedMetric!, 
+                        value: value, 
+                        date: date
+                      ));
+
+                      refreshState(); // Trigger setState in parent
+                    }
+                    Navigator.of(context).pop();
                   },
                   items:
                       metricBoxExercises.map<DropdownMenuItem<String>>((name) {
@@ -61,7 +81,16 @@ Future<void> showAddMetricDialog({
                   }).toList(),
                 ),
                 const SizedBox(height: 10),
-                if (selectedMetric != null) ...[
+                
+                //Already have date tha tis loading 
+                if(isLoadingMetric)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: CircularProgressIndicator(),
+                  )
+                
+                //Input, the has no saved data for that exercise 
+                else if(selectedMetric != null) ...[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: DatePickerDropdown(

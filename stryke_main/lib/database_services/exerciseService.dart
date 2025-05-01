@@ -69,7 +69,10 @@ class ExerciseServices{
   }
 
   Future <QuerySnapshot> checkEntry({required String userID, required String metricName}) async {
-    return await FirebaseFirestore.instance.collection('users').doc(userID).collection(metricName)
-
+    return await FirebaseFirestore.instance.collection('users').doc(userID)
+      .collection(metricName)
+      .orderBy('timestamp')
+      .limit(1)
+      .get();
   }
 } 
