@@ -64,6 +64,8 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
         desiredAccuracy: LocationAccuracy.high,
       );
 
+      //LAT AND LONG ARE SET TO OLIN RIGHT NOW
+      //NEED TO CHANGE TO CARVER EVENTUALLY
       const double gymLat = 41.50314;
       const double gymLng = -90.55042;
       const double maxDistanceMeters = 100;
