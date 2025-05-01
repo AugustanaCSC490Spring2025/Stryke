@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
+import 'package:test_app/screens/intro/views/team_input.dart';
 import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/widgets/text_input/text_input.dart';
 import '../../../auth/google_sign_in/authentication.dart';
@@ -170,41 +171,104 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ],
                       )),
                   verticalSpacing(screenHeight * 0.025),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 70,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          bool success = await _authService.signUpUser(
-                              _emailController.text,
-                              _passwordController.text,
-                              context);
+                  Row(
+                    children: [
+                      // Student Button (Original)
+                      Expanded(
+                        child: SizedBox(
+                          height: 70,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                bool success = await _authService.signUpUser(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  context,
+                                );
 
-                          if (success) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const InfoInputScreen()),
-                            );
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFB7FF00),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                                if (success) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const InfoInputScreen(),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFB7FF00),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: const Text(
+                              'Student',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                      const SizedBox(width: 10), // spacing between buttons
+
+                      // Coach Button (Transparent)
+                      Expanded(
+                        child: SizedBox(
+                          height: 70,
+                          child: OutlinedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                bool success = await _authService.signUpUser(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  context,
+                                );
+
+                                if (success) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                      const InfoInputScreen(),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  color: Color(0xFFB7FF00), width: 2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              backgroundColor: Colors.transparent,
+                            ),
+                            child: const Text(
+                              'Coach',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFB7FF00),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                  verticalSpacing(screenHeight * 0.005),
+                  Text(
+                    "Continue by selecting your role above.",
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 15,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -252,14 +316,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             builder: (context) => const InfoInputScreen()),
                       );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content:
-                              Text("Welcome back! You're already signed up."),
-                          backgroundColor: Color(0xFFB7FF00),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
                       Navigator.push(
                         context,
                         MaterialPageRoute(
