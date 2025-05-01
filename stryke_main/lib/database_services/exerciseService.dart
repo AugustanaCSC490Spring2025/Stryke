@@ -32,12 +32,12 @@ class ExerciseServices{
     }).toList();
   }
 
-  Future<void> addUserExercise({required String userID, required String exerciseName, required String value}) async{
+  Future<void> addUserExercise({required String userID, required String exerciseName, required String value, required DateTime date}) async{
     final userExerciseRef = FirebaseFirestore.instance.collection('users').doc(userID).collection(exerciseName);
 
     await userExerciseRef.add({
       'value' : value,
-      'timestamp' : DateTime.now()
+      'timestamp' : Timestamp.fromDate(date)
     });
   }
 
@@ -66,5 +66,10 @@ class ExerciseServices{
       'goalValue' : goalAmount,
       'trackedGoal' : goalName
     });
+  }
+
+  Future <QuerySnapshot> checkEntry({required String userID, required String metricName}) async {
+    return await FirebaseFirestore.instance.collection('users').doc(userID).collection(metricName)
+
   }
 } 

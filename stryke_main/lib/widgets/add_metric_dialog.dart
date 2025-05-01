@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:test_app/widgets/date_picker_widget.dart';
 
 import '../database_services/exerciseService.dart';
 import '../screens/home/home_screen.dart';
@@ -17,6 +18,7 @@ Future<void> showAddMetricDialog({
   String? selectedMetric;
   String? trackedField;
   String? fieldValue;
+  DateTime? selectedDate;
 
   await showDialog(
     context: context,
@@ -47,6 +49,8 @@ Future<void> showAddMetricDialog({
                     setState(() {
                       trackedField = field;
                     });
+
+                    final snapshot = ExerciseServices().checkEntry(userID: userID, String: String)
                   },
                   items:
                       metricBoxExercises.map<DropdownMenuItem<String>>((name) {
@@ -57,7 +61,18 @@ Future<void> showAddMetricDialog({
                   }).toList(),
                 ),
                 const SizedBox(height: 10),
-                if(selectedMetric != null)
+                if (selectedMetric != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: DatePickerDropdown(
+                      selectedDate: selectedDate,
+                      onDatePicked: (date) {
+                        setState(() {
+                          selectedDate = date;
+                        });
+                      },
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: TextField(
@@ -66,7 +81,8 @@ Future<void> showAddMetricDialog({
                         hintText: 'Enter $trackedField',
                         hintStyle: const TextStyle(color: Colors.white24),
                         enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white24)),
+                          borderSide: BorderSide(color: Colors.white24),
+                        ),
                       ),
                       onChanged: (value) {
                         setState(() {
@@ -75,7 +91,7 @@ Future<void> showAddMetricDialog({
                       },
                     ),
                   ),
-                
+                ]  
               ],
             ),
             actions: [
@@ -85,13 +101,13 @@ Future<void> showAddMetricDialog({
                     if (addedMetrics.contains(selectedMetric)) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text("You already have this metric."),
+                            content: Text("You already have this displayed."),
                             backgroundColor: Colors.red),
                       );
                       return;
                     }
-                    final allFieldsFilled = fieldValue!.isNotEmpty;
-                    if (!allFieldsFilled) {
+                    
+                    if (fieldValue!.isEmpty || selectedDate == null ) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content:
@@ -105,6 +121,7 @@ Future<void> showAddMetricDialog({
                       userID: userID,
                       exerciseName: selectedMetric!,
                       value: fieldValue!,
+                      date: selectedDate!
                     );
 
                     QuerySnapshot snapshot = await FirebaseFirestore.instance
