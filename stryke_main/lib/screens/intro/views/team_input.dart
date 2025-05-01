@@ -5,6 +5,7 @@ import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
+import '../../../utils/team_join.dart';
 
 class TeamInputScreen extends StatefulWidget {
   const TeamInputScreen({Key? key}) : super(key: key);
@@ -20,98 +21,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
 
   String? _errorMsg;
 
-  Future<void> _goNext() async {
-    setState(() {
-      _errorMsg = null;
-    });
-    try {
-      DocumentSnapshot teamsQuery = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(user!.uid)
-      .get();
-      List<String> teamIDs = List.from(teamsQuery['team_IDs']);
-
-       if (teamIDs.isNotEmpty) {
-      // Navigate to the next screen or show success message
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MainNavigation(index: 0),
-        ),
-      );
-      } else {
-        setState(() {
-          _errorMsg = "Please add a team code first";
-        });
-      }
-      _formKey.currentState!.validate();
-    }catch (e) {
-      setState(() {
-        _errorMsg = "Please add a team code first";
-      });
-      _formKey.currentState!.validate();
-
-    }
-
-
-
-   
-
-  }
-
-  Future<void> _joinTeam() async {
-      setState(() {
-        _errorMsg = null;
-      });
-
-    if (_formKey.currentState!.validate()) {
-      String teamCode = _teamKeyController.text.trim().toUpperCase();
-      String userId = user!.uid;
-
-      try {
-        // Check if the team code exists in Firestore
-        QuerySnapshot teamDocQuery = await FirebaseFirestore.instance
-            .collection('teams')
-            .where('team_Code', isEqualTo: teamCode)
-            .get();
-        print("here");
-        final teamDoc = teamDocQuery.docs.first;
-        // Add the user to the team in Firestore
-        if (teamDoc['athlete_IDs'].contains(userId)) {
-          setState(() {
-            _errorMsg = "You are already in this team";
-          });
-          _formKey.currentState!.validate();
-          return;
-        }else{        
-          await FirebaseFirestore.instance
-            .collection('teams')
-            .doc(teamDoc.id)
-            .update({
-          'athlete_IDs': FieldValue.arrayUnion([userId]),
-          });
-          await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .update({
-          'team_IDs': FieldValue.arrayUnion([teamDoc.id]),
-          });
-        }
-
-      // Navigate to the next screen or show success message
-          setState(() {
-            _teamKeyController.clear();
-            _errorMsg = null;
-          });
-
-      } catch (e) {
-        setState(() {
-          _errorMsg = "Team code does not exist";
-        });
-        _formKey.currentState!.validate();
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +37,8 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Color(0xFFB7FF00),
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
               child: const Icon(Icons.electric_bolt_rounded, size: 100),
             ),
@@ -181,14 +91,16 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                         filled: true,
                         fillColor: const Color(0xFF1C1C1C),
                         contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20.0),
+                            vertical: 20, horizontal: 20.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(color: Color(0xFFB7FF00)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(color: Color(0xFFB7FF00)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
                         ),
                       ),
                       obscureText: false,
@@ -199,7 +111,7 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                           return "Please enter a team code";
                         } else if (_errorMsg != null) {
                           return _errorMsg;
-                        } else{
+                        } else {
                           return null;
                         }
                       },
@@ -213,26 +125,50 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                         width: screenWidth * .45,
                         height: 70,
                         child: ElevatedButton(
-                          onPressed: () => _joinTeam(), 
+                          onPressed: () {
+                            joinTeam(
+                              formKey: _formKey,
+                              teamKeyController: _teamKeyController,
+                              userId: user!.uid,
+                              setErrorMsg: (msg) {
+                                setState(() {
+                                  _errorMsg = msg;
+                                });
+                              },
+                            );
+                          },
                           style: ButtonStyles.colorButton(
-                            backgroundColor: const Color(0xffb7ff00),
-                            textColor: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                          child: const Text("Add Team"),),
+                              backgroundColor: const Color(0xffb7ff00),
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          child: const Text("Add Team"),
+                        ),
                       ),
                       horizontalSpacing(20),
                       SizedBox(
                         width: screenWidth * .45,
                         height: 70,
                         child: ElevatedButton(
-                          onPressed: () => _goNext(),
+                          onPressed: () {
+                            goNext(
+                              context: context,
+                              formKey: _formKey,
+                              userId: user!.uid,
+                              setErrorMsg: (msg) {
+                                setState(() {
+                                  _errorMsg = msg;
+                                });
+                              },
+                            );
+                          },
                           style: ButtonStyles.colorButton(
-                            backgroundColor: const Color(0xffb7ff00),
-                            textColor: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                          child: const Text("Done"),),
+                              backgroundColor: const Color(0xffb7ff00),
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          child: const Text("Done"),
+                        ),
                       ),
                     ],
                   )
