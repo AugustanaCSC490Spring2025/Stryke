@@ -32,7 +32,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
       List<String> teamIDs = List.from(teamsQuery['team_IDs']);
 
        if (teamIDs.isNotEmpty) {
-      // Navigate to the next screen or show success message
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -52,11 +51,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
       _formKey.currentState!.validate();
 
     }
-
-
-
-   
-
   }
 
   Future<void> _joinTeam() async {
@@ -74,7 +68,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
             .collection('teams')
             .where('team_Code', isEqualTo: teamCode)
             .get();
-        print("here");
         final teamDoc = teamDocQuery.docs.first;
         // Add the user to the team in Firestore
         if (teamDoc['athlete_IDs'].contains(userId)) {
@@ -97,8 +90,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
           'team_IDs': FieldValue.arrayUnion([teamDoc.id]),
           });
         }
-
-      // Navigate to the next screen or show success message
           setState(() {
             _teamKeyController.clear();
             _errorMsg = null;
