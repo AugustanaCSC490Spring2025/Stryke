@@ -8,7 +8,7 @@ import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/profile_info_topbar.dart';
-import '../../widgets/workout_checkin.dart';
+import '../../widgets/attendance/workout_checkin.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
           //TOP BAR WITH PROFILE ICON AND USER NAME
           ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
 
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .035)),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .025)),
 
           SliverList(
             delegate: SliverChildListDelegate([
@@ -120,78 +120,6 @@ class _HomePageState extends State<HomePage> {
                       screenHeight: screenHeight,
                       userId: myUser?.uid,
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     const Text(
-                    //       "Quick Add",
-                    //       style: TextStyle(color: Colors.white, fontSize: 15),
-                    //     ),
-                    //   ],
-                    // ),
-                    // const Padding(padding: EdgeInsets.only(top: 5)),
-                    // Container(
-                    //   padding: EdgeInsets.all(screenWidth * 0.05),
-                    //   decoration: BoxDecoration(
-                    //     color: const Color(0xFF303030),
-                    //     borderRadius: BorderRadius.circular(20),
-                    //   ),
-                    //   child: Row(
-                    //     children: [
-                    //       const SizedBox(width: 5),
-                    //       Expanded(
-                    //         child: DropdownButton<ExerciseDropdownItem>(
-                    //           hint: const Text(
-                    //             "Select Exercise: ",
-                    //             style: TextStyle(color: Colors.white24),
-                    //           ),
-                    //           underline: SizedBox(),
-                    //           dropdownColor: const Color(0xFF303030),
-                    //           value: _quickAddValue,
-                    //           icon: const Icon(
-                    //             Icons.arrow_drop_down,
-                    //             color: Colors.white,
-                    //           ),
-                    //           iconSize: 30,
-                    //           isExpanded: true,
-                    //           onChanged: (ExerciseDropdownItem? newValue) {
-                    //             setState(() {
-                    //               _quickAddValue = newValue;
-                    //             });
-                    //           },
-                    //           items: _exerciseOptions.map((exercise) {
-                    //             return DropdownMenuItem<ExerciseDropdownItem>(
-                    //               value: exercise,
-                    //               child: Text(exercise.name,
-                    //                   style:
-                    //                       const TextStyle(color: Colors.white)),
-                    //             );
-                    //           }).toList(),
-                    //         ),
-                    //       ),
-                    //       Container(
-                    //           width: 2,
-                    //           height: screenWidth * 0.1,
-                    //           color: Color(0xFF1C1C1C)),
-                    //       const SizedBox(width: 5),
-                    //       Expanded(
-                    //         child: TextField(
-                    //           decoration: InputDecoration(
-                    //             hintText: "input here",
-                    //             hintStyle: TextStyle(color: Colors.white24),
-                    //             border: InputBorder.none,
-                    //           ),
-                    //           style: TextStyle(color: Colors.white),
-                    //         ),
-                    //       ),
-                    //       IconButton(
-                    //         icon:
-                    //             const Icon(Icons.add, color: Color(0xFFB7FF00)),
-                    //         onPressed: () async {},
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     verticalSpacing(screenHeight * .02),
 
                     Container(
@@ -221,16 +149,10 @@ class _HomePageState extends State<HomePage> {
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0x80B7FF00),
-                          foregroundColor: Colors.black,
+                          backgroundColor: const Color(0xFFB7FF00),
                           padding: EdgeInsets.symmetric(
-                              horizontal: screenWidth * .25,
-                              vertical: screenHeight * .02),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: const BorderSide(
-                                color: Color(0xFFB7FF00), width: 2),
-                          ),
+                              horizontal: screenWidth * .35,
+                              vertical: screenHeight * .025),
                         ),
                         onPressed: () {
                           showAddMetricDialog(
@@ -245,8 +167,7 @@ class _HomePageState extends State<HomePage> {
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.add, color: Colors.white70, size: 25),
-                            SizedBox(width: 8),  // Space between icon and text
+                            Icon(Icons.add, color: Colors.black, size: 25),
                           ],
                         ),
                       ),

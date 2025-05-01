@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:test_app/widgets/attendance/slide_act.dart';
 
 class WorkoutCheckInCard extends StatefulWidget {
   final double screenWidth;
@@ -54,7 +55,7 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
       if (permission == LocationPermission.deniedForever) {
         setState(() {
           locationStatus =
-          'Location permissions are permanently denied. Please enable them in settings.';
+              'Location permissions are permanently denied. Please enable them in settings.';
           isLoading = false;
         });
         return;
@@ -96,53 +97,12 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: const Color(0xFF2A2A2A),
-      margin: EdgeInsets.all(widget.screenWidth * 0.04),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(widget.screenWidth * 0.04),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Workout Check-In',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: widget.screenWidth * 0.05,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            if (!isCheckedIn)
-              ElevatedButton(
-                onPressed: isLoading ? null : _checkInUser,
-                child: isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Check In'),
-              )
-            else
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to your workout logging screen
-                  Navigator.pushNamed(context, '/workoutLog');
-                },
-                child: const Text('Log Workout'),
-              ),
-            if (locationStatus.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  locationStatus,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return SlideToConfirmCard(
+      screenWidth: screenWidth,
+      onSlide: _checkInUser, // <-- passed as a callback
+    );  }
 }

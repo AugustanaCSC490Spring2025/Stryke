@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
+  slide_to_act: ^2.0.2
 
 
   bloc: ^9.0.0
