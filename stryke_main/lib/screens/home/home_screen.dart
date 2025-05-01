@@ -8,6 +8,7 @@ import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/profile_info_topbar.dart';
+import '../../widgets/workout_checkin.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -114,78 +115,83 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Quick Add",
-                          style: TextStyle(color: Colors.white, fontSize: 15),
-                        ),
-                      ],
+                    WorkoutCheckInCard(
+                      screenWidth: screenWidth,
+                      screenHeight: screenHeight,
+                      userId: myUser?.uid,
                     ),
-                    const Padding(padding: EdgeInsets.only(top: 5)),
-                    Container(
-                      padding: EdgeInsets.all(screenWidth * 0.05),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF303030),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 5),
-                          Expanded(
-                            child: DropdownButton<ExerciseDropdownItem>(
-                              hint: const Text(
-                                "Select Exercise: ",
-                                style: TextStyle(color: Colors.white24),
-                              ),
-                              underline: SizedBox(),
-                              dropdownColor: const Color(0xFF303030),
-                              value: _quickAddValue,
-                              icon: const Icon(
-                                Icons.arrow_drop_down,
-                                color: Colors.white,
-                              ),
-                              iconSize: 30,
-                              isExpanded: true,
-                              onChanged: (ExerciseDropdownItem? newValue) {
-                                setState(() {
-                                  _quickAddValue = newValue;
-                                });
-                              },
-                              items: _exerciseOptions.map((exercise) {
-                                return DropdownMenuItem<ExerciseDropdownItem>(
-                                  value: exercise,
-                                  child: Text(exercise.name,
-                                      style:
-                                          const TextStyle(color: Colors.white)),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          Container(
-                              width: 2,
-                              height: screenWidth * 0.1,
-                              color: Color(0xFF1C1C1C)),
-                          const SizedBox(width: 5),
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: "input here",
-                                hintStyle: TextStyle(color: Colors.white24),
-                                border: InputBorder.none,
-                              ),
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          IconButton(
-                            icon:
-                                const Icon(Icons.add, color: Color(0xFFB7FF00)),
-                            onPressed: () async {},
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     const Text(
+                    //       "Quick Add",
+                    //       style: TextStyle(color: Colors.white, fontSize: 15),
+                    //     ),
+                    //   ],
+                    // ),
+                    // const Padding(padding: EdgeInsets.only(top: 5)),
+                    // Container(
+                    //   padding: EdgeInsets.all(screenWidth * 0.05),
+                    //   decoration: BoxDecoration(
+                    //     color: const Color(0xFF303030),
+                    //     borderRadius: BorderRadius.circular(20),
+                    //   ),
+                    //   child: Row(
+                    //     children: [
+                    //       const SizedBox(width: 5),
+                    //       Expanded(
+                    //         child: DropdownButton<ExerciseDropdownItem>(
+                    //           hint: const Text(
+                    //             "Select Exercise: ",
+                    //             style: TextStyle(color: Colors.white24),
+                    //           ),
+                    //           underline: SizedBox(),
+                    //           dropdownColor: const Color(0xFF303030),
+                    //           value: _quickAddValue,
+                    //           icon: const Icon(
+                    //             Icons.arrow_drop_down,
+                    //             color: Colors.white,
+                    //           ),
+                    //           iconSize: 30,
+                    //           isExpanded: true,
+                    //           onChanged: (ExerciseDropdownItem? newValue) {
+                    //             setState(() {
+                    //               _quickAddValue = newValue;
+                    //             });
+                    //           },
+                    //           items: _exerciseOptions.map((exercise) {
+                    //             return DropdownMenuItem<ExerciseDropdownItem>(
+                    //               value: exercise,
+                    //               child: Text(exercise.name,
+                    //                   style:
+                    //                       const TextStyle(color: Colors.white)),
+                    //             );
+                    //           }).toList(),
+                    //         ),
+                    //       ),
+                    //       Container(
+                    //           width: 2,
+                    //           height: screenWidth * 0.1,
+                    //           color: Color(0xFF1C1C1C)),
+                    //       const SizedBox(width: 5),
+                    //       Expanded(
+                    //         child: TextField(
+                    //           decoration: InputDecoration(
+                    //             hintText: "input here",
+                    //             hintStyle: TextStyle(color: Colors.white24),
+                    //             border: InputBorder.none,
+                    //           ),
+                    //           style: TextStyle(color: Colors.white),
+                    //         ),
+                    //       ),
+                    //       IconButton(
+                    //         icon:
+                    //             const Icon(Icons.add, color: Color(0xFFB7FF00)),
+                    //         onPressed: () async {},
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     verticalSpacing(screenHeight * .02),
 
                     Container(
