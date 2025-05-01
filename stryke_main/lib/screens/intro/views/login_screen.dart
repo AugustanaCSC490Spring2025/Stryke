@@ -240,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Login Button
                   SizedBox(
-                    width: double.infinity,
+                    width: screenWidth * .7,
                     height: 70,
                     child: ElevatedButton(
                     onPressed: () async {
@@ -270,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB7FF00),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       child: const Text(
