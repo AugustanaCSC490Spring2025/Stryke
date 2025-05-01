@@ -7,6 +7,7 @@ import '../../widgets/metric_box_builder.dart';
 import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exerciseService.dart';
 import 'package:intl/intl.dart';
+import '../../widgets/profile_info_topbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,7 +30,6 @@ class MetricEntry {
 
 class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
-  String? name;
   String? weight;
   bool isLoading = true;
   List<ExerciseDropdownItem> _exerciseOptions = [];
@@ -76,16 +76,6 @@ class _HomePageState extends State<HomePage> {
       });
     }
 
-    if (userDoc.exists) {
-      setState(() {
-        name = userDoc['first_Name'];
-      });
-    } else {
-      setState(() {
-        name = "Unknown User";
-      });
-    }
-
     setState(() => isLoading = false);
   }
 
@@ -112,62 +102,7 @@ class _HomePageState extends State<HomePage> {
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
 
           //TOP BAR WITH PROFILE ICON AND USER NAME
-          SliverAppBar(
-            floating: false,
-            pinned: false,
-            snap: false,
-            automaticallyImplyLeading: false,
-            backgroundColor: const Color(0xFF1C1C1C),
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.zero,
-              title: Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 22.0,
-                      backgroundImage: NetworkImage(myUser?.photoURL ??
-                          'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'),
-                    ),
-                    SizedBox(width: screenWidth * 0.03),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Welcome,',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: screenWidth * 0.035,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            '$name!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: screenWidth * 0.045,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_outlined,
-                        color: Colors.white,
-                      ),
-                      iconSize: 26,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
 
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .035)),
 
