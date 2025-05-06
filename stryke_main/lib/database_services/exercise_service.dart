@@ -1,16 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_app/components/exerciseDropDown.dart';
 
 class ExerciseServices{
   
-  Future<List<ExerciseDropdownItem>> fetchGlobalExercises() async{
-    final snapshot = await FirebaseFirestore.instance.collection('exercises').get();
-
-    return snapshot.docs.map((doc){
-      return ExerciseDropdownItem(id: doc.id, name: doc['name']);
-    }).toList();
-  }
-
   Future <String> fetchGloabalExerciseTrackedField(String exerciseName) async{
     final snapshot = await FirebaseFirestore.instance.collection('exercises')
       .where('name', isEqualTo: exerciseName)
@@ -32,12 +23,12 @@ class ExerciseServices{
     }).toList();
   }
 
-  Future<void> addUserExercise({required String userID, required String exerciseName, required String value}) async{
+  Future<void> addUserExercise({required String userID, required String exerciseName, required String value, required DateTime date}) async{
     final userExerciseRef = FirebaseFirestore.instance.collection('users').doc(userID).collection(exerciseName);
 
     await userExerciseRef.add({
       'value' : value,
-      'timestamp' : DateTime.now()
+      'timestamp' : Timestamp.fromDate(date)
     });
   }
 
@@ -66,5 +57,13 @@ class ExerciseServices{
       'goalValue' : goalAmount,
       'trackedGoal' : goalName
     });
+  }
+
+  Future <QuerySnapshot> checkEntry({required String userID, required String metricName}) async {
+    return await FirebaseFirestore.instance.collection('users').doc(userID)
+      .collection(metricName)
+      .orderBy('timestamp')
+      .limit(1)
+      .get();
   }
 } 

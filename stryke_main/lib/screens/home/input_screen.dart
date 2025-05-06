@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:test_app/database_services/exerciseService.dart';
+import 'package:test_app/database_services/exercise_service.dart';
 import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/widgets/date_picker_widget.dart';
 import 'package:test_app/widgets/line_chart_widget.dart';
@@ -290,7 +290,7 @@ class _InputScreenState extends State<InputScreen> {
                     children: [
                       // Date Column
                       Expanded(
-                          child: Container(
+                        child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           border: Border.all(color: Color(0xFF3A3A3A)),
@@ -321,7 +321,8 @@ class _InputScreenState extends State<InputScreen> {
                             ),
                           ],
                         ),
-                      )),
+                      )
+                      ),
                     ],
                   ),
                   Row(
@@ -398,20 +399,13 @@ class _InputScreenState extends State<InputScreen> {
                                 now.minute,
                                 now.second,
                               );
-
-                              if (widget.metricName == 'Weight') {
-                                ExerciseServices().addUserWeight(
-                                  userID: myUser!.uid,
-                                  weight: valueController.text,
-                                  date: adjustedDate,  
-                                );
-                              }else{
+                           
                                 ExerciseServices().addUserExercise(
                                   userID: myUser!.uid, 
                                   exerciseName: widget.metricName, 
-                                  value: valueController.text
+                                  value: valueController.text,
+                                  date: adjustedDate
                                 );
-                              }
 
                               setState(() {
                                 _statData = FirestoreService().fetchStatData(widget.metricName);

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../auth/google_sign_in/authentication.dart';
 import '../../components/main_navigation.dart';
 import '../../utils/spacing.dart';
+import '../../widgets/profile_info_topbar.dart';
 import '../intro/views/splash_screen.dart';
 
 class PersonalScreen extends StatefulWidget {
@@ -61,63 +62,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
         slivers: [
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
           //TOP BAR WITH PROFILE ICON AND USER NAME
-          SliverAppBar(
-            floating: false,
-            pinned: false,
-            snap: false,
-            automaticallyImplyLeading: false,
-            backgroundColor: const Color(0xFF1C1C1C),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding: EdgeInsets.only(top: screenHeight * 0.02),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: screenWidth * 0.05),
-                      child: CircleAvatar(
-                        radius: 30.0,
-                        backgroundImage: NetworkImage(myUser!.photoURL ??
-                            'https://example.com/default-avatar.png'),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: screenWidth * 0.03,
-                            right: screenWidth * 0.02),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // User's Name (white)
-                            Text(
-                              myUser!.displayName ?? 'User',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: screenWidth * 0.02),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.notifications_outlined,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
+
 
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .02)),
 
