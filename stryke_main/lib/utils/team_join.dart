@@ -45,15 +45,48 @@ Future<void> joinTeam({
   if (formKey.currentState!.validate()) {
     String code = teamKeyController.text.trim().toUpperCase();
 
+    if (code[0] == "C"){
+      try {
+        QuerySnapshot coachCodeQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('coach_code', isEqualTo: code)
+          .get();
+
+        final teamDoc = coachCodeQuery.docs.first;
+
+        if (teamDoc['coaches_ids'].contains(userId)) {
+          setErrorMsg("You are already in this team");
+          formKey.currentState!.validate();
+          return;
+        } else {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(teamDoc.id)
+              .update({
+            'coaches_IDs': FieldValue.arrayUnion([userId]),
+          });
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .update({
+            'team_IDs': FieldValue.arrayUnion([teamDoc.id]),
+          });
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .update({'is_Coach': true});
+        }
+
+      }catch (e) {
+        setErrorMsg("Coach code does not exist");
+        formKey.currentState!.validate();
+      }
+    }
+
     try {
       QuerySnapshot teamQuery = await FirebaseFirestore.instance
           .collection('teams')
           .where('team_Code', isEqualTo: code)
-          .get();
-
-      QuerySnapshot coachCodeQuery = await FirebaseFirestore.instance
-          .collection('users')
-          .where('coach_code', isEqualTo: code)
           .get();
 
       final teamDoc = teamQuery.docs.first;
