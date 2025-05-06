@@ -31,7 +31,6 @@ class MetricEntry {
 class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
   String? weight;
-  List<String>? metricPrefs;
   bool isLoading = true;
   List<MetricEntry> metricEntries = [];
   List metricBoxExercises = [];
@@ -47,8 +46,14 @@ class _HomePageState extends State<HomePage> {
   // Function to load user data from Firestore
   Future<void> _loadUserData() async {
     setState(() => isLoading = true);
-    
-    QuerySnapshot weightSnapshot = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid).collection('Weight').orderBy('timestamp', descending: true).limit(1).get();
+
+    QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myUser!.uid)
+        .collection('Weight')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
 
     if (weightSnapshot.docs.isNotEmpty) {
       DocumentSnapshot weightDoc = weightSnapshot.docs.first;
@@ -63,16 +68,6 @@ class _HomePageState extends State<HomePage> {
         ));
       });
     }
-
-    QuerySnapshot metricPreferences = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid).collection('metric_preferences').get();
-    
-    List<String> preferences = metricPreferences.docs
-    .map((doc) => doc.id)
-    .toList();
-
-    setState(() {
-      metricPrefs = preferences;
-    });
 
     setState(() => isLoading = false);
   }
@@ -89,13 +84,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
-    if (isLoading) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1C1C1C),
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
