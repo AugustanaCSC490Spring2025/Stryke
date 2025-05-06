@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../components/main_navigation.dart';
 
 Future<void> goNext({
@@ -44,12 +43,17 @@ Future<void> joinTeam({
   setErrorMsg(null);
 
   if (formKey.currentState!.validate()) {
-    String teamCode = teamKeyController.text.trim().toUpperCase();
+    String code = teamKeyController.text.trim().toUpperCase();
 
     try {
       QuerySnapshot teamQuery = await FirebaseFirestore.instance
           .collection('teams')
-          .where('team_Code', isEqualTo: teamCode)
+          .where('team_Code', isEqualTo: code)
+          .get();
+
+      QuerySnapshot coachCodeQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('coach_code', isEqualTo: code)
           .get();
 
       final teamDoc = teamQuery.docs.first;

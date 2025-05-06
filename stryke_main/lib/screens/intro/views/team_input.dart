@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
@@ -19,92 +21,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
 
   String? _errorMsg;
 
-<<<<<<< HEAD
-  Future<void> _goNext() async {
-    setState(() {
-      _errorMsg = null;
-    });
-    try {
-      DocumentSnapshot teamsQuery = await FirebaseFirestore.instance
-      .collection('users')
-      .doc(user!.uid)
-      .get();
-      List<String> teamIDs = List.from(teamsQuery['team_IDs']);
-
-       if (teamIDs.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MainNavigation(index: 0),
-        ),
-      );
-      } else {
-        setState(() {
-          _errorMsg = "Please add a team code first";
-        });
-      }
-      _formKey.currentState!.validate();
-    }catch (e) {
-      setState(() {
-        _errorMsg = "Please add a team code first";
-      });
-      _formKey.currentState!.validate();
-
-    }
-  }
-
-  Future<void> _joinTeam() async {
-      setState(() {
-        _errorMsg = null;
-      });
-
-    if (_formKey.currentState!.validate()) {
-      String teamCode = _teamKeyController.text.trim().toUpperCase();
-      String userId = user!.uid;
-
-      try {
-        // Check if the team code exists in Firestore
-        QuerySnapshot teamDocQuery = await FirebaseFirestore.instance
-            .collection('teams')
-            .where('team_Code', isEqualTo: teamCode)
-            .get();
-        final teamDoc = teamDocQuery.docs.first;
-        // Add the user to the team in Firestore
-        if (teamDoc['athlete_IDs'].contains(userId)) {
-          setState(() {
-            _errorMsg = "You are already in this team";
-          });
-          _formKey.currentState!.validate();
-          return;
-        }else{        
-          await FirebaseFirestore.instance
-            .collection('teams')
-            .doc(teamDoc.id)
-            .update({
-          'athlete_IDs': FieldValue.arrayUnion([userId]),
-          });
-          await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .update({
-          'team_IDs': FieldValue.arrayUnion([teamDoc.id]),
-          });
-        }
-          setState(() {
-            _teamKeyController.clear();
-            _errorMsg = null;
-          });
-
-      } catch (e) {
-        setState(() {
-          _errorMsg = "Team code does not exist";
-        });
-        _formKey.currentState!.validate();
-      }
-    }
-  }
-=======
->>>>>>> 6dbdebedd9d369cb67ba887c86e6d2b17422c966
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +32,7 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: screenHeight * .35,
+            height: screenHeight * .125,
             child: Container(
               width: double.infinity,
               decoration: const BoxDecoration(
@@ -124,14 +40,14 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
-              child: Icon(Icons.electric_bolt_rounded, size: screenHeight * .22),
+              child: const Icon(Icons.electric_bolt_rounded, size: 100),
             ),
           ),
-          verticalSpacing(screenHeight * .035),
+          verticalSpacing(30),
           const Align(
             alignment: Alignment.center,
             child: Text(
-              "Time to Team Up!",
+              "STRYKE On!",
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -139,13 +55,13 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
               ),
             ),
           ),
-          verticalSpacing(screenHeight* .015),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
+          verticalSpacing(20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 50),
             child: Column(
               children: [
                 Text(
-                  "Enter your 5 letter team code below.",
+                  "Now enter your 5 letter team code!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -157,7 +73,7 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
           ),
           verticalSpacing(30),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Form(
               key: _formKey,
               child: Column(
@@ -175,14 +91,14 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                         filled: true,
                         fillColor: const Color(0xFF1C1C1C),
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 22.5, horizontal: 20.0),
+                            vertical: 20, horizontal: 20.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(30),
                           borderSide:
                               const BorderSide(color: Color(0xFFB7FF00)),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(30),
                           borderSide:
                               const BorderSide(color: Color(0xFFB7FF00)),
                         ),
@@ -201,90 +117,61 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                       },
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  verticalSpacing(20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Add Team Button at the top
-                      Padding(
-                        padding: EdgeInsets.only(top: screenHeight * .025), // adjust as needed
-                        child: SizedBox(
-                          width: screenWidth * 0.7,
-                          height: 70,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              joinTeam(
-                                formKey: _formKey,
-                                teamKeyController: _teamKeyController,
-                                userId: user!.uid,
-                                setErrorMsg: (msg) {
-                                  setState(() {
-                                    _errorMsg = msg;
-                                  });
-                                },
-                              );
-                            },
-                            style: ButtonStyles.colorButton(
+                      SizedBox(
+                        width: screenWidth * .45,
+                        height: 70,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            joinTeam(
+                              formKey: _formKey,
+                              teamKeyController: _teamKeyController,
+                              userId: user!.uid,
+                              setErrorMsg: (msg) {
+                                setState(() {
+                                  _errorMsg = msg;
+                                });
+                              },
+                            );
+                          },
+                          style: ButtonStyles.colorButton(
                               backgroundColor: const Color(0xffb7ff00),
                               textColor: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                            child: const Text("Add Team"),
-                          ),
+                              fontSize: 20),
+                          child: const Text("Add Team"),
                         ),
                       ),
-
-                      verticalSpacing(screenHeight * .005),
-                      Text(
-                        "This adds a team to your profile.",
-                        style: TextStyle(
-                          color: Colors.white38,
-                          fontSize: 15,
+                      horizontalSpacing(20),
+                      SizedBox(
+                        width: screenWidth * .45,
+                        height: 70,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            goNext(
+                              context: context,
+                              formKey: _formKey,
+                              userId: user!.uid,
+                              setErrorMsg: (msg) {
+                                setState(() {
+                                  _errorMsg = msg;
+                                });
+                              },
+                            );
+                          },
+                          style: ButtonStyles.colorButton(
+                              backgroundColor: const Color(0xffb7ff00),
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          child: const Text("Done"),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      // Done Button at the very bottom
-                      Padding(
-                        padding: EdgeInsets.only(top: screenHeight * .1 ), // adjust as needed
-                        child: SizedBox(
-                          width: screenWidth * 0.7,
-                          height: 70,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              goNext(
-                                context: context,
-                                formKey: _formKey,
-                                userId: user!.uid,
-                                setErrorMsg: (msg) {
-                                  setState(() {
-                                    _errorMsg = msg;
-                                  });
-                                },
-                              );
-                            },
-                            style: ButtonStyles.transparentButton(
-                              borderColor: const Color(0xffb7ff00),
-                              textColor: const Color(0xffb7ff00),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            child: const Text("Done"),
-                          ),
-                        ),
-
-                      ),
-                      verticalSpacing(screenHeight * .005),
-                      Text(
-                        "Now continue to the app and enjoy your experience!",
-                        style: TextStyle(
-                          color: Colors.white38,
-                          fontSize: 13,
-                        ),
-                        textAlign: TextAlign.center,
                       ),
                     ],
-                  ),
+                  )
                 ],
               ),
             ),

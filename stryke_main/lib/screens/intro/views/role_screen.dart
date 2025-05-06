@@ -15,11 +15,21 @@ class RoleInputScreen extends StatefulWidget {
 
 class _RoleInputScreenState extends State<RoleInputScreen>{
     final user = FirebaseAuth.instance.currentUser;
-
+    final String coachesKey = "augie_coach";
+    String? _selectedRole;
     String? _errorMsg;
 
     Future<void> _goNext() async{
-
+        setState(() {
+            _errorMsg = null;
+        });
+        try{
+            
+        }catch (e) {
+            setState(() {
+                _errorMsg = "Please select a role first";
+            });
+        }
     }
 
     @override
@@ -35,6 +45,7 @@ class _RoleInputScreenState extends State<RoleInputScreen>{
             children: [
                 SizedBox(
                 height: screenHeight * .125,
+                width: screenWidth * .99,
                 child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -44,7 +55,7 @@ class _RoleInputScreenState extends State<RoleInputScreen>{
                 child: const Icon(Icons.electric_bolt_rounded, size: 100),
                 ),
             ),
-            verticalSpacing(30),
+            verticalSpacing(screenHeight * .05),
             const Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -56,7 +67,7 @@ class _RoleInputScreenState extends State<RoleInputScreen>{
                     ),
                 )   ,
             ),
-            verticalSpacing(20),
+            verticalSpacing(screenHeight * .05),
             const Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -67,7 +78,54 @@ class _RoleInputScreenState extends State<RoleInputScreen>{
                     color: Colors.white,
                     ),
                 )
-            ), 
+            ),
+            verticalSpacing(screenHeight * .05),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                    RadioListTile(
+                        title: Text('Coach'),
+                        value: 'Coach',
+                        groupValue: _selectedRole,
+                        onChanged: (value) {
+                            setState(() {
+                                _selectedRole = value;
+                            });
+                        },
+                    ),
+                    horizontalSpacing(screenWidth * .05),
+                    RadioListTile(
+                        title: Text('Athlete'),
+                        value: 'Athlete',
+                        groupValue: _selectedRole,
+                        onChanged: (value) {
+                            setState(() {
+                                _selectedRole = value;
+                            });
+                        },
+                    ),
+                ],
+            ),
+            verticalSpacing(screenHeight * .05),
+            if(_selectedRole == "Coach") ... [
+                
+            ],
+            verticalSpacing(screenHeight * .5),
+            SizedBox(
+                width: screenWidth * .45,
+                height: screenHeight * .075,
+                child: ElevatedButton(
+                    onPressed:() => _goNext(),
+                    style: ButtonStyles.colorButton(
+                        backgroundColor: const Color(0xffb7ff00),
+                        textColor: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                        child: const Text("Done"),
+                ),
+            ),
+
+
             ],
         )
         )
