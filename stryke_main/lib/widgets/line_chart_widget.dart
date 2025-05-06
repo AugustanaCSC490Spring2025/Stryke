@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:test_app/utils/date_getter.dart';
 
 class LineChartWidget extends StatelessWidget {
   final List<FlSpot> spots;

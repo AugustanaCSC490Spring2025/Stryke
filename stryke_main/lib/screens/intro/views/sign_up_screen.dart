@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
@@ -10,10 +11,10 @@ class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUnScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUnScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -22,7 +23,6 @@ class _SignUnScreenState extends State<SignUpScreen> {
   bool loginRequired = false;
   bool obscurePassword = true;
   bool isRounded = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,8 @@ class _SignUnScreenState extends State<SignUpScreen> {
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(40)),
                 ),
-                child: Icon(Icons.electric_bolt_rounded, size: screenHeight * 0.12),
+                child: Icon(Icons.electric_bolt_rounded,
+                    size: screenHeight * 0.12),
               ),
             ),
 
@@ -63,7 +64,7 @@ class _SignUnScreenState extends State<SignUpScreen> {
             ),
 
             verticalSpacing(screenHeight * 0.03),
-        
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
               child: Column(
@@ -82,44 +83,63 @@ class _SignUnScreenState extends State<SignUpScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: 90,
-                            child: buildTextInput(
-                              label: "Email", 
-                              hint: "ex. user@gmail.com", 
-                              controller: _emailController,
-                               validator:  (val) {
-                                  if (val!.isEmpty) {
-                                    return 'Please fill in this field';
-                                  } else if (!RegExp(
-                                          r'^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$')
-                                      .hasMatch(val)) {
-                                    return 'Please enter a valid email';
-                                  }
-                                  return null;
-                                })
-                          ),
+                              height: 90,
+                              child: buildTextInput(
+                                  obscure: false,
+                                  label: "Email",
+                                  hint: "ex. user@gmail.com",
+                                  controller: _emailController,
+                                  validator: (val) {
+                                    if (val!.isEmpty) {
+                                      return 'Please fill in this field';
+                                    } else if (!RegExp(
+                                            r'^[\w-\.]+@([\w-]+.)+[\w-]{2,4}$')
+                                        .hasMatch(val)) {
+                                      return 'Please enter a valid email';
+                                    }
+                                    return null;
+                                  })),
                           verticalSpacing(screenHeight * 0.005),
                           buildTextInput(
-                            label: "Password", 
-                            hint: "ex. Test1234!", 
-                            controller: _passwordController,
-                            validator: (val) {
+                              label: "Password",
+                              hint: "ex. Test1234!",
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  obscurePassword
+                                      ? CupertinoIcons.eye_fill
+                                      : CupertinoIcons.eye_slash_fill,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    obscurePassword = !obscurePassword;
+                                  });
+                                },
+                              ),
+                              obscure: obscurePassword,
+                              controller: _passwordController,
+                              validator: (val) {
                                 if (val!.isEmpty) {
                                   return 'Please fill in this field';
                                 }
                                 // Check for missing conditions and build the error message
                                 String errorMessage = '';
                                 if (!RegExp(r'^(?=.*?[A-Z])').hasMatch(val)) {
-                                  errorMessage += '• At least one uppercase letter\n';
+                                  errorMessage +=
+                                      '• At least one uppercase letter\n';
                                 }
                                 if (!RegExp(r'^(?=.*?[a-z])').hasMatch(val)) {
-                                  errorMessage += '• At least one lowercase letter\n';
+                                  errorMessage +=
+                                      '• At least one lowercase letter\n';
                                 }
                                 if (!RegExp(r'^(?=.*?[0-9])').hasMatch(val)) {
                                   errorMessage += '• At least one number\n';
                                 }
-                                if (!RegExp(r'^(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^])').hasMatch(val)) {
-                                  errorMessage += '• At least one special character\n';
+                                if (!RegExp(
+                                        r'^(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^])')
+                                    .hasMatch(val)) {
+                                  errorMessage +=
+                                      '• At least one special character\n';
                                 }
                                 if (val.length < 8) {
                                   errorMessage += '• Minimum of 8 characters\n';
@@ -132,61 +152,130 @@ class _SignUnScreenState extends State<SignUpScreen> {
                               }),
                           verticalSpacing(screenHeight * 0.025),
                           SizedBox(
-                            height: 90,
-                            child: buildTextInput(
-                            label: "Confirm Password", 
-                            hint: 'ex. Test1234!', 
-                            controller: _confirmPasswordController, 
-                            validator: (val) {
-                                if (val!.isEmpty) {
-                                  return 'Please fill in this field';
-                                } else if (val != _passwordController.text) {
-                                  return 'Please enter a correct password';
-                                }
-                                return null;
-                              },)),
+                              height: 90,
+                              child: buildTextInput(
+                                obscure: true,
+                                label: "Confirm Password",
+                                hint: 'ex. Test1234!',
+                                controller: _confirmPasswordController,
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return 'Please fill in this field';
+                                  } else if (val != _passwordController.text) {
+                                    return 'Please enter a correct password';
+                                  }
+                                  return null;
+                                },
+                              )),
                         ],
                       )),
                   verticalSpacing(screenHeight * 0.025),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 70,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          bool success = await _authService.signUpUser(_emailController.text, _passwordController.text, context);
-        
-                          if (success) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const InfoInputScreen()),
-                            );
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFB7FF00),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                  Row(
+                    children: [
+                      // Student Button (Original)
+                      Expanded(
+                        child: SizedBox(
+                          height: 70,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                bool success = await _authService.signUpUser(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  context,
+                                );
+
+                                if (success) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const InfoInputScreen(),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFB7FF00),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: const Text(
+                              'Student',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
+                      const SizedBox(width: 10), // spacing between buttons
+
+                      // Coach Button (Transparent)
+                      Expanded(
+                        child: SizedBox(
+                          height: 70,
+                          child: OutlinedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                bool success = await _authService.signUpUser(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                  context,
+                                );
+
+                                if (success) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                      const InfoInputScreen(),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  color: Color(0xFFB7FF00), width: 2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              backgroundColor: Colors.transparent,
+                            ),
+                            child: const Text(
+                              'Coach',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFB7FF00),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                  verticalSpacing(screenHeight * 0.005),
+                  Text(
+                    "Continue by selecting your role above.",
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 15,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
-        
+
             //sign in with google
             verticalSpacing(screenHeight * 0.035),
-        
+
             AnimatedContainer(
               curve: Curves.ease,
               duration: const Duration(milliseconds: 500),
@@ -222,19 +311,15 @@ class _SignUnScreenState extends State<SignUpScreen> {
                     if (userData == false) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const InfoInputScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const InfoInputScreen()),
                       );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Welcome back! You're already signed up."),
-                          backgroundColor: Color(0xFFB7FF00),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const MainNavigation(index: 0)),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MainNavigation(index: 0)),
                       );
                     }
                   }
@@ -246,7 +331,8 @@ class _SignUnScreenState extends State<SignUpScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Image.asset(
-                        'assets/images/google_logo.png', // The Google logo asset
+                        'assets/images/google_logo.png',
+                        // The Google logo asset
                         width: 24,
                         height: 24,
                       ),
@@ -266,7 +352,7 @@ class _SignUnScreenState extends State<SignUpScreen> {
             ),
 
             verticalSpacing(screenHeight * 0.055),
-        
+
             InkWell(
               onTap: () {
                 Navigator.push(
@@ -299,11 +385,11 @@ class _SignUnScreenState extends State<SignUpScreen> {
     );
   }
 
-@override // Prevent memory leaks and help run smoother
-void dispose() {
-  _emailController.dispose();
-  _passwordController.dispose();
-  _confirmPasswordController.dispose();
-  super.dispose();
-}
+  @override // Prevent memory leaks and help run smoother
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 }
