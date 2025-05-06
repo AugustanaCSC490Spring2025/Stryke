@@ -244,8 +244,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                               : FutureBuilder<List<String>>(
                                             future: Future.wait(teamIDs.map((id) async {
                                               final doc = await FirebaseFirestore.instance.collection('teams').doc(id).get();
-                                              return doc.data()?['name'] ?? 'Unnamed Team';
-                                            })),
+                                              final data = doc.data();
+                                              return data?['name'] ?? id;                                            })),
                                             builder: (context, snapshot) {
                                               if (!snapshot.hasData) return const CircularProgressIndicator();
                                               final teamNames = snapshot.data!;
