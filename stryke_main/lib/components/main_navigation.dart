@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/personal_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   final int index;
-
-  // Constructor to receive the initial index
   const MainNavigation({super.key, required this.index});  // Default value for initialIndex
 
   @override
@@ -14,6 +14,15 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;  // Default selected index
+  bool _isProfileLocator = false;
+  Map<String,String>? _profileData;
+
+void initState() {
+  super.initState();
+  _selectedIndex = widget.index;
+}
+
+
 
   final List<Widget> _screens = [
     HomePage(),

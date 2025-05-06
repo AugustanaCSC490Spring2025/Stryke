@@ -104,6 +104,13 @@ class _HomePageState extends State<HomePage> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: const Color(0xFF1C1C1C),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(

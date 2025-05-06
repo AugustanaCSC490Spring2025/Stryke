@@ -17,7 +17,7 @@ class PersonalScreen extends StatefulWidget {
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
-
+  bool isLoading = true;
   String age = '';
   String height = '';
   String weight = '';
@@ -28,30 +28,38 @@ class _PersonalScreenState extends State<PersonalScreen> {
     fetchUserData();
   }
 
-  void fetchUserData() async {
-    if (myUser != null) {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(myUser!.uid)
-          .get();
-        final weightQuery = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
-          .collection('Weight').
-          orderBy('timestamp', descending: true)
-          .limit(1).get();
-        final weightDoc = weightQuery.docs.first;
-      final data = userDoc.data();
-      if (data != null) {
-        setState(() {
-          age = data['age'] ?? '';
-          height = data['height'] ?? '';
-          weight = weightDoc.get('value');
-        });
-      }
-    }
+  Future<void> fetchUserData() async {
+    setState(() => isLoading = true);
+
+   final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myUser!.uid)
+        .get();
+    final weightQuery = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myUser!.uid)
+        .collection('Weight')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+    final weightDoc = weightQuery.docs.first;
+    final data = userDoc.data();
+    setState(() {
+      age = data?['age']?.toString() ?? '';
+      height = data?['height']?.toString() ?? '';
+      weight = weightDoc.get('value').toString();
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: const Color(0xFF1C1C1C),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
