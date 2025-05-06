@@ -1,11 +1,10 @@
  import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:test_app/components/exerciseDropDown.dart';
-import '../../widgets/add_metric_dialog.dart';
-import '../../widgets/metric_box_builder.dart';
+import '../../widgets/metric_box/add_metric_dialog.dart';
+import '../../widgets/metric_box/metric_box_builder.dart';
 import '../../utils/spacing.dart';
-import 'package:test_app/database_services/exerciseService.dart';
+import 'package:test_app/database_services/exercise_service.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/profile_info_topbar.dart';
 import '../../widgets/attendance/workout_checkin.dart';
@@ -33,8 +32,6 @@ class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
   String? weight;
   bool isLoading = true;
-  List<ExerciseDropdownItem> _exerciseOptions = [];
-  ExerciseDropdownItem? _quickAddValue;
   List<MetricEntry> metricEntries = [];
   List metricBoxExercises = [];
   Set<String> addedMetrics = {};
@@ -49,11 +46,6 @@ class _HomePageState extends State<HomePage> {
   // Function to load user data from Firestore
   Future<void> _loadUserData() async {
     setState(() => isLoading = true);
-
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(myUser!.uid)
-        .get();
 
     QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
         .collection('users')
@@ -81,10 +73,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadGlobalExercises() async {
-    final exercises = await ExerciseServices().fetchGlobalExercises();
     ExerciseServices().fetchGlobalExerciseNames().then((exerciseNames) {
       setState(() {
-        _exerciseOptions = exercises;
         metricBoxExercises = exerciseNames;
       });
     });

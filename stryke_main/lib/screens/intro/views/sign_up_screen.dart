@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/components/main_navigation.dart';
 import 'package:test_app/screens/intro/views/info_input_screen.dart';
-import 'package:test_app/screens/intro/views/team_input.dart';
 import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/widgets/text_input/text_input.dart';
 import '../../../auth/google_sign_in/authentication.dart';

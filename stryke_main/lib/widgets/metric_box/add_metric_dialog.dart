@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:test_app/widgets/date_picker_widget.dart';
-
-import '../database_services/exerciseService.dart';
-import '../screens/home/home_screen.dart';
+import '../../database_services/exercise_service.dart';
+import '../../screens/home/home_screen.dart';
 // Import your services and models here
 
 Future<void> showAddMetricDialog({
@@ -69,8 +68,13 @@ Future<void> showAddMetricDialog({
                       ));
 
                       refreshState(); // Trigger setState in parent
+                      Navigator.of(context).pop();
+                    }else{
+                      setState((){
+                        isLoadingMetric = false;
+                      });
                     }
-                    Navigator.of(context).pop();
+                    
                   },
                   items:
                       metricBoxExercises.map<DropdownMenuItem<String>>((name) {
@@ -82,14 +86,14 @@ Future<void> showAddMetricDialog({
                 ),
                 const SizedBox(height: 10),
                 
-                //Already have date tha tis loading 
+                //Already have data that is loading 
                 if(isLoadingMetric)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: CircularProgressIndicator(),
                   )
                 
-                //Input, the has no saved data for that exercise 
+                //Input, the user has no saved data for that exercise 
                 else if(selectedMetric != null) ...[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),

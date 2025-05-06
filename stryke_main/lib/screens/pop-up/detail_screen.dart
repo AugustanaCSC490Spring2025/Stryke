@@ -44,7 +44,7 @@ class _StatDetailScreenState extends State<StatDetailScreen> {
   }
 
   void _showEditDialog() {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController textController = TextEditingController();
 
     showDialog(
       context: context,
@@ -54,7 +54,7 @@ class _StatDetailScreenState extends State<StatDetailScreen> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text("Edit ${widget.statLabel}", style: const TextStyle(color: Colors.white)),
           content: TextField(
-            controller: _controller,
+            controller: textController,
             keyboardType: TextInputType.number,
             style: const TextStyle(color: Colors.white),
             decoration: const InputDecoration(
@@ -70,7 +70,7 @@ class _StatDetailScreenState extends State<StatDetailScreen> {
             ),
             TextButton(
               onPressed: () async {
-                double? value = double.tryParse(_controller.text);
+                double? value = double.tryParse(textController.text);
                 if (value != null) {
                   final uid = FirebaseAuth.instance.currentUser!.uid;
                   await FirebaseFirestore.instance

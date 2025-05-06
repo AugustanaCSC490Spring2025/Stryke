@@ -1,16 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:test_app/components/exerciseDropDown.dart';
 
 class ExerciseServices{
   
-  Future<List<ExerciseDropdownItem>> fetchGlobalExercises() async{
-    final snapshot = await FirebaseFirestore.instance.collection('exercises').get();
-
-    return snapshot.docs.map((doc){
-      return ExerciseDropdownItem(id: doc.id, name: doc['name']);
-    }).toList();
-  }
-
   Future <String> fetchGloabalExerciseTrackedField(String exerciseName) async{
     final snapshot = await FirebaseFirestore.instance.collection('exercises')
       .where('name', isEqualTo: exerciseName)

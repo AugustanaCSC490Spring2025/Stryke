@@ -330,12 +330,12 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                               onChanged: dropdownCallback,
                               items: const [
                                 DropdownMenuItem(
-                                  child: Text("Male"),
                                   value: "Male",
+                                  child: Text("Male"),
                                 ),
                                 DropdownMenuItem(
-                                  child: Text("Female"),
                                   value: "Female",
+                                  child: Text("Female"),
                                 ),
                                 DropdownMenuItem(
                                   value: "Other",

@@ -65,8 +65,10 @@ class _SlideToConfirmCardState extends State<SlideToConfirmCard> {
                   elevation: 0,
                   innerColor: Colors.white,
                   outerColor: const Color(0xFFB7FF00),
-                  sliderButtonIcon:
-                      const Icon(Icons.arrow_forward, color: Colors.black),
+                  sliderButtonIcon:MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: const Icon(Icons.arrow_forward, color: Colors.black)
+                      ),
                   text: 'Slide to Confirm',
                   textStyle: const TextStyle(
                     color: Colors.black,
