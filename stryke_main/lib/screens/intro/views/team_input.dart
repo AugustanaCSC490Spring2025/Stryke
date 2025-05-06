@@ -5,6 +5,7 @@ import '../../../components/main_navigation.dart';
 import '../../../components/my_text_field.dart';
 import '../../../utils/button_styles.dart';
 import '../../../utils/spacing.dart';
+import '../../../utils/team_join.dart';
 
 class TeamInputScreen extends StatefulWidget {
   const TeamInputScreen({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
 
   String? _errorMsg;
 
+<<<<<<< HEAD
   Future<void> _goNext() async {
     setState(() {
       _errorMsg = null;
@@ -103,6 +105,8 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
       }
     }
   }
+=======
+>>>>>>> 6dbdebedd9d369cb67ba887c86e6d2b17422c966
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +123,8 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Color(0xFFB7FF00),
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(40)),
               ),
               child: const Icon(Icons.electric_bolt_rounded, size: 100),
             ),
@@ -172,14 +177,16 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                         filled: true,
                         fillColor: const Color(0xFF1C1C1C),
                         contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20.0),
+                            vertical: 20, horizontal: 20.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(color: Color(0xFFB7FF00)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(color: Color(0xFFB7FF00)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFFB7FF00)),
                         ),
                       ),
                       obscureText: false,
@@ -190,7 +197,7 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                           return "Please enter a team code";
                         } else if (_errorMsg != null) {
                           return _errorMsg;
-                        } else{
+                        } else {
                           return null;
                         }
                       },
@@ -204,26 +211,50 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                         width: screenWidth * .45,
                         height: 70,
                         child: ElevatedButton(
-                          onPressed: () => _joinTeam(), 
+                          onPressed: () {
+                            joinTeam(
+                              formKey: _formKey,
+                              teamKeyController: _teamKeyController,
+                              userId: user!.uid,
+                              setErrorMsg: (msg) {
+                                setState(() {
+                                  _errorMsg = msg;
+                                });
+                              },
+                            );
+                          },
                           style: ButtonStyles.colorButton(
-                            backgroundColor: const Color(0xffb7ff00),
-                            textColor: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                          child: const Text("Add Team"),),
+                              backgroundColor: const Color(0xffb7ff00),
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          child: const Text("Add Team"),
+                        ),
                       ),
                       horizontalSpacing(20),
                       SizedBox(
                         width: screenWidth * .45,
                         height: 70,
                         child: ElevatedButton(
-                          onPressed: () => _goNext(),
+                          onPressed: () {
+                            goNext(
+                              context: context,
+                              formKey: _formKey,
+                              userId: user!.uid,
+                              setErrorMsg: (msg) {
+                                setState(() {
+                                  _errorMsg = msg;
+                                });
+                              },
+                            );
+                          },
                           style: ButtonStyles.colorButton(
-                            backgroundColor: const Color(0xffb7ff00),
-                            textColor: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                          child: const Text("Done"),),
+                              backgroundColor: const Color(0xffb7ff00),
+                              textColor: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                          child: const Text("Done"),
+                        ),
                       ),
                     ],
                   )
