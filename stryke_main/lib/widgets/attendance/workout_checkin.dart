@@ -20,12 +20,10 @@ class WorkoutCheckInCard extends StatefulWidget {
 
 class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
   bool isCheckedIn = false;
-  bool isLoading = false;
   String locationStatus = '';
 
-  Future<void> _checkInUser() async {
+  Future<bool> _checkInUser() async {
     setState(() {
-      isLoading = true;
       locationStatus = '';
     });
 
@@ -34,9 +32,7 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
       if (!serviceEnabled) {
         setState(() {
           locationStatus = 'Location services are disabled.';
-          isLoading = false;
         });
-        return;
       }
 
       LocationPermission permission = await Geolocator.checkPermission();
@@ -47,29 +43,27 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
       if (permission == LocationPermission.denied) {
         setState(() {
           locationStatus = 'Location permission denied.';
-          isLoading = false;
         });
-        return;
       }
 
       if (permission == LocationPermission.deniedForever) {
         setState(() {
           locationStatus =
               'Location permissions are permanently denied. Please enable them in settings.';
-          isLoading = false;
         });
-        return;
       }
 
       final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
+      print("${position.latitude}, ${position.longitude}");
+
       //LAT AND LONG ARE SET TO OLIN RIGHT NOW
       //NEED TO CHANGE TO CARVER EVENTUALLY
       const double gymLat = 41.50314;
       const double gymLng = -90.55042;
-      const double maxDistanceMeters = 100;
+      const double maxDistanceMeters = 250;
 
       final distance = Geolocator.distanceBetween(
         gymLat,
@@ -78,24 +72,28 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
         position.longitude,
       );
 
+      print('You are ${distance} meters from the correct location');
+
+      print('You are $distance meters from the correct location');
+
       if (distance <= maxDistanceMeters) {
         setState(() {
           isCheckedIn = true;
           locationStatus = 'Check-in successful!';
         });
+        return true;
       } else {
         setState(() {
+          isCheckedIn = false;
           locationStatus = 'You must be at the gym to check in.';
         });
+        return false;
       }
     } catch (e) {
       setState(() {
         locationStatus = 'Error accessing location: $e';
       });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
+      return false;
     }
   }
 
@@ -105,6 +103,8 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
 
     return SlideToConfirmCard(
       screenWidth: screenWidth,
-      onSlide: _checkInUser, // <-- passed as a callback
-    );  }
+      onSlide: _checkInUser,
+      isCheckedIn: isCheckedIn,
+    );
+  }
 }
