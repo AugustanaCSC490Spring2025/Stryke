@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:test_app/widgets/attendance/slide_act.dart';
+import 'package:test_app/database_services/workout_checkin_service.dart';
+
 
 class WorkoutCheckInCard extends StatefulWidget {
   final double screenWidth;
@@ -21,6 +23,28 @@ class WorkoutCheckInCard extends StatefulWidget {
 class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
   bool isCheckedIn = false;
   String locationStatus = '';
+
+  final CheckInService _checkInService = CheckInService();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeCheckInStatus();
+  }
+
+  Future<void> _initializeCheckInStatus() async {
+    if (widget.userId == null) return;
+
+    final alreadyCheckedIn = await _checkInService.isCheckedInToday(widget.userId!);
+    if(!alreadyCheckedIn) {
+      await _checkInService.createUnverifiedCheckIn(widget.userId!);
+    }
+
+    setState(() {
+      isCheckedIn = alreadyCheckedIn;
+    });
+  }
+
 
   Future<bool> _checkInUser() async {
     setState(() {
@@ -77,10 +101,13 @@ class _WorkoutCheckInCardState extends State<WorkoutCheckInCard> {
       print('You are $distance meters from the correct location');
 
       if (distance <= maxDistanceMeters) {
+        await _checkInService.markCheckedIn(widget.userId!);
+
         setState(() {
           isCheckedIn = true;
           locationStatus = 'Check-in successful!';
         });
+
         return true;
       } else {
         setState(() {
