@@ -16,7 +16,7 @@ class DatePickerDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()async{
+      onTap: () async{
         final pickedDate = await showDatePicker(
           context: context,
           initialDate: DateTime.now(),
@@ -25,14 +25,18 @@ class DatePickerDropdown extends StatelessWidget {
           builder: (context, child) {
             return Theme(
               data: ThemeData.dark().copyWith(
-                colorScheme: ColorScheme.dark(
+                colorScheme: const ColorScheme.dark(
                   primary: Color(0xFFB7FF00),
                   onSurface: Colors.white,
                 ),
-                dialogBackgroundColor: Color(0xFF2A2A2A),
-              ), 
-              child: child!
+                dialogTheme: const DialogTheme(
+                  backgroundColor: Color(0xFF303030),
+                ),
+                canvasColor: Color(0xFF303030), // Ensures consistent background
+              ),
+              child: child!,
             );
+
           },
         );
         if(pickedDate != null){

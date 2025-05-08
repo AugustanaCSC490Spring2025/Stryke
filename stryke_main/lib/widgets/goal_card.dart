@@ -13,6 +13,7 @@ class GoalProgressWidget extends StatelessWidget {
   }) : super(key: key);
 
 
+
   @override
   Widget build(BuildContext context) {
     // Determine if it's a weight gain or loss goal

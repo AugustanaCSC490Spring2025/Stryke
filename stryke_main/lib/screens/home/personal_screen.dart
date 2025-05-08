@@ -19,12 +19,14 @@ class PersonalScreen extends StatefulWidget {
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _heightController = TextEditingController();
 
   String age = '';
   String height = '';
   String weight = '';
   List<String> teamIDs = [];
-
 
   @override
   void initState() {
@@ -61,7 +63,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
     }
   }
 
-
   void deleteTeam(String teamId) async {
     await FirebaseFirestore.instance
         .collection('users')
@@ -76,9 +77,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
     Navigator.of(context).pop(); // optional: close dialog
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -218,67 +216,92 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                      const TeamInputScreen()),
+                                          const TeamInputScreen()),
                                 );
                               },
                             ),
 
                             ListTile(
-                              leading: const Icon(Icons.assignment,
-                                  color: Color(0xFFB7FF00)),
-                              // Clipboard icon
-                              title: const Text("My Teams",
-                                  style: TextStyle(color: Colors.white)),
+                                leading: const Icon(Icons.assignment,
+                                    color: Color(0xFFB7FF00)),
+                                // Clipboard icon
+                                title: const Text("My Teams",
+                                    style: TextStyle(color: Colors.white)),
                                 onTap: () {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
                                       print("Loaded teamIDs: $teamIDs");
                                       return AlertDialog(
-                                        backgroundColor: const Color(0xFF303030),
-                                        title: const Text('My Teams', style: TextStyle(color: Colors.white)),
+                                        backgroundColor:
+                                            const Color(0xFF303030),
+                                        title: const Text('My Teams',
+                                            style:
+                                                TextStyle(color: Colors.white)),
                                         content: SizedBox(
                                           width: double.maxFinite,
                                           child: teamIDs.isEmpty
-                                              ? const Text('No teams.', style: TextStyle(color: Colors.white70))
+                                              ? const Text('No teams.',
+                                                  style: TextStyle(
+                                                      color: Colors.white70))
                                               : FutureBuilder<List<String>>(
-                                            future: Future.wait(teamIDs.map((id) async {
-                                              final doc = await FirebaseFirestore.instance.collection('teams').doc(id).get();
-                                              final data = doc.data();
-                                              return data?['name'] ?? id;                                            })),
-                                            builder: (context, snapshot) {
-                                              if (!snapshot.hasData) return const CircularProgressIndicator();
-                                              final teamNames = snapshot.data!;
-                                              return ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount: teamNames.length,
-                                                itemBuilder: (context, index) {
-                                                  return ListTile(
-                                                    title: Text(teamNames[index], style: const TextStyle(color: Colors.white)),
-                                                    trailing: IconButton(
-                                                      icon: const Icon(Icons.delete, color: Colors.red),
-                                                      onPressed: () => deleteTeam(teamIDs[index]),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          ),
+                                                  future: Future.wait(
+                                                      teamIDs.map((id) async {
+                                                    final doc =
+                                                        await FirebaseFirestore
+                                                            .instance
+                                                            .collection('teams')
+                                                            .doc(id)
+                                                            .get();
+                                                    final data = doc.data();
+                                                    return data?['name'] ?? id;
+                                                  })),
+                                                  builder: (context, snapshot) {
+                                                    if (!snapshot.hasData)
+                                                      return const CircularProgressIndicator();
+                                                    final teamNames =
+                                                        snapshot.data!;
+                                                    return ListView.builder(
+                                                      shrinkWrap: true,
+                                                      itemCount:
+                                                          teamNames.length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return ListTile(
+                                                          title: Text(
+                                                              teamNames[index],
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .white)),
+                                                          trailing: IconButton(
+                                                            icon: const Icon(
+                                                                Icons.delete,
+                                                                color:
+                                                                    Colors.red),
+                                                            onPressed: () =>
+                                                                deleteTeam(
+                                                                    teamIDs[
+                                                                        index]),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
                                         ),
                                         actions: [
                                           TextButton(
-                                            child: const Text('Close', style: TextStyle(color: Color(0xFFB7FF00))),
-                                            onPressed: () => Navigator.of(context).pop(),
+                                            child: const Text('Close',
+                                                style: TextStyle(
+                                                    color: Color(0xFFB7FF00))),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
                                           ),
                                         ],
                                       );
                                     },
                                   );
-                                }
-
-
-                            ),
-
+                                }),
 
                             ListTile(
                               leading: const Icon(Icons.edit,
@@ -308,8 +331,50 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                               ),
                                             ),
                                             const SizedBox(height: 20),
-                                            const TextField(
-                                              decoration: InputDecoration(
+                                            TextFormField(
+                                              controller: _nameController,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              keyboardType: TextInputType.name,
+                                              decoration: const InputDecoration(
+                                                hintText: 'ex. Phil Foden',
+                                                labelText: "First & Last name",
+                                                labelStyle: TextStyle(
+                                                    color: Colors.white38),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Colors.white38),
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Color(0xFFB7FF00)),
+                                                ),
+                                                errorStyle:
+                                                    TextStyle(height: 0.8),
+                                              ),
+                                              validator: (val) {
+                                                if (val == null ||
+                                                    val.trim().isEmpty) {
+                                                  return 'Please fill in this field';
+                                                } else if (!RegExp(
+                                                        r'^[A-Za-z]+ [A-Za-z]+$')
+                                                    .hasMatch(val.trim())) {
+                                                  return 'Please enter your first and last name';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                            const SizedBox(height: 20),
+                                            TextFormField(
+                                              controller: _ageController,
+                                              // Add this controller in your state
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
                                                 labelText: 'Age',
                                                 labelStyle: TextStyle(
                                                     color: Colors.white38),
@@ -323,13 +388,28 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                   borderSide: BorderSide(
                                                       color: Color(0xFFB7FF00)),
                                                 ),
+                                                errorStyle:
+                                                    TextStyle(height: 0.8),
                                               ),
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                              validator: (val) {
+                                                if (val == null ||
+                                                    val.isEmpty) {
+                                                  return 'Please enter your age';
+                                                } else if (int.tryParse(val) ==
+                                                    null) {
+                                                  return 'Age must be a number';
+                                                }
+                                                return null;
+                                              },
                                             ),
                                             const SizedBox(height: 10),
-                                            const TextField(
-                                              decoration: InputDecoration(
+                                            TextFormField(
+                                              controller: _heightController,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              keyboardType: TextInputType.text,
+                                              decoration: const InputDecoration(
+                                                hintText: "ex. 6' 2",
                                                 labelText: 'Height',
                                                 labelStyle: TextStyle(
                                                     color: Colors.white38),
@@ -343,9 +423,40 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                   borderSide: BorderSide(
                                                       color: Color(0xFFB7FF00)),
                                                 ),
+                                                errorStyle:
+                                                    TextStyle(height: 0.8),
                                               ),
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                              onChanged: (val) {
+                                                final regex = RegExp(
+                                                    r"^(\d{1,2})[' ]?\s?(\d{1,2})$");
+                                                final match = regex
+                                                    .firstMatch(val.trim());
+
+                                                if (match != null) {
+                                                  final feet = int.tryParse(
+                                                      match.group(1)!);
+                                                  final inches = int.tryParse(
+                                                      match.group(2)!);
+
+                                                  if (feet != null &&
+                                                      inches != null &&
+                                                      feet >= 4 &&
+                                                      feet <= 7 &&
+                                                      inches >= 0 &&
+                                                      inches <= 11) {
+                                                    final formatted =
+                                                        "$feet' $inches";
+                                                    _heightController.value =
+                                                        TextEditingValue(
+                                                      text: formatted,
+                                                      selection: TextSelection
+                                                          .collapsed(
+                                                              offset: formatted
+                                                                  .length),
+                                                    );
+                                                  }
+                                                }
+                                              },
                                             ),
                                             const SizedBox(height: 20),
                                             Row(
@@ -363,9 +474,88 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                   ),
                                                 ),
                                                 TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop(); // Placeholder for save action
+                                                  onPressed: () async {
+                                                    final userId = FirebaseAuth
+                                                        .instance
+                                                        .currentUser
+                                                        ?.uid;
+                                                    final name = _nameController
+                                                        .text
+                                                        .trim();
+                                                    final age = _ageController
+                                                        .text
+                                                        .trim();
+                                                    final height =
+                                                        _heightController.text
+                                                            .trim();
+
+                                                    final nameValid =
+                                                        name.contains(' ');
+                                                    final ageValid =
+                                                        age.isNotEmpty;
+
+                                                    final heightRegex = RegExp(
+                                                        r"^(\d{1,2})[' ]?\s?(\d{1,2})$");
+                                                    final match = heightRegex
+                                                        .firstMatch(height);
+                                                    final heightValid = match != null &&
+                                                        int.tryParse(match
+                                                                .group(1)!) !=
+                                                            null &&
+                                                        int.tryParse(match
+                                                                .group(2)!) !=
+                                                            null &&
+                                                        int.parse(match.group(1)!) >=
+                                                            4 &&
+                                                        int.parse(match
+                                                                .group(1)!) <=
+                                                            7 &&
+                                                        int.parse(match
+                                                                .group(2)!) >=
+                                                            0 &&
+                                                        int.parse(match
+                                                                .group(2)!) <=
+                                                            11;
+
+                                                    if (userId != null &&
+                                                        nameValid &&
+                                                        ageValid &&
+                                                        heightValid) {
+                                                      final parts =
+                                                          name.split(' ');
+                                                      final firstName =
+                                                          parts.first;
+                                                      final lastName = parts
+                                                          .sublist(1)
+                                                          .join(' ');
+
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection("users")
+                                                          .doc(userId)
+                                                          .set(
+                                                              {
+                                                            "first_Name":
+                                                                firstName,
+                                                            "last_Name":
+                                                                lastName,
+                                                            "age": age,
+                                                            "height": height,
+                                                          },
+                                                              SetOptions(
+                                                                  merge: true));
+
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    } else {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        const SnackBar(
+                                                            content: Text(
+                                                                "Please enter valid name, age, and height.")),
+                                                      );
+                                                    }
                                                   },
                                                   child: const Text(
                                                     "Save",
