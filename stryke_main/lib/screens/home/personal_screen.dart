@@ -7,6 +7,7 @@ import '../../components/main_navigation.dart';
 import '../../utils/spacing.dart';
 import '../../widgets/profile_info_topbar.dart';
 import '../intro/views/splash_screen.dart';
+import '../intro/views/team_input.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -22,6 +23,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
   String age = '';
   String height = '';
   String weight = '';
+  List<String> teamIDs = [];
+
 
   @override
   void initState() {
@@ -35,21 +38,47 @@ class _PersonalScreenState extends State<PersonalScreen> {
           .collection('users')
           .doc(myUser!.uid)
           .get();
-        final weightQuery = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
-          .collection('Weight').
-          orderBy('timestamp', descending: true)
-          .limit(1).get();
-        final weightDoc = weightQuery.docs.first;
+
       final data = userDoc.data();
+      final weightQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(myUser!.uid)
+          .collection('Weight')
+          .orderBy('timestamp', descending: true)
+          .limit(1)
+          .get();
+
+      final weightDoc = weightQuery.docs.first;
+
       if (data != null) {
         setState(() {
           age = data['age'] ?? '';
           height = data['height'] ?? '';
           weight = weightDoc.get('value');
+          teamIDs = List<String>.from(data['team_IDs'] ?? []);
         });
       }
     }
   }
+
+
+  void deleteTeam(String teamId) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myUser!.uid)
+        .update({
+      'team_IDs': FieldValue.arrayRemove([teamId]),
+    });
+
+    setState(() {
+      teamIDs.remove(teamId);
+    });
+
+    Navigator.of(context).pop(); // optional: close dialog
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +89,18 @@ class _PersonalScreenState extends State<PersonalScreen> {
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
           //TOP BAR WITH PROFILE ICON AND USER NAME
-          ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
-
+          ProfileInfoTopbar(
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+              myUser: myUser!),
 
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .02)),
 
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 return Padding(
                   padding: EdgeInsets.all(screenWidth * 0.05),
                   child: Column(
@@ -83,14 +114,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
-                            ),
-                          ),
-                          Text(
-                            "edit",
-                            style: TextStyle(
-                              color: const Color(0xFFB7FF00),
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -164,6 +187,260 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
                       verticalSpacing(screenHeight * .025),
 
+                      Container(
+                        padding: EdgeInsets.all(screenWidth * 0.035),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF303030),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Personal Management",
+                                  style: TextStyle(
+                                    color: Colors.white38,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            ListTile(
+                              leading: const Icon(Icons.add,
+                                  color: Color(0xFFB7FF00)),
+                              title: const Text("Add Team",
+                                  style: TextStyle(color: Colors.white)),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      const TeamInputScreen()),
+                                );
+                              },
+                            ),
+
+                            ListTile(
+                              leading: const Icon(Icons.assignment,
+                                  color: Color(0xFFB7FF00)),
+                              // Clipboard icon
+                              title: const Text("My Teams",
+                                  style: TextStyle(color: Colors.white)),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      print("Loaded teamIDs: $teamIDs");
+                                      return AlertDialog(
+                                        backgroundColor: const Color(0xFF303030),
+                                        title: const Text('My Teams', style: TextStyle(color: Colors.white)),
+                                        content: SizedBox(
+                                          width: double.maxFinite,
+                                          child: teamIDs.isEmpty
+                                              ? const Text('No teams.', style: TextStyle(color: Colors.white70))
+                                              : FutureBuilder<List<String>>(
+                                            future: Future.wait(teamIDs.map((id) async {
+                                              final doc = await FirebaseFirestore.instance.collection('teams').doc(id).get();
+                                              final data = doc.data();
+                                              return data?['name'] ?? id;                                            })),
+                                            builder: (context, snapshot) {
+                                              if (!snapshot.hasData) return const CircularProgressIndicator();
+                                              final teamNames = snapshot.data!;
+                                              return ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: teamNames.length,
+                                                itemBuilder: (context, index) {
+                                                  return ListTile(
+                                                    title: Text(teamNames[index], style: const TextStyle(color: Colors.white)),
+                                                    trailing: IconButton(
+                                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                                      onPressed: () => deleteTeam(teamIDs[index]),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text('Close', style: TextStyle(color: Color(0xFFB7FF00))),
+                                            onPressed: () => Navigator.of(context).pop(),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+
+
+                            ),
+
+
+                            ListTile(
+                              leading: const Icon(Icons.edit,
+                                  color: Color(0xFFB7FF00)),
+                              // Edit icon
+                              title: const Text("Edit Personal Data",
+                                  style: TextStyle(color: Colors.white)),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      backgroundColor: const Color(0xFF303030),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                              "Edit Personal Data",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 20),
+                                            const TextField(
+                                              decoration: InputDecoration(
+                                                labelText: 'Age',
+                                                labelStyle: TextStyle(
+                                                    color: Colors.white38),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Colors.white38),
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Color(0xFFB7FF00)),
+                                                ),
+                                              ),
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            const TextField(
+                                              decoration: InputDecoration(
+                                                labelText: 'Height',
+                                                labelStyle: TextStyle(
+                                                    color: Colors.white38),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Colors.white38),
+                                                ),
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Color(0xFFB7FF00)),
+                                                ),
+                                              ),
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.white70),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(); // Placeholder for save action
+                                                  },
+                                                  child: const Text(
+                                                    "Save",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Color(0xFFB7FF00)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                            // "Sign Out" Section
+                            ListTile(
+                              leading: const Icon(Icons.exit_to_app,
+                                  color: Color(0xFFB7FF00)),
+                              title: const Text("Sign Out",
+                                  style: TextStyle(color: Colors.white)),
+                              onTap: () async {
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor: const Color(0xFF303030),
+                                      title: const Text("Sign Out",
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                      content: const Text(
+                                          "Are you sure you want to sign out?",
+                                          style:
+                                              TextStyle(color: Colors.white70)),
+                                      actionsAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      actions: [
+                                        TextButton(
+                                          child: const Text("Cancel",
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                        ),
+                                        TextButton(
+                                          child: const Text("Sign Out",
+                                              style: TextStyle(
+                                                  color: Color(0xFFB7FF00))),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+                                if (confirm == true) {
+                                  await _authService.signOut();
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SplashScreen()),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      verticalSpacing(screenHeight * .025),
                       // PERSONAL PROGRESS
                       Container(
                         padding: EdgeInsets.all(screenWidth * 0.035),
@@ -202,190 +479,6 @@ class _PersonalScreenState extends State<PersonalScreen> {
                           ],
                         ),
                       ),
-
-                      verticalSpacing(screenHeight * .025),
-
-                      Container(
-                        padding: EdgeInsets.all(screenWidth * 0.035),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF303030),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Personal Management",
-                                  style: TextStyle(
-                                    color: Colors.white38,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            ListTile(
-                              leading: const Icon(Icons.flag, color: Color(0xFFB7FF00)),
-                              title: const Text("Set Goals", style: TextStyle(color: Colors.white)),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => MainNavigation(index: 2)),
-                                );
-                              },
-                            ),
-
-                            ListTile(
-                              leading: const Icon(Icons.assignment, color: Color(0xFFB7FF00)), // Clipboard icon
-                              title: const Text("Goal Reports", style: TextStyle(color: Colors.white)),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => MainNavigation(index: 2)),
-                                );
-                              },
-                            ),
-
-                            ListTile(
-                              leading: const Icon(Icons.edit, color: Color(0xFFB7FF00)), // Edit icon
-                              title: const Text("Edit Personal Data", style: TextStyle(color: Colors.white)),
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      backgroundColor: const Color(0xFF303030),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(20.0),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Text(
-                                              "Edit Personal Data",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 20),
-                                            const TextField(
-                                              decoration: InputDecoration(
-                                                labelText: 'Age',
-                                                labelStyle: TextStyle(color: Colors.white38),
-                                                enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.white38),
-                                                ),
-                                                focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xFFB7FF00)),
-                                                ),
-                                              ),
-                                              style: TextStyle(color: Colors.white),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            const TextField(
-                                              decoration: InputDecoration(
-                                                labelText: 'Height',
-                                                labelStyle: TextStyle(color: Colors.white38),
-                                                enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.white38),
-                                                ),
-                                                focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xFFB7FF00)),
-                                                ),
-                                              ),
-                                              style: TextStyle(color: Colors.white),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            const TextField(
-                                              decoration: InputDecoration(
-                                                labelText: 'Weight',
-                                                labelStyle: TextStyle(color: Colors.white38),
-                                                enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.white38),
-                                                ),
-                                                focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Color(0xFFB7FF00)),
-                                                ),
-                                              ),
-                                              style: TextStyle(color: Colors.white),
-                                            ),
-                                            const SizedBox(height: 20),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text(
-                                                    "Cancel",
-                                                    style: TextStyle(color: Colors.white70),
-                                                  ),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop(); // Placeholder for save action
-                                                  },
-                                                  child: const Text(
-                                                    "Save",
-                                                    style: TextStyle(color: Color(0xFFB7FF00)),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-
-                            ),
-                            // "Sign Out" Section
-                            ListTile(
-                              leading: const Icon(Icons.exit_to_app, color: Color(0xFFB7FF00)),
-                              title: const Text("Sign Out", style: TextStyle(color: Colors.white)),
-                              onTap: () async {
-                                final confirm = await showDialog<bool>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      backgroundColor: const Color(0xFF303030),
-                                      title: const Text("Sign Out", style: TextStyle(color: Colors.white)),
-                                      content: const Text("Are you sure you want to sign out?",
-                                          style: TextStyle(color: Colors.white70)),
-                                      actionsAlignment: MainAxisAlignment.spaceEvenly,
-                                      actions: [
-                                        TextButton(
-                                          child: const Text("Cancel", style: TextStyle(color: Colors.white)),
-                                          onPressed: () => Navigator.of(context).pop(false),
-                                        ),
-                                        TextButton(
-                                          child: const Text("Sign Out", style: TextStyle(color: Color(0xFFB7FF00))),
-                                          onPressed: () => Navigator.of(context).pop(true),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-
-                                if (confirm == true) {
-                                  await _authService.signOut();
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const SplashScreen()),
-                                  );
-                                }
-                              },
-                            ),
-
-                          ],
-                        ),
-                      ),
                       verticalSpacing(screenHeight * .025),
 
                       Container(
@@ -410,23 +503,25 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             ),
                             // "Get Help Here" Section
                             ListTile(
-                              leading: const Icon(Icons.question_answer, color: Color(0xFFB7FF00)),
-                              title: const Text("FAQ*", style: TextStyle(color: Colors.white)),
+                              leading: const Icon(Icons.question_answer,
+                                  color: Color(0xFFB7FF00)),
+                              title: const Text("FAQ*",
+                                  style: TextStyle(color: Colors.white)),
                               onTap: () {
                                 //
                               },
                             ),
                             ListTile(
-                              leading: const Icon(Icons.info_outline, color: Color(0xFFB7FF00)),
-                              title: const Text("About*", style: TextStyle(color: Colors.white)),
-                              onTap: () {
-
-                              },
+                              leading: const Icon(Icons.info_outline,
+                                  color: Color(0xFFB7FF00)),
+                              title: const Text("About*",
+                                  style: TextStyle(color: Colors.white)),
+                              onTap: () {},
                             ),
                           ],
                         ),
                       ),
-                      
+
                       verticalSpacing(screenHeight * .05)
                     ],
                   ),
