@@ -6,6 +6,7 @@ import 'package:test_app/utils/spacing.dart';
 import 'package:test_app/widgets/text_input/text_input.dart';
 import '../../../auth/google_sign_in/authentication.dart';
 import 'login_screen.dart';
+import 'role_screen.dart';
 
 
 class SignUpScreen extends StatefulWidget {
