@@ -86,14 +86,12 @@ Future<void> showAddMetricDialog({
                 ),
                 const SizedBox(height: 10),
                 
-                //Already have data that is loading 
                 if(isLoadingMetric)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: CircularProgressIndicator(),
                   )
                 
-                //Input, the user has no saved data for that exercise 
                 else if(selectedMetric != null) ...[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
@@ -157,11 +155,11 @@ Future<void> showAddMetricDialog({
                       date: selectedDate!
                     );
 
-                    await FirebaseFirestore.instance
+                    FirebaseFirestore.instance
                     .collection('users')
                     .doc(userID)
                     .update({
-                      'metric_preferences' : FieldValue.arrayUnion([selectedMetric]),
+                      'metric_preferences' : FieldValue.arrayUnion(['Back Squat']),
                     });
 
                     QuerySnapshot snapshot = await FirebaseFirestore.instance
