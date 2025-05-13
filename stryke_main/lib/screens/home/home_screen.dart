@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/metric_box/add_metric_dialog.dart';
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = true;
   late List<String> preferences;
   List<MetricEntry> metricEntries = [];
-  List<String> metricBoxExercises = [];
+  List metricBoxExercises = [];
   Set<String> addedMetrics = {};
 
   @override
@@ -81,9 +81,14 @@ class _HomePageState extends State<HomePage> {
 //   }
 // }
 
+
   // Function to load user data from Firestore
   Future<void> _loadUserPreferences(List<String> preferences) async {
 
+    if (preferences.isEmpty){
+      preferences.add('Weight');
+    }
+    
     for (var collection in preferences){
           QuerySnapshot collectionSnapshot = await FirebaseFirestore.instance
         .collection('users')
@@ -113,8 +118,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadGlobalExercises() async {
     ExerciseServices().fetchGlobalExerciseNames().then((exerciseNames) {
       setState(() {
-
-        metricBoxExercises = exerciseNames.cast<String>();
+        metricBoxExercises = exerciseNames;
       });
     });
   }
@@ -174,6 +178,7 @@ class _HomePageState extends State<HomePage> {
                             context, entry.metricType, entry.value, entry.date)),
 
                     // Dynamically add the metric boxes here
+
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
