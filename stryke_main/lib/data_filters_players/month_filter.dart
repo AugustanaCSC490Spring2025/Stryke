@@ -13,13 +13,14 @@ List<FlSpot> getMonthSpots(List<StatPoint> data, DateTime now) {
   for (int index = 0; index < days.length; index++) {
     DateTime day = days[index];
 
-    final matchingData = data.where((d) {
+    final List<StatPoint> matchingData = data.where((d) {
       final dateOnly = DateTime(d.date.year, d.date.month, d.date.day);
       return dateOnly.isAtSameMomentAs(day);
     }).toList();
 
     if (matchingData.isNotEmpty) {
-      final avg = matchingData.map((d) => d.value).reduce((a, b) => a + b) / matchingData.length;
+      final avg = matchingData.map((statPoint) => statPoint.value).reduce((a, b) => a + b) / matchingData.length;
+
       spots.add(FlSpot(index.toDouble(), avg));
     }
   }
