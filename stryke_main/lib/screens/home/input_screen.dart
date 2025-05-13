@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,6 @@ import 'package:test_app/database_services/firestore_service.dart';
 import 'package:test_app/models/stat_point.dart';
 import '../../widgets/goal_card.dart';
 import 'package:test_app/data_filters_players/filter_manager.dart';
-
 
 class InputScreen extends StatefulWidget {
   final String metricName;
@@ -39,17 +40,22 @@ class _InputScreenState extends State<InputScreen> {
     loadGoalAndCurrentValue();
   }
 
-  void loadGoalAndCurrentValue() async{
-    final fetchedGoal = await ExerciseServices().fetchGoal(userID: myUser!.uid, goalName: widget.metricName);
+  void loadGoalAndCurrentValue() async {
+    final fetchedGoal = await ExerciseServices()
+        .fetchGoal(userID: myUser!.uid, goalName: widget.metricName);
 
-    QuerySnapshot recentDoc = await FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
-      .collection(widget.metricName).orderBy('timestamp', descending: true)
-      .limit(1).get();
+    QuerySnapshot recentDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myUser!.uid)
+        .collection(widget.metricName)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
 
     String rawVal = recentDoc.docs.first['value'];
     double current = double.tryParse(rawVal) ?? 0;
 
-     //create fetchRecentDoc method?
+    //create fetchRecentDoc method?
     setState(() {
       goalValue = fetchedGoal;
       currentValue = current;
@@ -57,7 +63,7 @@ class _InputScreenState extends State<InputScreen> {
     });
   }
 
-  void _showEditGoalDialog() {
+  void _showEditGoalDialog() async {
     TextEditingController controller =
         TextEditingController(text: goalValue.toString());
 
@@ -88,7 +94,10 @@ class _InputScreenState extends State<InputScreen> {
                 setState(() {
                   goalValue = input;
                 });
-                ExerciseServices().addGoal(userID: myUser!.uid, goalAmount: goalValue.toString(), goalName: widget.metricName);
+                ExerciseServices().addGoal(
+                    userID: myUser!.uid,
+                    goalAmount: goalValue.toString(),
+                    goalName: widget.metricName);
                 Navigator.pop(context); // Close the dialog if you're using one
               } else {
                 // Optionally show an error or ignore
@@ -186,7 +195,6 @@ class _InputScreenState extends State<InputScreen> {
                     ),
                     child: Column(
                       children: [
-
                         // Time Filter Row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -201,7 +209,9 @@ class _InputScreenState extends State<InputScreen> {
                               child: Text(
                                 e,
                                 style: TextStyle(
-                                  color: isSelected ? Color(0xFFB7FF00) : Colors.white,
+                                  color: isSelected
+                                      ? Color(0xFFB7FF00)
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: screenWidth * 0.04,
                                 ),
@@ -212,17 +222,20 @@ class _InputScreenState extends State<InputScreen> {
 
                         verticalSpacing(screenHeight * 0.015),
 
-
                         // Graph Widget
                         FutureBuilder<List<StatPoint>>(
                           future: _statData,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 40.0),
-                                child: Center(child: CircularProgressIndicator()),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
                               );
-                            } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                            } else if (snapshot.hasError ||
+                                !snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20.0),
                                 child: Text(
@@ -233,7 +246,8 @@ class _InputScreenState extends State<InputScreen> {
                             } else {
                               final dataPoints = snapshot.data!;
 
-                              final filteredSpots = getSpotsForFilter(selectedFilter, dataPoints);
+                              final filteredSpots =
+                                  getSpotsForFilter(selectedFilter, dataPoints);
 
                               if (filteredSpots.isEmpty) {
                                 return const Padding(
@@ -245,10 +259,12 @@ class _InputScreenState extends State<InputScreen> {
                                 );
                               }
 
-                              final filteredYValues = filteredSpots.map((e) => e.y).toList();
+                              final filteredYValues =
+                                  filteredSpots.map((e) => e.y).toList();
 
                               final average = filteredYValues.isNotEmpty
-                                  ? filteredYValues.reduce((a, b) => a + b) / filteredYValues.length
+                                  ? filteredYValues.reduce((a, b) => a + b) /
+                                      filteredYValues.length
                                   : 0.0;
 
                               return Column(
@@ -258,10 +274,12 @@ class _InputScreenState extends State<InputScreen> {
                                     children: [
                                       Text(
                                         "Avg. ${widget.metricName}: ",
-                                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ),
                                       Text(
-                                        average.toStringAsFixed(1),  // Show 1 decimal place
+                                        average.toStringAsFixed(1),
+                                        // Show 1 decimal place
                                         style: const TextStyle(
                                           color: Color(0xFFB7FF00),
                                           fontSize: 16,
@@ -274,7 +292,9 @@ class _InputScreenState extends State<InputScreen> {
                                   verticalSpacing(10),
 
                                   // Graph
-                                  LineChartWidget(spots: filteredSpots, selectedFilter: selectedFilter),
+                                  LineChartWidget(
+                                      spots: filteredSpots,
+                                      selectedFilter: selectedFilter),
                                 ],
                               );
                             }
@@ -290,7 +310,7 @@ class _InputScreenState extends State<InputScreen> {
                     children: [
                       // Date Column
                       Expanded(
-                        child: Container(
+                          child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           border: Border.all(color: Color(0xFF3A3A3A)),
@@ -307,7 +327,8 @@ class _InputScreenState extends State<InputScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text("Date:",
-                                    style: TextStyle(color: Colors.white, fontSize: 15)),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 15)),
                                 DatePickerDropdown(
                                   selectedDate: selectedDate,
                                   onDatePicked: (date) {
@@ -321,8 +342,7 @@ class _InputScreenState extends State<InputScreen> {
                             ),
                           ],
                         ),
-                      )
-                      ),
+                      )),
                     ],
                   ),
                   Row(
@@ -340,7 +360,8 @@ class _InputScreenState extends State<InputScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           alignment: Alignment.centerLeft,
                           child: const Text("Value:",
-                              style: TextStyle(color: Colors.white, fontSize: 15)),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15)),
                         ),
                       ),
 
@@ -381,15 +402,17 @@ class _InputScreenState extends State<InputScreen> {
                             height: 60,
                             width: 50,
                             decoration: BoxDecoration(
-                              color:  Color(0xFFB7FF00),
+                              color: Color(0xFFB7FF00),
                               border: Border.all(color: Color(0xFF3A3A3A)),
                               borderRadius: const BorderRadius.only(
                                   bottomRight: Radius.circular(16)),
                             ),
-                            child: const Icon(Icons.add, size: 20, color: Colors.black),
+                            child: const Icon(Icons.add,
+                                size: 20, color: Colors.black),
                           ),
                           onTap: () {
-                            if (valueController.text.isNotEmpty && selectedDate != null) {
+                            if (valueController.text.isNotEmpty &&
+                                selectedDate != null) {
                               final now = DateTime.now();
                               final adjustedDate = DateTime(
                                 selectedDate!.year,
@@ -399,18 +422,19 @@ class _InputScreenState extends State<InputScreen> {
                                 now.minute,
                                 now.second,
                               );
-                           
-                                ExerciseServices().addUserExercise(
-                                  userID: myUser!.uid, 
-                                  exerciseName: widget.metricName, 
+
+                              ExerciseServices().addUserExercise(
+                                  userID: myUser!.uid,
+                                  exerciseName: widget.metricName,
                                   value: valueController.text,
-                                  date: adjustedDate
-                                );
+                                  date: adjustedDate);
 
                               setState(() {
-                                _statData = FirestoreService().fetchStatData(widget.metricName);
+                                _statData = FirestoreService()
+                                    .fetchStatData(widget.metricName);
                                 valueController.clear();
                                 selectedDate = null;
+                                loadGoalAndCurrentValue();
                               });
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -421,7 +445,6 @@ class _InputScreenState extends State<InputScreen> {
                               );
                             }
                           },
-
                         ),
                       ),
                     ],
@@ -431,14 +454,14 @@ class _InputScreenState extends State<InputScreen> {
                   const Text("delete", style: TextStyle(color: Colors.red)),
 
                   verticalSpacing(screenHeight * 0.03),
-                  //Goal Piece 
+                  //Goal Piece
                   isGoalLoaded
-                    ? const CircularProgressIndicator() //if goal not loaded 
-                    : GoalProgressWidget(
-                        currentGoal: currentValue,
-                        goalValue: goalValue,
-                        onEdit: _showEditGoalDialog,
-                      )
+                      ? const CircularProgressIndicator() //if goal not loaded
+                      : GoalProgressWidget(
+                          currentGoal: currentValue,
+                          goalValue: goalValue,
+                          onEdit: _showEditGoalDialog,
+                        )
                 ],
               ),
             ),

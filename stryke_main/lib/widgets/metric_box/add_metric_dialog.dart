@@ -139,7 +139,7 @@ Future<void> showAddMetricDialog({
                       );
                       return;
                     }
-                    
+   
                     if (fieldValue!.isEmpty || selectedDate == null ) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -149,13 +149,20 @@ Future<void> showAddMetricDialog({
                       );
                       return;
                     }
-
+                    try {
                     await ExerciseServices().addUserExercise(
                       userID: userID,
                       exerciseName: selectedMetric!,
                       value: fieldValue!,
                       date: selectedDate!
                     );
+
+                    await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(userID)
+                    .update({
+                      'metric_preferences' : FieldValue.arrayUnion([selectedMetric]),
+                    });
 
                     QuerySnapshot snapshot = await FirebaseFirestore.instance
                         .collection('users')
@@ -174,8 +181,13 @@ Future<void> showAddMetricDialog({
                         value: fieldValue!,
                         date: date));
 
-                    refreshState(); // Trigger setState in parent
+                    refreshState(); 
                     Navigator.of(context).pop();
+                    } catch (e, st) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error saving preferences: $e')),
+                      );
+                    }
                   }
                 },
                 child: const Text('Add'),

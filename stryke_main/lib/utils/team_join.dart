@@ -10,13 +10,24 @@ Future<void> goNext({
 }) async {
   setErrorMsg(null);
   try {
+    List<String> coachIDs = [];
+    List<String> teamIDs = [];
+
     DocumentSnapshot userDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .get();
-
-    List<String> teamIDs = List.from(userDoc['team_IDs']);
-    List<String> coachIDs = List.from(userDoc['coach_IDs']);
+    try{
+      coachIDs = List.from(userDoc['coach_IDs']);
+    }catch (e) {
+      coachIDs = [];
+      }
+    try{
+      teamIDs = List.from(userDoc['team_IDs']);
+    }
+    catch (e) {
+      teamIDs = [];
+    }
 
     if (coachIDs.isNotEmpty){
       Navigator.pushReplacement(
@@ -25,9 +36,7 @@ Future<void> goNext({
           builder: (context) => const MainNavigation(index: 0),
         ),
       );    
-    }
-
-    else if (teamIDs.isNotEmpty) {
+    }else if (teamIDs.isNotEmpty) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -36,8 +45,8 @@ Future<void> goNext({
       );
     } else {
       setErrorMsg("Please add a team code first");
+      formKey.currentState!.validate();
     }
-    formKey.currentState!.validate();
   } catch (e) {
     setErrorMsg("Please add a team code first");
     formKey.currentState!.validate();

@@ -32,8 +32,9 @@ class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
   String? weight;
   bool isLoading = true;
+  late List<String> preferences;
   List<MetricEntry> metricEntries = [];
-  List metricBoxExercises = [];
+  List<String> metricBoxExercises = [];
   Set<String> addedMetrics = {};
 
   @override
@@ -43,39 +44,77 @@ class _HomePageState extends State<HomePage> {
     _loadGlobalExercises();
   }
 
-  // Function to load user data from Firestore
+  // Getting userdata
   Future<void> _loadUserData() async {
     setState(() => isLoading = true);
 
-    QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
+    final userDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
-        .collection('Weight')
+        .get();
+
+    if (userDoc.exists){
+      final data = userDoc.data()!;
+      setState(() {
+        preferences = List<String>.from(data['metric_preferences'] ?? []);
+      });
+    }
+
+   _loadUserPreferences(preferences);
+
+    setState(() => isLoading = false);
+  }
+
+//   void _openAddMetricDialog() async {
+//   final newEntry = await showAddMetricDialog(
+//     context: context,
+//     metricBoxExercises: _allPossibleMetrics,  // List<String>
+//     addedMetrics: _addedMetrics,             // Set<String>
+//     userID: myUser!.uid,
+//   );
+
+//   if (newEntry != null) {
+//     setState(() {
+//       _addedMetrics.add(newEntry.metricType);
+//       _metricEntries.add(newEntry);
+//     });
+//   }
+// }
+
+  // Function to load user data from Firestore
+  Future<void> _loadUserPreferences(List<String> preferences) async {
+
+    for (var collection in preferences){
+          QuerySnapshot collectionSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(myUser!.uid)
+        .collection(collection)
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
 
-    if (weightSnapshot.docs.isNotEmpty) {
-      DocumentSnapshot weightDoc = weightSnapshot.docs.first;
-      Timestamp timestamp = weightDoc.get('timestamp');
-      String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
-      setState(() {
-        weight = weightDoc['value'].toString();
-        metricEntries.add(MetricEntry(
-          metricType: "Weight",
-          value: weight!,
-          date: date,
+      if (collectionSnapshot.docs.isNotEmpty) {
+        DocumentSnapshot weightDoc = collectionSnapshot.docs.first;
+        Timestamp timestamp = weightDoc.get('timestamp');
+        String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
+        setState(() {
+          weight = weightDoc['value'].toString();
+          metricEntries.add(MetricEntry(
+            metricType: collection,
+            value: weight!,
+            date: date,
         ));
       });
     }
 
-    setState(() => isLoading = false);
+    }
   }
 
   Future<void> _loadGlobalExercises() async {
     ExerciseServices().fetchGlobalExerciseNames().then((exerciseNames) {
       setState(() {
-        metricBoxExercises = exerciseNames;
+
+        metricBoxExercises = exerciseNames.cast<String>();
       });
     });
   }
