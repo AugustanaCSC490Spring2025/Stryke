@@ -48,19 +48,37 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadUserData() async {
     setState(() => isLoading = true);
 
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(myUser!.uid)
-        .get();
+    final userRef = FirebaseFirestore.instance
+      .collection('users')
+      .doc(myUser!.uid);
 
-    if (userDoc.exists){
+    final userDoc = await userRef.get();
+
+    List<String> prefs;
+
+    if (!userDoc.exists){
+      prefs = ['Weight'];
+      await userRef.set({
+        'metric_preferences' : prefs,
+      }); 
+    } else {
       final data = userDoc.data()!;
-      setState(() {
-        preferences = List<String>.from(data['metric_preferences'] ?? []);
-      });
-    }
+      if (data['metric_preferences'] == null){
+        prefs = ['Weight'];
+        await userRef.update({
+          'metric_preferences' : prefs,
+        });
+      } else {
+        prefs = List<String>.from(data['metric_preferences']);
+      }
 
-   _loadUserPreferences(preferences);
+      setState(() {
+        preferences = prefs;
+      });
+
+    }
+    
+   await _loadUserPreferences(preferences);
 
     setState(() => isLoading = false);
   }
@@ -88,7 +106,7 @@ class _HomePageState extends State<HomePage> {
     if (preferences.isEmpty){
       preferences.add('Weight');
     }
-    
+
     for (var collection in preferences){
           QuerySnapshot collectionSnapshot = await FirebaseFirestore.instance
         .collection('users')
