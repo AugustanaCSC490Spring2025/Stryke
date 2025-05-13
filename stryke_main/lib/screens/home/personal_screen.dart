@@ -95,19 +95,17 @@ class _PersonalScreenState extends State<PersonalScreen> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
-          //TOP BAR WITH PROFILE ICON AND USER NAME
-          ProfileInfoTopbar(
-              screenWidth: screenWidth,
-              screenHeight: screenHeight,
-              myUser: myUser!),
 
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .02)),
+          //TOP BAR WITH PROFILE ICON AND USER NAME
+          ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
+
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .025)),
 
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Padding(
-                  padding: EdgeInsets.all(screenWidth * 0.05),
+                  padding: EdgeInsets.only(left: screenWidth * 0.05, right: screenWidth * 0.05),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

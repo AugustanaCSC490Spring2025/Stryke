@@ -103,8 +103,7 @@ Future<void> joinTeam({
         setErrorMsg("Coach code does not exist");
         formKey.currentState!.validate();
       }
-    }
-    else {
+    }else {
     try {
       QuerySnapshot teamQuery = await FirebaseFirestore.instance
           .collection('teams')

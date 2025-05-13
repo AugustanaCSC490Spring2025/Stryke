@@ -1,4 +1,4 @@
- import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/metric_box/add_metric_dialog.dart';
@@ -174,7 +174,6 @@ class _HomePageState extends State<HomePage> {
                             context, entry.metricType, entry.value, entry.date)),
 
                     // Dynamically add the metric boxes here
-
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
