@@ -31,8 +31,8 @@ class LineChartWidget extends StatelessWidget {
       minXOverride = 0;
       maxXOverride = daysInMonth(DateTime.now()).toDouble() - 1;
     } else if (selectedFilter == 'D') {
-      final earliest = spots.map((s) => s.x).reduce((a, b) => a < b ? a : b);
-      final latest = spots.map((s) => s.x).reduce((a, b) => a > b ? a : b);
+      final earliest = spots.map((spot) => spot.x).reduce((a, b) => a < b ? a : b);
+      final latest = spots.map((spot) => spot.x).reduce((a, b) => a > b ? a : b);
 
       minXOverride = (earliest - 5).clamp(0, 1440);
       maxXOverride = (latest + 5).clamp(0, 1440);
@@ -44,6 +44,7 @@ class LineChartWidget extends StatelessWidget {
 
     final minY = (rawMinY - 10).floorToDouble();
     final maxY = (rawMaxY + 10).ceilToDouble();
+
 
     final dynamicInterval = (selectedFilter == 'D' || selectedFilter == 'M') && spots.length <= 5
         ? 1.0
