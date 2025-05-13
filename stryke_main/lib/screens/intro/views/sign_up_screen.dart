@@ -204,56 +204,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                             ),
                             child: const Text(
-                              'Student',
+                              'Sign Up',
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10), // spacing between buttons
-
-                      // Coach Button (Transparent)
-                      Expanded(
-                        child: SizedBox(
-                          height: 70,
-                          child: OutlinedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                bool success = await _authService.signUpUser(
-                                  _emailController.text,
-                                  _passwordController.text,
-                                  context,
-                                );
-
-                                if (success) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                      const InfoInputScreen(),
-                                    ),
-                                  );
-                                }
-                              }
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                  color: Color(0xFFB7FF00), width: 2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              backgroundColor: Colors.transparent,
-                            ),
-                            child: const Text(
-                              'Coach',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFB7FF00),
                               ),
                             ),
                           ),
