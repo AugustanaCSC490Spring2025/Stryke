@@ -6,7 +6,6 @@ class DatePickerDropdown extends StatelessWidget {
   final Function(DateTime) onDatePicked;
   final String labelText;
 
-
   const DatePickerDropdown({super.key, 
     required this.selectedDate, 
     required this.onDatePicked, 
@@ -36,7 +35,6 @@ class DatePickerDropdown extends StatelessWidget {
               ),
               child: child!,
             );
-
           },
         );
         if(pickedDate != null){
