@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
             return const CircularProgressIndicator(); // Show loading indicator while checking auth
           }
           if (snapshot.hasData) {
-            // Quick lug shortcut
             // User is logged in
             return const MainNavigation(
                 index: 0); // Go to the main navigation page
