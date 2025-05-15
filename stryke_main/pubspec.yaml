@@ -19,7 +19,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   slide_to_act: ^2.0.2
 
-
+  flutter_launcher_icons: ^0.13.1
   bloc: ^9.0.0
   flutter_bloc: ^9.1.0
   equatable: ^2.0.5
@@ -36,6 +36,10 @@ dev_dependencies:
 
 dependency_overrides:
   multicast_dns: ^0.3.2
+
+flutter-flutter_launcher_icons:
+  android: true
+  ios: true
 
 flutter:
   uses-material-design: true
