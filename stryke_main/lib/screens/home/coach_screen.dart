@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../utils/metric_entry.dart';
+import '../../widgets/metric_box/coach_metric_box.dart';
 import '../../widgets/metric_box/metric_box_builder.dart';
 import '../../widgets/profile_info_topbar.dart';
 import '../../utils/spacing.dart';
@@ -39,9 +40,21 @@ class _CoachScreenState extends State<CoachScreen> {
 
     for (var doc in teamsSnapshot.docs) {
       final data = doc.data();
-      final coachIds = List<String>.from(data['coaches_IDs'] ?? []);
+      List<String> coachIds = [];
+      final rawCoachIds = data['coaches_IDs'];
+      if (rawCoachIds is String) {
+        coachIds.add(rawCoachIds);
+      } else if (rawCoachIds is Iterable) {
+        coachIds = List<String>.from(rawCoachIds);
+      }
       if (coachIds.contains(coachId)) {
-        athleteIds.addAll(List<String>.from(data['athlete_IDs'] ?? []));
+        final rawAthleteIDs = data['athlete_IDs'];
+
+        if (rawAthleteIDs is String) {
+          athleteIds.add(rawAthleteIDs);
+        } else if (rawAthleteIDs is Iterable) {
+          athleteIds.addAll(List<String>.from(rawAthleteIDs));
+        }
       }
     }
 
@@ -111,7 +124,10 @@ class _CoachScreenState extends State<CoachScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text("Athletes",
-                      style: TextStyle(color: Colors.white, fontSize: 18)),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      )),
                   verticalSpacing(10),
                   TextField(
                     onChanged: (val) => setState(() => searchQuery = val),
@@ -120,7 +136,7 @@ class _CoachScreenState extends State<CoachScreen> {
                       hintText: "Search",
                       hintStyle: const TextStyle(color: Colors.white38),
                       filled: true,
-                      fillColor: const Color(0xFF2C2C2C),
+                      fillColor: const Color(0xFF303030),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -132,13 +148,18 @@ class _CoachScreenState extends State<CoachScreen> {
                   verticalSpacing(15),
                   Row(
                     children: [
-                      const Text("Filtered For...",
-                          style: TextStyle(color: Colors.white70)),
-                      const SizedBox(width: 8),
+                      const Text(
+                        "Filtered For...",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      const Spacer(),
                       DropdownButton<String>(
                         dropdownColor: const Color(0xFF2C2C2C),
                         value: selectedMetric,
-                        style: const TextStyle(color: Color(0xFFB7FF00)),
+                        style: const TextStyle(
+                          color: Color(0xFFB7FF00),
+                          fontSize: 18,
+                        ),
                         items: ['Weight', 'Bench Press', 'Squat', 'Front Squat']
                             .map((metric) {
                           return DropdownMenuItem(
@@ -169,36 +190,12 @@ class _CoachScreenState extends State<CoachScreen> {
                     (context, index) {
                       final athlete = filteredAthletes[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 6),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2C2C2C),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              athlete['name'],
-                              style: const TextStyle(color: Color(0xFFB7FF00)),
-                            ),
-                            subtitle: Text(
-                              '${athlete['value']} lbs',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            trailing: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  athlete['date'],
-                                  style: const TextStyle(color: Colors.white54),
-                                ),
-                                const Icon(Icons.arrow_forward_ios,
-                                    color: Colors.white70, size: 16),
-                              ],
-                            ),
-                            onTap: () {},
-                          ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: buildCoachMetricBox(
+                          context: context,
+                          athleteName: athlete['name'],
+                          value: athlete['value'],
+                          date: athlete['date'],
                         ),
                       );
                     },
