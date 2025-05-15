@@ -8,6 +8,12 @@ class FirebaseMsg {
   Future<void> initFCM() async {
     await msgService.requestPermission();
 
+    await msgService.requestPermission();
+    NotificationSettings settings = await msgService.getNotificationSettings();
+
+    print("🔔 Permission status: ${settings.authorizationStatus}");
+
+
     var token = await msgService.getToken();
 
     // Save token for user
