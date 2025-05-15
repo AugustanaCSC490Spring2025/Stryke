@@ -9,7 +9,6 @@ class FirebaseMsg {
     await msgService.requestPermission();
 
     var token = await msgService.getToken();
-
     // Save token for user
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && token != null) {
