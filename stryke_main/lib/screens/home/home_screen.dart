@@ -1,4 +1,4 @@
- import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/metric_box/add_metric_dialog.dart';
@@ -75,30 +75,12 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         preferences = prefs;
       });
-
     }
     
    await _loadUserPreferences(preferences);
 
     setState(() => isLoading = false);
   }
-
-//   void _openAddMetricDialog() async {
-//   final newEntry = await showAddMetricDialog(
-//     context: context,
-//     metricBoxExercises: _allPossibleMetrics,  // List<String>
-//     addedMetrics: _addedMetrics,             // Set<String>
-//     userID: myUser!.uid,
-//   );
-
-//   if (newEntry != null) {
-//     setState(() {
-//       _addedMetrics.add(newEntry.metricType);
-//       _metricEntries.add(newEntry);
-//     });
-//   }
-// }
-
 
   // Function to load user data from Firestore
   Future<void> _loadUserPreferences(List<String> preferences) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_app/database_services/firebase_msg.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/home/personal_screen.dart';
 
@@ -29,8 +30,12 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   void initState() {
     super.initState();
-    // Initialize _selectedIndex with the value passed via the constructor
     _selectedIndex = widget.index;
+    _setUpFCM();
+  }
+
+  void _setUpFCM() async {
+    await FirebaseMsg().initFCM();
   }
 
   @override
