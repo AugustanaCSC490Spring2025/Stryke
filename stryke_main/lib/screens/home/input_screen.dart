@@ -10,6 +10,7 @@ import 'package:test_app/database_services/firestore_service.dart';
 import 'package:test_app/models/stat_point.dart';
 import '../../widgets/goal_card.dart';
 import 'package:test_app/data_filters_players/filter_manager.dart';
+import '../../widgets/metric_box/metric_box_delete.dart';
 
 class InputScreen extends StatefulWidget {
   final String metricName;
@@ -449,7 +450,14 @@ class _InputScreenState extends State<InputScreen> {
                   ),
 
                   verticalSpacing(screenHeight * 0.01),
-                  const Text("delete", style: TextStyle(color: Colors.red)),
+                  TextButton(
+                    onPressed: () {
+                        handleDeleteMetric(
+                          context: context, 
+                          userId: myUser!.uid, 
+                          metricName: widget.metricName);
+                    }, 
+                    child: const Text("delete", style: TextStyle(color: Colors.red))),
 
                   verticalSpacing(screenHeight * 0.03),
                   //Goal Piece
