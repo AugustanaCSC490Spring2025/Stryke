@@ -96,7 +96,7 @@ Future<void> _loadGlobalExercises() async {
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: SizedBox(height: screenHeight * .03)),
+          SliverToBoxAdapter(child: SizedBox(height: screenHeight * .07)),
           ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
           SliverToBoxAdapter(child: SizedBox(height: screenHeight * .025)),
           SliverList(

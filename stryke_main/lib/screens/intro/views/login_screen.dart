@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             // Header with Icon
             Container(
-              height: screenHeight * 0.125,
+              height: screenHeight * 0.2,
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Color(0xFFB7FF00),

@@ -160,7 +160,7 @@ class _CoachScreenState extends State<CoachScreen> {
                           color: Color(0xFFB7FF00),
                           fontSize: 18,
                         ),
-                        items: ['Weight', 'Bench Press', 'Squat', 'Front Squat']
+                        items: ['Weight', 'Bench Press', 'Back Squat', 'Front Squat']
                             .map((metric) {
                           return DropdownMenuItem(
                             value: metric,

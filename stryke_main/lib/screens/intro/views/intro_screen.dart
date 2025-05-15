@@ -25,14 +25,14 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
         child: Column(
           children: [
             SizedBox(
-              height: screenHeight * 0.5,
+              height: screenHeight * 0.4,
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: Color(0xFFB7FF00),
                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
                 ),
-                child: Icon(Icons.electric_bolt_rounded, size: screenHeight * 0.3),
+                child: Icon(Icons.electric_bolt, size: screenHeight * 0.2),
               ),
             ),
             verticalSpacing(screenHeight * 0.03),

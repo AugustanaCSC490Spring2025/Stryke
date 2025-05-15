@@ -39,7 +39,7 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                       BorderRadius.vertical(bottom: Radius.circular(40)),
                 ),
                 child:
-                    Icon(Icons.electric_bolt_rounded, size: screenHeight * .22),
+                    Icon(Icons.electric_bolt_rounded, size: screenHeight * .2),
               ),
             ),
             verticalSpacing(screenHeight * .035),
@@ -127,8 +127,8 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                             width: screenWidth * 0.7,
                             height: 70,
                             child: ElevatedButton(
-                              onPressed: () {
-                                joinTeam(
+                              onPressed: () async {
+                                await joinTeam(
                                   formKey: _formKey,
                                   teamKeyController: _teamKeyController,
                                   userId: user!.uid,
@@ -138,6 +138,17 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                                     });
                                   },
                                 );
+
+                                // Show success snackbar if there was no error
+                                if (_errorMsg == null || _errorMsg!.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('🎉 You successfully joined the team!'),
+                                      backgroundColor: Color(0xFF303030),
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
                               },
                               style: ButtonStyles.colorButton(
                                 backgroundColor: const Color(0xffb7ff00),
