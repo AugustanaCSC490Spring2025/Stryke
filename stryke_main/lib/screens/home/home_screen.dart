@@ -31,8 +31,9 @@ class MetricEntry {
 class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
   String? weight;
+  bool _didLoad = false;
   bool isLoading = true;
-  late List<String> preferences;
+  List<String> preferences = [];
   List<MetricEntry> metricEntries = [];
   List metricBoxExercises = [];
   Set<String> addedMetrics = {};
@@ -51,32 +52,28 @@ class _HomePageState extends State<HomePage> {
     final userRef = FirebaseFirestore.instance
       .collection('users')
       .doc(myUser!.uid);
-
     final userDoc = await userRef.get();
 
     List<String> prefs;
 
-    if (!userDoc.exists){
-      prefs = ['Weight'];
-      await userRef.set({
-        'metric_preferences' : prefs,
-      }); 
-    } else {
-      final data = userDoc.data()!;
-      if (data['metric_preferences'] == null){
+    if (!_didLoad) {
+      if (!userDoc.exists || userDoc.data()?['metric_preferences'] == null) {
         prefs = ['Weight'];
-        await userRef.update({
-          'metric_preferences' : prefs,
-        });
+        await userRef.set({
+          'metric_preferences': prefs,
+        }, SetOptions(merge: true));
       } else {
-        prefs = List<String>.from(data['metric_preferences']);
+        prefs = List<String>.from(userDoc.data()!['metric_preferences']);
       }
-
-      setState(() {
-        preferences = prefs;
-      });
+      _didLoad = true;
+    } else {
+      prefs = List<String>.from(userDoc.data()?['metric_preferences'] ?? ['Weight']);
     }
     
+    setState(() {
+      preferences = prefs;
+    });
+
    await _loadUserPreferences(preferences);
 
     setState(() => isLoading = false);
@@ -85,12 +82,8 @@ class _HomePageState extends State<HomePage> {
   // Function to load user data from Firestore
   Future<void> _loadUserPreferences(List<String> preferences) async {
 
-    if (preferences.isEmpty){
-      preferences.add('Weight');
-    }
-
     for (var collection in preferences){
-          QuerySnapshot collectionSnapshot = await FirebaseFirestore.instance
+        QuerySnapshot collectionSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
         .collection(collection)
@@ -123,8 +116,18 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _addPreferences() async {
-    
+  Future<void> _addPreferences(List<String> prefs) async {
+      final userRef = FirebaseFirestore.instance
+      .collection('users')
+      .doc(myUser!.uid);
+
+      await userRef.update({
+        'metric_preferences' : prefs,
+      }); 
+
+      setState(() {
+        preferences = prefs;
+      });
   }
 
   @override
@@ -191,15 +194,27 @@ class _HomePageState extends State<HomePage> {
                               horizontal: screenWidth * .35,
                               vertical: screenHeight * .025),
                         ),
-                        onPressed: () {
-                          showAddMetricDialog(
-                            context: context,
-                            metricBoxExercises: metricBoxExercises,
-                            addedMetrics: addedMetrics,
-                            metricEntries: metricEntries,
-                            userID: myUser!.uid,
-                            refreshState: () => setState(() {}),
-                          );
+                        onPressed: ()  async {
+                                final newMetric = await showAddMetricDialog(
+                                context: context,
+                                metricBoxExercises: metricBoxExercises,
+                                addedMetrics: addedMetrics,
+                                metricEntries: metricEntries,
+                                userID: myUser!.uid,
+                              );
+
+                               if (newMetric == null) return;
+                                    final userRef = FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(myUser!.uid);
+                                      await userRef.update({
+                                        'metric_preferences': FieldValue.arrayUnion([newMetric]),
+                                      });
+                                      setState(() {
+                                        preferences.add(newMetric);
+                                        addedMetrics.add(newMetric);
+                                                });
+                              await _addPreferences(preferences);
                         },
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
