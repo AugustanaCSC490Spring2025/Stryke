@@ -34,21 +34,13 @@ class ProfileInfoTopbar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome, ${myUser.displayName}!',
+                    '${myUser.displayName}',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: screenWidth * .035,
+                      fontSize: screenWidth * .05,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  /* Text(
-                    '${myUser.displayName}!',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: screenWidth * .045,
-                      fontWeight: FontWeight.w700
-                    ),
-                  ) */
                 ],
               ),
             ),

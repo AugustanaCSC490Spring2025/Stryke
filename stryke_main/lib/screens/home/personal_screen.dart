@@ -97,7 +97,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
 
           //TOP BAR WITH PROFILE ICON AND USER NAME
           ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
