@@ -13,6 +13,7 @@ Future<void> showAddMetricDialog({
   required List<MetricEntry> metricEntries,
   required String userID,
   required Function refreshState,
+  
 }) async {
   String? selectedMetric;
   String? trackedField;
