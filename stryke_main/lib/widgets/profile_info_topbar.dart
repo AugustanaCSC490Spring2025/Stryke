@@ -41,14 +41,6 @@ class ProfileInfoTopbar extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  /* Text(
-                    '${myUser.displayName}!',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: screenWidth * .045,
-                      fontWeight: FontWeight.w700
-                    ),
-                  ) */
                 ],
               ),
             ),
