@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../utils/metric_entry.dart';
@@ -17,34 +17,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class MetricEntry {
-  final String metricType;
-  final String value;
-  final String date;
-
-  MetricEntry({
-    required this.metricType,
-    required this.value,
-    required this.date,
-  });
-}
-
 class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
   String? weight;
   bool isLoading = true;
-  bool isCoach = false;
-
-  // Student
   late List<String> preferences;
   List<MetricEntry> metricEntries = [];
   List metricBoxExercises = [];
   Set<String> addedMetrics = {};
-
-  // Coach
-  List<Map<String, dynamic>> athleteMetrics = [];
-  String selectedMetric = "Weight";
-  String searchQuery = "";
 
   @override
   void initState() {
@@ -61,17 +41,6 @@ class _HomePageState extends State<HomePage> {
       .collection('users')
       .doc(myUser!.uid);
 
-    if (isCoach) {
-      await _loadAthleteData();
-    } else {
-      await _loadStudentData(data);
-    }
-
-    setState(() => isLoading = false);
-  }
-
-  Future<void> _loadStudentData(Map<String, dynamic> data) async {
-    final userRef = FirebaseFirestore.instance.collection('users').doc(myUser!.uid);
     final userDoc = await userRef.get();
 
     List<String> prefs;
@@ -171,7 +140,7 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           // HEIGHT BEFORE PROFILE BAR
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
 
           //TOP BAR WITH PROFILE ICON AND USER NAME
           ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
@@ -246,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              verticalSpacing(screenHeight * .05),
+              verticalSpacing(screenHeight * .2),
             ]),
           ),
         ],

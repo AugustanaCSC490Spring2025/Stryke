@@ -312,7 +312,6 @@ class _InputScreenState extends State<InputScreen> {
                           child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xFF3A3A3A)),
                           color: const Color(0xFF2A2A2A),
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(16),
@@ -351,7 +350,16 @@ class _InputScreenState extends State<InputScreen> {
                         child: Container(
                           height: 60,
                           decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFF3A3A3A)),
+                            border: const Border(
+                              right: BorderSide(
+                                color: Color(0xFF3A3A3A),
+                                width: 1.0,
+                              ),
+                              top: BorderSide(
+                                color: Color(0xFF3A3A3A),
+                                width: 1.0,
+                              ),
+                            ),
                             color: const Color(0xFF2A2A2A),
                             borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(16)),
@@ -369,7 +377,12 @@ class _InputScreenState extends State<InputScreen> {
                         child: Container(
                           height: 60,
                           decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFF3A3A3A)),
+                            border: const Border(
+                              top: BorderSide(
+                                color: Color(0xFF3A3A3A),
+                                width: 1.0,
+                              ),
+                            ),
                             color: const Color(0xFF2A2A2A),
                           ),
                           alignment: Alignment.center,
@@ -467,7 +480,8 @@ class _InputScreenState extends State<InputScreen> {
                           currentGoal: currentValue,
                           goalValue: goalValue,
                           onEdit: _showEditGoalDialog,
-                        )
+                        ),
+                  verticalSpacing(screenHeight * 0.2),
                 ],
               ),
             ),
