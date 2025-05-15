@@ -19,7 +19,7 @@ class PersonalScreen extends StatefulWidget {
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
-  bool isLoading = true;
+  bool isLoading = false;
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _heightController = TextEditingController();
@@ -36,6 +36,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   }
 
   void fetchUserData() async {
+    isLoading = true;
     if (myUser != null) {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -62,6 +63,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
         });
       }
     }
+
+    isLoading = false;
   }
 
   void deleteTeam(String teamId) async {

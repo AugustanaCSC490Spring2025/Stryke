@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:test_app/widgets/date_picker_widget.dart';
 import '../../database_services/exercise_service.dart';
 import '../../screens/home/home_screen.dart';
-// Import your services and models here
 
 Future<void> showAddMetricDialog({
   required BuildContext context,
@@ -51,7 +50,6 @@ Future<void> showAddMetricDialog({
                       trackedField = field;
                     });
 
-                     //check if user has existing date 
                     final snapshot = await ExerciseServices().checkEntry(userID: userID, metricName: selectedMetric!);
                     if(snapshot.docs.isNotEmpty){
                       final doc = snapshot.docs.first;
@@ -59,7 +57,6 @@ Future<void> showAddMetricDialog({
                       final timestamp = doc.get('timestamp') as Timestamp;
                       final date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
 
-                      //build metric box of existing exercise 
                       addedMetrics.add(selectedMetric!);
                       metricEntries.add(MetricEntry(
                         metricType: selectedMetric!, 
@@ -67,7 +64,7 @@ Future<void> showAddMetricDialog({
                         date: date
                       ));
 
-                      refreshState(); // Trigger setState in parent
+                      refreshState();
                       Navigator.of(context).pop();
                     }else{
                       setState((){
@@ -159,7 +156,7 @@ Future<void> showAddMetricDialog({
                     .collection('users')
                     .doc(userID)
                     .update({
-                      'metric_preferences' : FieldValue.arrayUnion(['Back Squat']),
+                      'metric_preferences' : FieldValue.arrayUnion(['Back Squat']), // HARD CODED IN FIX IN WITH HOME SCREEN
                     });
 
                     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -181,7 +178,7 @@ Future<void> showAddMetricDialog({
 
                     refreshState(); 
                     Navigator.of(context).pop();
-                    } catch (e, st) {
+                    } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Error saving preferences: $e')),
                       );
