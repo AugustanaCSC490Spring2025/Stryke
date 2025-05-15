@@ -13,6 +13,5 @@ void main() async {
   );
 
   await FirebaseMsg().initFCM();
-
   runApp(const MyApp());
 }

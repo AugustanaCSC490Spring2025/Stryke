@@ -306,7 +306,8 @@ class _InputScreenState extends State<InputScreen> {
                   verticalSpacing(screenHeight * 0.01),
                   Row(
                     children: [
-                      // Date Column
+
+                      // Date 
                       Expanded(
                           child: Container(
                         padding: const EdgeInsets.all(16),
@@ -322,7 +323,7 @@ class _InputScreenState extends State<InputScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 const Text("Date:",
                                     style: TextStyle(
@@ -334,7 +335,7 @@ class _InputScreenState extends State<InputScreen> {
                                       selectedDate = date;
                                     });
                                   },
-                                  labelText: "Select workout date",
+                                  labelText: "Select date",
                                 ),
                               ],
                             ),
@@ -345,7 +346,7 @@ class _InputScreenState extends State<InputScreen> {
                   ),
                   Row(
                     children: [
-                      // Value Column
+                      // Value 
                       Expanded(
                         child: Container(
                           height: 60,
@@ -363,7 +364,7 @@ class _InputScreenState extends State<InputScreen> {
                         ),
                       ),
 
-                      // Input
+                      // Input textField
                       Expanded(
                         child: Container(
                           height: 60,
@@ -421,7 +422,7 @@ class _InputScreenState extends State<InputScreen> {
                                 now.second,
                               );
 
-                              ExerciseServices().addUserExercise(
+                              ExerciseServices().addUserEntry(
                                   userID: myUser!.uid,
                                   exerciseName: widget.metricName,
                                   value: valueController.text,
@@ -447,9 +448,6 @@ class _InputScreenState extends State<InputScreen> {
                       ),
                     ],
                   ),
-
-                  verticalSpacing(screenHeight * 0.01),
-                  const Text("delete", style: TextStyle(color: Colors.red)),
 
                   verticalSpacing(screenHeight * 0.03),
                   //Goal Piece
