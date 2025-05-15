@@ -262,7 +262,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   if (success) {
                     //bool userData = await _authService.checkIfUserHasData();
                     bool userData = await _authService.checkIfUserExists();
-                    print(userData);
 
                     if (userData == false) {
                       Navigator.push(

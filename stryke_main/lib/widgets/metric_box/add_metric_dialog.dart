@@ -147,7 +147,7 @@ Future<void> showAddMetricDialog({
                       return;
                     }
                     try {
-                    await ExerciseServices().addUserExercise(
+                    await ExerciseServices().addUserEntry(
                       userID: userID,
                       exerciseName: selectedMetric!,
                       value: fieldValue!,
