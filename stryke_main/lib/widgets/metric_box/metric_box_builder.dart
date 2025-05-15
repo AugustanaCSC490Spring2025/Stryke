@@ -29,7 +29,6 @@ Widget buildMetricBox(BuildContext context, String? metricType, String value, St
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row: Metric name + Date
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -51,7 +50,6 @@ Widget buildMetricBox(BuildContext context, String? metricType, String value, St
               ],
             ),
             const Spacer(),
-            // Bottom row: Value + Icon
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

@@ -19,10 +19,11 @@ class PersonalScreen extends StatefulWidget {
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
+  bool isLoading = false;
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _heightController = TextEditingController();
-
+  
   String age = '';
   String height = '';
   String weight = '';
@@ -35,6 +36,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   }
 
   void fetchUserData() async {
+    isLoading = true;
     if (myUser != null) {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -61,6 +63,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
         });
       }
     }
+
+    isLoading = false;
   }
 
   void deleteTeam(String teamId) async {
@@ -80,6 +84,12 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: const Color(0xFF1C1C1C),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -88,19 +98,17 @@ class _PersonalScreenState extends State<PersonalScreen> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
-          //TOP BAR WITH PROFILE ICON AND USER NAME
-          ProfileInfoTopbar(
-              screenWidth: screenWidth,
-              screenHeight: screenHeight,
-              myUser: myUser!),
 
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .02)),
+          //TOP BAR WITH PROFILE ICON AND USER NAME
+          ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
+
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .025)),
 
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Padding(
-                  padding: EdgeInsets.all(screenWidth * 0.05),
+                  padding: EdgeInsets.only(left: screenWidth * 0.05, right: screenWidth * 0.05),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
