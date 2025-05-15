@@ -10,7 +10,7 @@ void handleDeleteMetric({
     context: context,
     builder: (BuildContext dialogContext) {
       return AlertDialog(
-        backgroundColor: const Color(0xFF1C1C1C), // dark background
+        backgroundColor: const Color(0xFF303030), // dark background
         title: const Text("Confirm Delete", 
             style: TextStyle(color: Colors.white)),
         content: Text("Are you sure you want to delete all data for \"$metricName\"?", 
