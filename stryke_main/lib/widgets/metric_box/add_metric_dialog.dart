@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:test_app/widgets/date_picker_widget.dart';
 import '../../database_services/exercise_service.dart';
-import '../../screens/home/home_screen.dart';
+import '../../utils/metric_entry.dart';
 
 Future<String?> showAddMetricDialog({
   required BuildContext context,
@@ -18,7 +18,7 @@ Future<String?> showAddMetricDialog({
   DateTime? selectedDate;
   bool isLoadingMetric = false;
 
-  return showDialog<String?>(
+  return showDialog<String>(
     context: context,
     builder: (BuildContext dialogContext) {
       return StatefulBuilder(
@@ -49,6 +49,7 @@ Future<String?> showAddMetricDialog({
                       selectedDate = null;
                       isLoadingMetric = true;
                     });
+                    // fetch the unit or field label
                     final field = await ExerciseServices()
                         .fetchGloabalExerciseTrackedField(newValue!);
                     setState(() {
@@ -59,7 +60,8 @@ Future<String?> showAddMetricDialog({
                   items: metricBoxExercises
                       .map((name) => DropdownMenuItem<String>(
                             value: name,
-                            child: Text(name, style: const TextStyle(color: Colors.white)),
+                            child: Text(name,
+                                style: const TextStyle(color: Colors.white)),
                           ))
                       .toList(),
                 ),
@@ -92,11 +94,7 @@ Future<String?> showAddMetricDialog({
                           borderSide: BorderSide(color: Colors.white24),
                         ),
                       ),
-                      onChanged: (value) {
-                        setState(() {
-                          fieldValue = value;
-                        });
-                      },
+                      onChanged: (value) => fieldValue = value,
                     ),
                   ),
                 ],
@@ -126,37 +124,46 @@ Future<String?> showAddMetricDialog({
                     return;
                   }
 
-                  // Add user exercise
-                  await ExerciseServices().addUserExercise(
-                    userID: userID,
-                    exerciseName: selectedMetric!,
-                    value: fieldValue!,
-                    date: selectedDate!,
-                  );
+                  try {
+                    // Write the new exercise entry
+                    await ExerciseServices().addUserEntry(
+                      userID: userID,
+                      exerciseName: selectedMetric!,
+                      value: fieldValue!,
+                      date: selectedDate!,
+                    );
 
-                  // Update metric preferences
-                  final userRef = FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(userID);
-                  await userRef.set(
-                    {
-                      'metric_preferences': FieldValue.arrayUnion([selectedMetric]),
-                    },
-                    SetOptions(merge: true),
-                  );
+                    // Append metric_preferences
+                    final userRef = FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(userID);
+                    await userRef.set(
+                      {
+                        'metric_preferences':
+                            FieldValue.arrayUnion([selectedMetric]),
+                      },
+                      SetOptions(merge: true),
+                    );
 
-                  // Add to local lists
-                  addedMetrics.add(selectedMetric!);
-                  metricEntries.add(
-                    MetricEntry(
+                    // Update local lists
+                    addedMetrics.add(selectedMetric!);
+                    metricEntries.add(MetricEntry(
                       metricType: selectedMetric!,
                       value: fieldValue!,
-                      date: DateFormat('MM/dd/yyyy').format(selectedDate!),
-                    ),
-                  );
+                      date: DateFormat('MM/dd/yyyy')
+                          .format(selectedDate!),
+                    ));
 
-                  // Close dialog, returning the selected metric
-                  Navigator.of(dialogContext).pop(selectedMetric);
+                    // Close only the dialog
+                    Navigator.of(dialogContext).pop(selectedMetric);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error saving metric: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
                 child: const Text('Add'),
               ),

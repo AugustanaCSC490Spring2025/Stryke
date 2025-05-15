@@ -10,6 +10,7 @@ import 'package:test_app/database_services/firestore_service.dart';
 import 'package:test_app/models/stat_point.dart';
 import '../../widgets/goal_card.dart';
 import 'package:test_app/data_filters_players/filter_manager.dart';
+import '../../widgets/metric_box/metric_box_delete.dart';
 
 class InputScreen extends StatefulWidget {
   final String metricName;
@@ -306,12 +307,12 @@ class _InputScreenState extends State<InputScreen> {
                   verticalSpacing(screenHeight * 0.01),
                   Row(
                     children: [
-                      // Date Column
+
+                      // Date 
                       Expanded(
                           child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xFF3A3A3A)),
                           color: const Color(0xFF2A2A2A),
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(16),
@@ -322,7 +323,7 @@ class _InputScreenState extends State<InputScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 const Text("Date:",
                                     style: TextStyle(
@@ -334,7 +335,7 @@ class _InputScreenState extends State<InputScreen> {
                                       selectedDate = date;
                                     });
                                   },
-                                  labelText: "Select workout date",
+                                  labelText: "Select date",
                                 ),
                               ],
                             ),
@@ -345,12 +346,21 @@ class _InputScreenState extends State<InputScreen> {
                   ),
                   Row(
                     children: [
-                      // Value Column
+                      // Value 
                       Expanded(
                         child: Container(
                           height: 60,
                           decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFF3A3A3A)),
+                            border: const Border(
+                              right: BorderSide(
+                                color: Color(0xFF3A3A3A),
+                                width: 1.0,
+                              ),
+                              top: BorderSide(
+                                color: Color(0xFF3A3A3A),
+                                width: 1.0,
+                              ),
+                            ),
                             color: const Color(0xFF2A2A2A),
                             borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(16)),
@@ -363,12 +373,17 @@ class _InputScreenState extends State<InputScreen> {
                         ),
                       ),
 
-                      // Input
+                      // Input textField
                       Expanded(
                         child: Container(
                           height: 60,
                           decoration: BoxDecoration(
-                            border: Border.all(color: Color(0xFF3A3A3A)),
+                            border: const Border(
+                              top: BorderSide(
+                                color: Color(0xFF3A3A3A),
+                                width: 1.0,
+                              ),
+                            ),
                             color: const Color(0xFF2A2A2A),
                           ),
                           alignment: Alignment.center,
@@ -421,7 +436,7 @@ class _InputScreenState extends State<InputScreen> {
                                 now.second,
                               );
 
-                              ExerciseServices().addUserExercise(
+                              ExerciseServices().addUserEntry(
                                   userID: myUser!.uid,
                                   exerciseName: widget.metricName,
                                   value: valueController.text,
@@ -449,7 +464,14 @@ class _InputScreenState extends State<InputScreen> {
                   ),
 
                   verticalSpacing(screenHeight * 0.01),
-                  const Text("delete", style: TextStyle(color: Colors.red)),
+                  TextButton(
+                    onPressed: () {
+                        handleDeleteMetric(
+                          context: context, 
+                          userId: myUser!.uid, 
+                          metricName: widget.metricName);
+                    }, 
+                    child: const Text("delete", style: TextStyle(color: Colors.red))),
 
                   verticalSpacing(screenHeight * 0.03),
                   //Goal Piece
@@ -459,7 +481,8 @@ class _InputScreenState extends State<InputScreen> {
                           currentGoal: currentValue,
                           goalValue: goalValue,
                           onEdit: _showEditGoalDialog,
-                        )
+                        ),
+                  verticalSpacing(screenHeight * 0.2),
                 ],
               ),
             ),

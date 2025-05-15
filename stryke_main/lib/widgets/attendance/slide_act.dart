@@ -27,7 +27,7 @@ class _SlideToConfirmCardState extends State<SlideToConfirmCard> {
       margin: const EdgeInsets.symmetric(vertical: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2A2A),
+        color: const Color(0xFF303030),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

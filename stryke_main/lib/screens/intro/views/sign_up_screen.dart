@@ -64,7 +64,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            verticalSpacing(screenHeight * 0.03),
+            verticalSpacing(screenHeight * 0.015),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       color: Colors.white,
                     ),
                   ),
-                  verticalSpacing(screenHeight * 0.05),
+                  verticalSpacing(screenHeight * 0.03),
                   Form(
                       key: _formKey,
                       child: Column(
@@ -262,7 +262,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   if (success) {
                     //bool userData = await _authService.checkIfUserHasData();
                     bool userData = await _authService.checkIfUserExists();
-                    print(userData);
 
                     if (userData == false) {
                       Navigator.push(
@@ -331,10 +330,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold, // Bold style
                       ),
                     ),
+
                   ],
                 ),
               ),
             ),
+            verticalSpacing(screenHeight * .2),
+
           ],
         ),
       ),

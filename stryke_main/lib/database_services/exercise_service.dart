@@ -24,7 +24,7 @@ class ExerciseServices {
     }).toList();
   }
 
-  Future<void> addUserExercise(
+  Future<void> addUserEntry(
       {required String userID,
       required String exerciseName,
       required String value,
@@ -38,7 +38,7 @@ class ExerciseServices {
         .add({'value': value, 'timestamp': Timestamp.fromDate(date)});
   }
 
-  Future<void> addUserWeight(
+  /* Future<void> addUserWeight(
       {required String userID,
       required String weight,
       required DateTime date}) async {
@@ -49,7 +49,7 @@ class ExerciseServices {
 
     await userWeightRef
         .add({'timestamp': Timestamp.fromDate(date), 'value': weight});
-  }
+  } */
 
   Future<double> fetchGoal(
       {required String userID, required String goalName}) async {

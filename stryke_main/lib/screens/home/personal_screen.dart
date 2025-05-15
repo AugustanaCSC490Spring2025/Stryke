@@ -23,7 +23,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _heightController = TextEditingController();
-  
+
   String age = '';
   String height = '';
   String weight = '';
@@ -97,10 +97,13 @@ class _PersonalScreenState extends State<PersonalScreen> {
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
 
           //TOP BAR WITH PROFILE ICON AND USER NAME
-          ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
+          ProfileInfoTopbar(
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+              myUser: myUser!),
 
           SliverToBoxAdapter(child: verticalSpacing(screenHeight * .025)),
 
@@ -108,7 +111,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Padding(
-                  padding: EdgeInsets.only(left: screenWidth * 0.05, right: screenWidth * 0.05),
+                  padding: EdgeInsets.only(
+                      left: screenWidth * 0.05, right: screenWidth * 0.05),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -525,6 +529,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                                 .group(2)!) <=
                                                             11;
 
+
                                                     if (userId != null &&
                                                         nameValid &&
                                                         ageValid &&
@@ -537,24 +542,24 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                           .sublist(1)
                                                           .join(' ');
 
+                                                      await myUser?.updateDisplayName("$firstName $lastName");
+
                                                       await FirebaseFirestore
                                                           .instance
                                                           .collection("users")
                                                           .doc(userId)
-                                                          .set(
-                                                              {
-                                                            "first_Name":
-                                                                firstName,
-                                                            "last_Name":
-                                                                lastName,
-                                                            "age": age,
-                                                            "height": height,
-                                                          },
-                                                              SetOptions(
-                                                                  merge: true));
+                                                          .update({
+                                                        "first_Name": firstName,
+                                                        "last_Name": lastName,
+                                                        "age": age,
+                                                        "height": height,
+                                                      });
 
-                                                      Navigator.of(context)
-                                                          .pop();
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => const MainNavigation(index: 1)),
+                                                      );
+
                                                     } else {
                                                       ScaffoldMessenger.of(
                                                               context)
@@ -565,6 +570,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                       );
                                                     }
                                                   },
+
                                                   child: const Text(
                                                     "Save",
                                                     style: TextStyle(
@@ -582,7 +588,32 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                 );
                               },
                             ),
-                            // "Sign Out" Section
+                          ],
+                        ),
+                      ),
+
+                      verticalSpacing(screenHeight * .025),
+                      // PERSONAL PROGRESS
+                      Container(
+                        padding: EdgeInsets.all(screenWidth * 0.035),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF303030),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Navigate",
+                                  style: TextStyle(
+                                    color: Colors.white38,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
                             ListTile(
                               leading: const Icon(Icons.exit_to_app,
                                   color: Color(0xFFB7FF00)),
@@ -596,13 +627,13 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                       backgroundColor: const Color(0xFF303030),
                                       title: const Text("Sign Out",
                                           style:
-                                              TextStyle(color: Colors.white)),
+                                          TextStyle(color: Colors.white)),
                                       content: const Text(
                                           "Are you sure you want to sign out?",
                                           style:
-                                              TextStyle(color: Colors.white70)),
+                                          TextStyle(color: Colors.white70)),
                                       actionsAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                       actions: [
                                         TextButton(
                                           child: const Text("Cancel",
@@ -629,49 +660,9 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const SplashScreen()),
+                                        const SplashScreen()),
                                   );
                                 }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      verticalSpacing(screenHeight * .025),
-                      // PERSONAL PROGRESS
-                      Container(
-                        padding: EdgeInsets.all(screenWidth * 0.035),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF303030),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  "Personal Progress",
-                                  style: TextStyle(
-                                    color: Colors.white38,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.show_chart,
-                                  color: Color(0xFFB7FF00)),
-                              title: Text("My Progress",
-                                  style: TextStyle(color: Colors.white)),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          MainNavigation(index: 1)),
-                                );
                               },
                             ),
                           ],
@@ -720,7 +711,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         ),
                       ),
 
-                      verticalSpacing(screenHeight * .05)
+                      verticalSpacing(screenHeight * .2)
                     ],
                   ),
                 );

@@ -9,7 +9,7 @@ class DatePickerDropdown extends StatelessWidget {
   const DatePickerDropdown({super.key, 
     required this.selectedDate, 
     required this.onDatePicked, 
-    this.labelText = "Select a date"
+    this.labelText = "Select date"
   });
 
   @override

@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            verticalSpacing(screenHeight * 0.045),
+            verticalSpacing(screenHeight * 0.02),
 
             // Form Fields
             Padding(
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  verticalSpacing(screenHeight * 0.06),
+                  verticalSpacing(screenHeight * 0.04),
 
                   Form(
                       key: _formKey,
@@ -387,7 +387,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  verticalSpacing(screenHeight * .2),
                 ],
               ),
             ),
