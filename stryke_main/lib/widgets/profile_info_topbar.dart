@@ -1,17 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/home/notification_page.dart';
+
 class ProfileInfoTopbar extends StatelessWidget {
   final double screenWidth;
   final double screenHeight;
   final User myUser;
 
-  const ProfileInfoTopbar({
-    super.key,
-    required this.screenWidth,
-    required this.screenHeight,
-    required this.myUser
-  });
+  const ProfileInfoTopbar(
+      {super.key,
+      required this.screenWidth,
+      required this.screenHeight,
+      required this.myUser});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +24,8 @@ class ProfileInfoTopbar extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 22.0,
-              backgroundImage: NetworkImage(myUser.photoURL ?? 
-                'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'
-              ),
+              backgroundImage: NetworkImage(myUser.photoURL ??
+                  'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'),
             ),
             SizedBox(width: screenWidth * .03),
             Expanded(
@@ -53,8 +53,14 @@ class ProfileInfoTopbar extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: (){}, 
-              icon: const Icon(Icons.notifications_outlined, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                );
+              },
+              icon:
+                  const Icon(Icons.notifications_outlined, color: Colors.white),
               iconSize: 26,
             ),
           ],
