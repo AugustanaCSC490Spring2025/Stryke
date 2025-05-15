@@ -1,5 +1,3 @@
- import 'dart:nativewrappers/_internal/vm/lib/isolate_patch.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
