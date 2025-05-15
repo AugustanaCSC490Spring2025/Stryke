@@ -96,6 +96,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                       child: const Text("Login"),
                     ),
                   ),
+                  verticalSpacing(screenHeight * .2),
                 ],
               ),
             ),

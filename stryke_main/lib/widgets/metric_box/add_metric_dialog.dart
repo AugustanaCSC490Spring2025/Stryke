@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:test_app/widgets/date_picker_widget.dart';
 import '../../database_services/exercise_service.dart';
 import '../../screens/home/home_screen.dart';
+import '../../utils/metric_entry.dart';
 
 Future<void> showAddMetricDialog({
   required BuildContext context,

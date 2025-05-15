@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../utils/metric_entry.dart';
 import '../../widgets/metric_box/add_metric_dialog.dart';
 import '../../widgets/metric_box/metric_box_builder.dart';
 import '../../utils/spacing.dart';
@@ -14,18 +15,6 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
-}
-
-class MetricEntry {
-  final String metricType;
-  final String value;
-  final String date;
-
-  MetricEntry({
-    required this.metricType,
-    required this.value,
-    required this.date,
-  });
 }
 
 class _HomePageState extends State<HomePage> {
@@ -75,12 +64,30 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         preferences = prefs;
       });
+
     }
     
    await _loadUserPreferences(preferences);
 
     setState(() => isLoading = false);
   }
+
+//   void _openAddMetricDialog() async {
+//   final newEntry = await showAddMetricDialog(
+//     context: context,
+//     metricBoxExercises: _allPossibleMetrics,  // List<String>
+//     addedMetrics: _addedMetrics,             // Set<String>
+//     userID: myUser!.uid,
+//   );
+
+//   if (newEntry != null) {
+//     setState(() {
+//       _addedMetrics.add(newEntry.metricType);
+//       _metricEntries.add(newEntry);
+//     });
+//   }
+// }
+
 
   // Function to load user data from Firestore
   Future<void> _loadUserPreferences(List<String> preferences) async {
@@ -133,7 +140,7 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           // HEIGHT BEFORE PROFILE BAR
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
 
           //TOP BAR WITH PROFILE ICON AND USER NAME
           ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
@@ -208,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              verticalSpacing(screenHeight * .05),
+              verticalSpacing(screenHeight * .2),
             ]),
           ),
         ],

@@ -200,6 +200,7 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                       ),
                     ],
                   ),
+                  verticalSpacing(screenHeight * .2),
                 ],
               ),
             ),
