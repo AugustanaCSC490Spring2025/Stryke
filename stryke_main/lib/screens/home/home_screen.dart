@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/metric_box/add_metric_dialog.dart';
@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
   String? weight;
   bool isLoading = true;
+  late List<String> preferences;
   List<MetricEntry> metricEntries = [];
   List metricBoxExercises = [];
   Set<String> addedMetrics = {};
@@ -43,33 +44,93 @@ class _HomePageState extends State<HomePage> {
     _loadGlobalExercises();
   }
 
-  // Function to load user data from Firestore
+  // Getting userdata
   Future<void> _loadUserData() async {
     setState(() => isLoading = true);
 
-    QuerySnapshot weightSnapshot = await FirebaseFirestore.instance
+    final userRef = FirebaseFirestore.instance
+      .collection('users')
+      .doc(myUser!.uid);
+
+    final userDoc = await userRef.get();
+
+    List<String> prefs;
+
+    if (!userDoc.exists){
+      prefs = ['Weight'];
+      await userRef.set({
+        'metric_preferences' : prefs,
+      }); 
+    } else {
+      final data = userDoc.data()!;
+      if (data['metric_preferences'] == null){
+        prefs = ['Weight'];
+        await userRef.update({
+          'metric_preferences' : prefs,
+        });
+      } else {
+        prefs = List<String>.from(data['metric_preferences']);
+      }
+
+      setState(() {
+        preferences = prefs;
+      });
+
+    }
+    
+   await _loadUserPreferences(preferences);
+
+    setState(() => isLoading = false);
+  }
+
+//   void _openAddMetricDialog() async {
+//   final newEntry = await showAddMetricDialog(
+//     context: context,
+//     metricBoxExercises: _allPossibleMetrics,  // List<String>
+//     addedMetrics: _addedMetrics,             // Set<String>
+//     userID: myUser!.uid,
+//   );
+
+//   if (newEntry != null) {
+//     setState(() {
+//       _addedMetrics.add(newEntry.metricType);
+//       _metricEntries.add(newEntry);
+//     });
+//   }
+// }
+
+
+  // Function to load user data from Firestore
+  Future<void> _loadUserPreferences(List<String> preferences) async {
+
+    if (preferences.isEmpty){
+      preferences.add('Weight');
+    }
+
+    for (var collection in preferences){
+          QuerySnapshot collectionSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(myUser!.uid)
-        .collection('Weight')
+        .collection(collection)
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
 
-    if (weightSnapshot.docs.isNotEmpty) {
-      DocumentSnapshot weightDoc = weightSnapshot.docs.first;
-      Timestamp timestamp = weightDoc.get('timestamp');
-      String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
-      setState(() {
-        weight = weightDoc['value'].toString();
-        metricEntries.add(MetricEntry(
-          metricType: "Weight",
-          value: weight!,
-          date: date,
+      if (collectionSnapshot.docs.isNotEmpty) {
+        DocumentSnapshot weightDoc = collectionSnapshot.docs.first;
+        Timestamp timestamp = weightDoc.get('timestamp');
+        String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
+        setState(() {
+          weight = weightDoc['value'].toString();
+          metricEntries.add(MetricEntry(
+            metricType: collection,
+            value: weight!,
+            date: date,
         ));
       });
     }
 
-    setState(() => isLoading = false);
+    }
   }
 
   Future<void> _loadGlobalExercises() async {
@@ -135,6 +196,7 @@ class _HomePageState extends State<HomePage> {
                             context, entry.metricType, entry.value, entry.date)),
 
                     // Dynamically add the metric boxes here
+
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(

@@ -19,10 +19,11 @@ class PersonalScreen extends StatefulWidget {
 class _PersonalScreenState extends State<PersonalScreen> {
   final myUser = FirebaseAuth.instance.currentUser;
   final _authService = Authentication();
+  bool isLoading = false;
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _heightController = TextEditingController();
-
+  
   String age = '';
   String height = '';
   String weight = '';
@@ -35,6 +36,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
   }
 
   void fetchUserData() async {
+    isLoading = true;
     if (myUser != null) {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -61,6 +63,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
         });
       }
     }
+
+    isLoading = false;
   }
 
   void deleteTeam(String teamId) async {
@@ -80,6 +84,12 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: const Color(0xFF1C1C1C),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
