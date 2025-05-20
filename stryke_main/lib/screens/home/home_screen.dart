@@ -106,17 +106,42 @@ Future<void> _loadGlobalExercises() async {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
+                    //Check In Widget 
                     WorkoutCheckInCard(
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
                       userId: myUser?.uid,
                     ),
+
                     SizedBox(height: screenHeight * .02),
                     Divider(color: Colors.white24, thickness: 1),
                     SizedBox(height: screenHeight * .02),
                     const Text('Your Metrics...', style: TextStyle(color: Colors.white, fontSize: 15)),
                     SizedBox(height: screenHeight * .01),
-                    ...metricEntries.map((entry) => buildMetricBox(context, entry.metricType, entry.value, entry.date)),
+                    ...preferences.map((entry){
+                      return StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
+                          .collection(entry)
+                          .orderBy('timestamp', descending: true)
+                          .limit(1)
+                          .snapshots(), 
+
+                        builder: (context, snapshot){
+                          if(!snapshot.hasData){
+                            return CircularProgressIndicator();
+                          }
+                          final doc = snapshot.data!.docs.first;
+                          final value = doc['value'];
+                          final timestamp = (doc['timestamp'] as Timestamp).toDate();
+                          final dateStr = DateFormat('MM/dd/yyyy').format(timestamp);
+
+                          return buildMetricBox(context, entry, value, dateStr);
+                        },
+                      );
+                    }),
+
+                    //Metric Boxes
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(

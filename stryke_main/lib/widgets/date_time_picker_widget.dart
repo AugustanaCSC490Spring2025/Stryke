@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class DatePickerDropdown extends StatelessWidget {
+class DateTimePickerDropdown extends StatelessWidget {
   final DateTime? selectedDate;
   final Function(DateTime) onDatePicked;
   final String labelText;
 
-  const DatePickerDropdown({super.key, 
+  const DateTimePickerDropdown({super.key, 
     required this.selectedDate, 
     required this.onDatePicked, 
     this.labelText = "Select date"
@@ -37,8 +37,51 @@ class DatePickerDropdown extends StatelessWidget {
             );
           },
         );
-        if(pickedDate != null){
-          onDatePicked(pickedDate);
+        if (pickedDate != null) {
+          // Wait until the dialog fully closes before opening the next
+          Future.delayed(Duration.zero, () async {
+            final pickedTime = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay.fromDateTime(
+                selectedDate ?? DateTime.now(),
+              ),
+              
+              builder: (context, child) {
+                return Theme(
+                  data: ThemeData.dark().copyWith(
+                    colorScheme: const ColorScheme.dark(
+                      primary: Color(0xFFB7FF00),
+                      onSurface: Colors.white,
+                    ),
+                    dialogTheme: const DialogTheme(
+                      backgroundColor: Color(0xFF303030),
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+
+            if (pickedTime != null) {
+              final fullDateTime = DateTime(
+                pickedDate.year,
+                pickedDate.month,
+                pickedDate.day,
+                pickedTime.hour,
+                pickedTime.minute,
+              );
+              if(fullDateTime.isAfter(DateTime.now())){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Times in the future are invalid."),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }else{
+                onDatePicked(fullDateTime);
+              }
+            }
+          });
         }
       },
       child: Container(

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:test_app/database_services/exercise_service.dart';
 import 'package:test_app/utils/spacing.dart';
-import 'package:test_app/widgets/date_picker_widget.dart';
+import 'package:test_app/widgets/date_time_picker_widget.dart';
 import 'package:test_app/widgets/line_chart_widget.dart';
 import 'package:test_app/database_services/firestore_service.dart';
 import 'package:test_app/models/stat_point.dart';
@@ -328,7 +328,7 @@ class _InputScreenState extends State<InputScreen> {
                                 const Text("Date:",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 15)),
-                                DatePickerDropdown(
+                                DateTimePickerDropdown(
                                   selectedDate: selectedDate,
                                   onDatePicked: (date) {
                                     setState(() {
@@ -426,21 +426,13 @@ class _InputScreenState extends State<InputScreen> {
                           onTap: () {
                             if (valueController.text.isNotEmpty &&
                                 selectedDate != null) {
-                              final now = DateTime.now();
-                              final adjustedDate = DateTime(
-                                selectedDate!.year,
-                                selectedDate!.month,
-                                selectedDate!.day,
-                                now.hour,
-                                now.minute,
-                                now.second,
-                              );
 
                               ExerciseServices().addUserEntry(
                                   userID: myUser!.uid,
                                   exerciseName: widget.metricName,
                                   value: valueController.text,
-                                  date: adjustedDate);
+                                  date: selectedDate!
+                              );
 
                               setState(() {
                                 _statData = FirestoreService()
