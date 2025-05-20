@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:test_app/widgets/date_picker_widget.dart';
+import 'package:test_app/widgets/date_time_picker_widget.dart';
 import '../../database_services/exercise_service.dart';
 import '../../utils/metric_entry.dart';
 
@@ -74,7 +74,7 @@ Future<String?> showAddMetricDialog({
                 else if (selectedMetric != null && trackedField != null) ...[
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: DatePickerDropdown(
+                    child: DateTimePickerDropdown(
                       selectedDate: selectedDate,
                       onDatePicked: (date) {
                         setState(() {
@@ -150,8 +150,7 @@ Future<String?> showAddMetricDialog({
                     metricEntries.add(MetricEntry(
                       metricType: selectedMetric!,
                       value: fieldValue!,
-                      date: DateFormat('MM/dd/yyyy')
-                          .format(selectedDate!),
+                      date: DateFormat('MM/dd/yyyy').format(selectedDate!),
                     ));
 
                     // Close only the dialog

@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/screens/intro/views/info_input_screen.dart';
 import 'package:test_app/screens/intro/views/intro_screen.dart';
-import 'package:test_app/screens/intro/views/splash_screen.dart';
 import 'components/main_navigation.dart';
 
 class MyApp extends StatelessWidget {
@@ -13,19 +14,34 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "STRYKE",
       home: StreamBuilder<User?>(
-        stream:
-            FirebaseAuth.instance.authStateChanges(), // Listen to auth changes
+        stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // Show loading indicator while checking auth
+            return const Center(child: CircularProgressIndicator());
           }
+
           if (snapshot.hasData) {
-            // User is logged in
-            return const MainNavigation(
-                index: 0); // Go to the main navigation page
+            return FutureBuilder<DocumentSnapshot>(
+              future: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(snapshot.data!.uid)
+                  .get(),
+              builder: (context, userSnapshot) {
+                if (userSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!userSnapshot.hasData ||
+                    !userSnapshot.data!.exists ||
+                    (userSnapshot.data!.data() as Map<String, dynamic>).isEmpty) {
+                  return const InfoInputScreen(); // Replace with your screen to collect user info
+                }
+
+                return const MainNavigation(index: 0); // Home screen
+              },
+            );
           } else {
-            // User is not logged in
-            return const IntroScreen(); // Stay on AuthPage or navigate to login
+            return const IntroScreen();
           }
         },
       ),

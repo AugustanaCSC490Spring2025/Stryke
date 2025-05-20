@@ -183,7 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           );
 
                           if (success) {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const InfoInputScreen(),
@@ -243,7 +243,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   bool success = await _authService.googleSignIn();
 
                   if (success) {
-                    //bool userData = await _authService.checkIfUserHasData();
                     bool userData = await _authService.checkIfUserHasData();
 
                     if (userData == false) {
@@ -253,7 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             builder: (context) => const InfoInputScreen()),
                       );
                     } else {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
