@@ -255,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return;
                       }
                       setState(() => _loginError = null);
-                      bool userData = await _authService.checkIfUserExists();
+                      bool userData = await _authService.checkIfUserHasData();
                       if (userData) {
                         nav.pushReplacement(
                           MaterialPageRoute(builder: (_) => const MainNavigation(index: 0)),
@@ -315,8 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         bool success = await _authService.googleSignIn();
 
                         if (success) {
-                          //bool userData = await _authService.checkIfUserHasData();
-                          bool userData = await _authService.checkIfUserExists();
+                          bool userData = await _authService.checkIfUserHasData();
                           if (!mounted) return;
                           if (userData == false) {
                             nav.pushReplacement(

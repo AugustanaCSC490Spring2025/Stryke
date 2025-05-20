@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../auth/google_sign_in/authentication.dart';
 import '../screens/home/notification_page.dart';
+import '../screens/intro/views/intro_screen.dart';
 
 class ProfileInfoTopbar extends StatelessWidget {
   final double screenWidth;
@@ -22,10 +24,102 @@ class ProfileInfoTopbar extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 22.0,
-              backgroundImage: NetworkImage(myUser.photoURL ??
-                  'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg'),
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      backgroundColor: const Color(0xFF303030),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      title: const Text(
+                        'Account Options',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      content: const Text(
+                        'Choose an action:',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            await Authentication().signOut();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const IntroScreen()),
+                            ); // Your method
+                          },
+                          child: const Text('Sign Out',
+                              style: TextStyle(color: Color(0xFFB7FF00))),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  backgroundColor: const Color(0xFF303030),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  title: const Text(
+                                    'Confirm Deletion',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  content: const Text(
+                                    'Are you sure you want to delete your account? This action cannot be undone.',
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: const Text('Cancel',
+                                          style:
+                                              TextStyle(color: Colors.white60)),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await Authentication().deleteAccount(
+                                            context);
+                                        Navigator.of(context).pop();
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => const IntroScreen()),
+                                        );
+                                      },
+                                      child: const Text('Delete',
+                                          style: TextStyle(
+                                              color: Colors.redAccent)),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            // Make sure this exists
+                          },
+                          child: const Text('Delete Account',
+                              style: TextStyle(color: Colors.redAccent)),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Cancel',
+                              style: TextStyle(color: Colors.white60)),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: CircleAvatar(
+                radius: 22.0,
+                backgroundImage: NetworkImage(
+                  myUser.photoURL ??
+                      'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg',
+                ),
+              ),
             ),
             SizedBox(width: screenWidth * .03),
             Expanded(
