@@ -58,7 +58,7 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                         BorderRadius.vertical(bottom: Radius.circular(40)),
                   ),
                   child: Icon(Icons.electric_bolt_rounded,
-                      size: screenHeight * 0.12),
+                      size: screenHeight * 0.08),
                 ),
               ),
               verticalSpacing(screenHeight * 0.03),

@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             // Header with Icon
             Container(
-              height: screenHeight * 0.125,
+              height: screenHeight * 0.2,
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Color(0xFFB7FF00),
@@ -257,11 +257,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() => _loginError = null);
                       bool userData = await _authService.checkIfUserExists();
                       if (userData) {
-                        nav.push(
+                        nav.pushReplacement(
                           MaterialPageRoute(builder: (_) => const MainNavigation(index: 0)),
                         );
                       } else {
-                        nav.push(
+                        nav.pushReplacement(
                           MaterialPageRoute(builder: (_) => const InfoInputScreen()),
                         );
                       }
@@ -319,12 +319,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           bool userData = await _authService.checkIfUserExists();
                           if (!mounted) return;
                           if (userData == false) {
-                            nav.push(
+                            nav.pushReplacement(
                               MaterialPageRoute(
                                   builder: (_) => const InfoInputScreen()),
                             );
                           } else {
-                            nav.push(
+                            nav.pushReplacement(
                               MaterialPageRoute(
                                   builder: (_) => const MainNavigation(index: 0)),
                             );
@@ -362,7 +362,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   InkWell(
                     onTap: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const SignUpScreen()),

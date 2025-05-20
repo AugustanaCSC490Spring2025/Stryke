@@ -378,7 +378,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                 return null;
                                               },
                                             ),
-                                            const SizedBox(height: 20),
+                                            const SizedBox(height: 10),
                                             TextFormField(
                                               controller: _ageController,
                                               // Add this controller in your state
@@ -388,6 +388,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                                   TextInputType.number,
                                               decoration: const InputDecoration(
                                                 labelText: 'Age',
+                                                hintText: 'ex. 21',
                                                 labelStyle: TextStyle(
                                                     color: Colors.white38),
                                                 enabledBorder:

@@ -7,7 +7,6 @@ import 'package:test_app/widgets/text_input/text_input.dart';
 import '../../../auth/google_sign_in/authentication.dart';
 import 'login_screen.dart';
 
-
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -36,7 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           children: [
             SizedBox(
-              height: screenHeight * 0.125,
+              height: screenHeight * 0.2,
               child: Container(
                 width: double.infinity,
                 decoration: const BoxDecoration(
@@ -64,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
 
-            verticalSpacing(screenHeight * 0.015),
+            verticalSpacing(screenHeight * 0.005),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
@@ -170,60 +169,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               )),
                         ],
                       )),
-                  verticalSpacing(screenHeight * 0.025),
-                  Row(
-                    children: [
-                      // Student Button (Original)
-                      Expanded(
-                        child: SizedBox(
-                          height: 70,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                bool success = await _authService.signUpUser(
-                                  _emailController.text,
-                                  _passwordController.text,
-                                  context,
-                                );
+                  verticalSpacing(screenHeight * 0.02),
+                  SizedBox(
+                    width: screenWidth * .7,
+                    height: 70,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          bool success = await _authService.signUpUser(
+                            _emailController.text,
+                            _passwordController.text,
+                            context,
+                          );
 
-                                if (success) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const InfoInputScreen(),
-                                    ),
-                                  );
-                                }
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFB7FF00),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
+                          if (success) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const InfoInputScreen(),
                               ),
-                            ),
-                            child: const Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
+                            );
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFB7FF00),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
                         ),
                       ),
-                    ],
-                  ),
-                  verticalSpacing(screenHeight * 0.005),
-                  Text(
-                    "Continue by selecting your role above.",
-                    style: TextStyle(
-                      color: Colors.white54,
-                      fontSize: 15,
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -330,13 +313,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold, // Bold style
                       ),
                     ),
-
                   ],
                 ),
               ),
             ),
             verticalSpacing(screenHeight * .2),
-
           ],
         ),
       ),

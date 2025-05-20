@@ -1,14 +1,13 @@
- import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../utils/metric_entry.dart';
 import '../../widgets/metric_box/add_metric_dialog.dart';
 import '../../widgets/metric_box/metric_box_builder.dart';
-import '../../utils/spacing.dart';
 import 'package:test_app/database_services/exercise_service.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/profile_info_topbar.dart';
 import '../../widgets/attendance/workout_checkin.dart';
+import '../../utils/metric_entry.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,11 +18,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User? myUser = FirebaseAuth.instance.currentUser;
-  String? weight;
   bool isLoading = true;
-  late List<String> preferences;
+  List<String> preferences = [];
   List<MetricEntry> metricEntries = [];
-  List metricBoxExercises = [];
+  List<String> metricBoxExercises = [];
   Set<String> addedMetrics = {};
 
   @override
@@ -33,108 +31,78 @@ class _HomePageState extends State<HomePage> {
     _loadGlobalExercises();
   }
 
-  // Getting userdata
   Future<void> _loadUserData() async {
+    if (addedMetrics.isNotEmpty) return;
+
     setState(() => isLoading = true);
-
-    final userRef = FirebaseFirestore.instance
-      .collection('users')
-      .doc(myUser!.uid);
-
+    final userRef = FirebaseFirestore.instance.collection('users').doc(myUser!.uid);
     final userDoc = await userRef.get();
 
     List<String> prefs;
-
-    if (!userDoc.exists){
+    final data = userDoc.data();
+    if (!userDoc.exists || data?['metric_preferences'] == null) {
       prefs = ['Weight'];
-      await userRef.set({
-        'metric_preferences' : prefs,
-      }); 
+      await userRef.set({'metric_preferences': prefs}, SetOptions(merge: true));
     } else {
-      final data = userDoc.data()!;
-      if (data['metric_preferences'] == null){
-        prefs = ['Weight'];
-        await userRef.update({
-          'metric_preferences' : prefs,
-        });
-      } else {
-        prefs = List<String>.from(data['metric_preferences']);
-      }
-
-      setState(() {
-        preferences = prefs;
-      });
-
+      prefs = List<String>.from(data!['metric_preferences']);
     }
-    
-   await _loadUserPreferences(preferences);
 
+    setState(() {
+      preferences = prefs;
+    });
+
+    await _loadUserPreferences();
     setState(() => isLoading = false);
   }
 
-  // Function to load user data from Firestore
-  Future<void> _loadUserPreferences(List<String> preferences) async {
+  Future<void> _loadUserPreferences() async {
+    metricEntries.clear();
+    addedMetrics.clear();
 
-    if (preferences.isEmpty){
-      preferences.add('Weight');
-    }
+    for (var metric in preferences) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(myUser!.uid)
+          .collection(metric)
+          .orderBy('timestamp', descending: true)
+          .limit(1)
+          .get();
 
-    for (var collection in preferences){
-          QuerySnapshot collectionSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(myUser!.uid)
-        .collection(collection)
-        .orderBy('timestamp', descending: true)
-        .limit(1)
-        .get();
-
-      if (collectionSnapshot.docs.isNotEmpty) {
-        DocumentSnapshot weightDoc = collectionSnapshot.docs.first;
-        Timestamp timestamp = weightDoc.get('timestamp');
-        String date = DateFormat('MM/dd/yyyy').format(timestamp.toDate());
-        setState(() {
-          weight = weightDoc['value'].toString();
-          metricEntries.add(MetricEntry(
-            metricType: collection,
-            value: weight!,
-            date: date,
-        ));
-      });
-    }
-
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        final value = doc.get('value').toString();
+        final ts = doc.get('timestamp') as Timestamp;
+        final date = DateFormat('MM/dd/yyyy').format(ts.toDate());
+        metricEntries.add(MetricEntry(metricType: metric, value: value, date: date));
+        addedMetrics.add(metric);
+      }
     }
   }
 
-  Future<void> _loadGlobalExercises() async {
-    ExerciseServices().fetchGlobalExerciseNames().then((exerciseNames) {
-      setState(() {
-        metricBoxExercises = exerciseNames;
-      });
-    });
-  }
+Future<void> _loadGlobalExercises() async {
+  final rawList = await ExerciseServices().fetchGlobalExerciseNames();
+  final List<String> names = rawList.cast<String>();
+  setState(() {
+    metricBoxExercises = names;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(
         slivers: [
-          // HEIGHT BEFORE PROFILE BAR
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .07)),
-
-          //TOP BAR WITH PROFILE ICON AND USER NAME
+          SliverToBoxAdapter(child: SizedBox(height: screenHeight * .07)),
           ProfileInfoTopbar(screenWidth: screenWidth, screenHeight: screenHeight, myUser: myUser!),
-
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .025)),
-
+          SliverToBoxAdapter(child: SizedBox(height: screenHeight * .025)),
           SliverList(
             delegate: SliverChildListDelegate([
               Padding(
-                padding: EdgeInsets.only(
-                    left: screenWidth * 0.05, right: screenWidth * 0.05),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * .05),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -143,32 +111,12 @@ class _HomePageState extends State<HomePage> {
                       screenHeight: screenHeight,
                       userId: myUser?.uid,
                     ),
-                    verticalSpacing(screenHeight * .02),
-
-                    Container(
-                      height: 1,
-                      decoration: BoxDecoration(
-                          color: Colors.white24,
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    verticalSpacing(screenHeight * .02),
-
-                    const Text(
-                      "Your Metrics...",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                      ),
-                    ),
-
-                    verticalSpacing(screenHeight * .01),
-
-                    ...metricEntries
-                        .map((entry) => buildMetricBox(
-                            context, entry.metricType, entry.value, entry.date)),
-
-                    // Dynamically add the metric boxes here
-
+                    SizedBox(height: screenHeight * .02),
+                    Divider(color: Colors.white24, thickness: 1),
+                    SizedBox(height: screenHeight * .02),
+                    const Text('Your Metrics...', style: TextStyle(color: Colors.white, fontSize: 15)),
+                    SizedBox(height: screenHeight * .01),
+                    ...metricEntries.map((entry) => buildMetricBox(context, entry.metricType, entry.value, entry.date)),
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -177,28 +125,33 @@ class _HomePageState extends State<HomePage> {
                               horizontal: screenWidth * .35,
                               vertical: screenHeight * .025),
                         ),
-                        onPressed: () {
-                          showAddMetricDialog(
+                        onPressed: () async {
+                          final newMetric = await showAddMetricDialog(
                             context: context,
                             metricBoxExercises: metricBoxExercises,
                             addedMetrics: addedMetrics,
                             metricEntries: metricEntries,
                             userID: myUser!.uid,
-                            refreshState: () => setState(() {}),
                           );
+                          if (newMetric == null) return;
+
+                          // Append preference in Firestore
+                          final userRef = FirebaseFirestore.instance.collection('users').doc(myUser!.uid);
+                          await userRef.update({
+                            'metric_preferences': FieldValue.arrayUnion([newMetric]),
+                          });
+
+                          setState(() {
+                            preferences.add(newMetric);
+                          });
                         },
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.add, color: Colors.black, size: 25),
-                          ],
-                        ),
+                        child: const Icon(Icons.add, color: Colors.black, size: 25),
                       ),
                     ),
+                    SizedBox(height: screenHeight * .05),
                   ],
                 ),
               ),
-              verticalSpacing(screenHeight * .2),
             ]),
           ),
         ],
