@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/components/main_navigation.dart';
 
 void handleDeleteMetric({
   required BuildContext context,
@@ -46,10 +47,17 @@ void handleDeleteMetric({
                     .update({
                       'metric_preferences': FieldValue.arrayRemove([metricName])
                     });
+                
 
                 // 3. Navigate back to home
                 if (context.mounted) {
-                  Navigator.of(context).pop();  // pop InputScreen
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute( 
+                      builder: (context) => 
+                      MainNavigation(index: 0), // Replace with your actual screen
+                    ),
+                  ) ;  // pop InputScreen
                 }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
