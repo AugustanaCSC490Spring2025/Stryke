@@ -105,29 +105,6 @@ class Authentication {
   }
 
 
-  Future<bool> checkIfUserExists() async {
-    try {
-      final User? user = FirebaseAuth.instance.currentUser;
-
-      if (user == null) {
-        return false;
-      }
-
-      final docSnapshot = await FirebaseFirestore.instance.collection('users')
-          .doc(user.uid)
-          .get();
-
-      if (!docSnapshot.exists) {
-        return false;
-      }
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -136,4 +113,38 @@ class Authentication {
       print("Sign out failed: $e");
     }
   }
+
+  Future<void> deleteAccount(BuildContext context) async {
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final uid = user.uid;
+
+      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
+
+      await user.delete();
+
+      await FirebaseAuth.instance.signOut();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account successfully deleted.'),
+          backgroundColor: Color(0xFF303030),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+
+    } catch (e) {
+      print('Error deleting account: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to delete account. Try again.'),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
 }
