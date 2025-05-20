@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/components/main_navigation.dart';
+import 'package:test_app/screens/intro/views/intro_screen.dart';
 import 'package:test_app/screens/intro/views/splash_screen.dart';
 
 class AuthPage extends StatelessWidget {
@@ -15,7 +16,7 @@ class AuthPage extends StatelessWidget {
             if (snapshot.hasData) {
               return const MainNavigation(index: 0);
             } else {
-              return const SplashScreen();
+              return const IntroScreen();
             }
           }
       )

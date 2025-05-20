@@ -68,28 +68,42 @@ class Authentication {
     final User? user = FirebaseAuth.instance.currentUser;
 
     if (user == null) return false;
-    print("User ID: ${user.uid} + 1");
+
     try {
-      final docSnapshot = await _firestore.collection('users')
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
           .doc(user.uid)
           .get();
 
       if (!docSnapshot.exists) {
-        print("User ID: ${user.uid} + 2");
+        print("User doc does not exist for UID: ${user.uid}");
         return false;
       }
 
       final data = docSnapshot.data();
-      if (data == null || data.isEmpty) {
-        print("User ID: ${user.uid} + 3");
+      if (data == null) {
+        print("No data found in user doc: ${user.uid}");
         return false;
       }
-      print("User ID: ${user.uid} + 4");
+
+      // Check specific fields you require to consider the user profile complete
+      final requiredFields = ['first_Name', 'last_Name', 'age', 'height'];
+      for (final field in requiredFields) {
+        if (data[field] == null || (data[field] is String && (data[field] as String).trim().isEmpty)) {
+          print("Missing or empty field '$field' for UID: ${user.uid}");
+          return false;
+        }
+      }
+
+      print("User data is complete for UID: ${user.uid}");
       return true;
+
     } catch (e) {
+      print("Error checking user data: $e");
       return false;
     }
   }
+
 
   Future<bool> checkIfUserExists() async {
     try {

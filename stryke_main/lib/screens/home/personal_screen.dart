@@ -6,6 +6,7 @@ import '../../auth/google_sign_in/authentication.dart';
 import '../../components/main_navigation.dart';
 import '../../utils/spacing.dart';
 import '../../widgets/profile_info_topbar.dart';
+import '../intro/views/intro_screen.dart';
 import '../intro/views/splash_screen.dart';
 import '../intro/views/team_input.dart';
 
@@ -661,7 +662,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        const SplashScreen()),
+                                        const IntroScreen()),
                                   );
                                 }
                               },

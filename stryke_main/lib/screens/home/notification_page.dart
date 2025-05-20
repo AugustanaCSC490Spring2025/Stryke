@@ -30,7 +30,7 @@ class NotificationsPage extends StatelessWidget {
       backgroundColor: const Color(0xFF1C1C1C),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: verticalSpacing(screenHeight * 0.03)),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * 0.07)),
 
           SliverToBoxAdapter(
             child: Padding(
