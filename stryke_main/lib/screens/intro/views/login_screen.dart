@@ -245,6 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton(
                     onPressed: () async {
                       if (!_formKey.currentState!.validate()) return;
+                      final nav = Navigator.of(context);
                       bool success = await _authService.loginUser(
                         _emailController.text,
                         _passwordController.text,
@@ -256,11 +257,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() => _loginError = null);
                       bool userData = await _authService.checkIfUserHasData();
                       if (userData) {
-                        Navigator.of(context).pushReplacement(
+                        nav.pushReplacement(
                           MaterialPageRoute(builder: (_) => const MainNavigation(index: 0)),
                         );
                       } else {
-                        Navigator.of(context).pushReplacement(
+                        nav.pushReplacement(
                           MaterialPageRoute(builder: (_) => const InfoInputScreen()),
                         );
                       }
@@ -309,18 +310,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           isRounded = !isRounded;
                         });
 
+                        final nav = Navigator.of(context);
+
                         bool success = await _authService.googleSignIn();
 
                         if (success) {
                           bool userData = await _authService.checkIfUserHasData();
                           //if (!mounted) return;
                           if (userData == false) {
-                            Navigator.of(context).pushReplacement(
+                            nav.pushReplacement(
                               MaterialPageRoute(
                                   builder: (_) => const InfoInputScreen()),
                             );
                           } else {
-                            Navigator.of(context).pushReplacement(
+                            nav.pushReplacement(
                               MaterialPageRoute(
                                   builder: (_) => const MainNavigation(index: 0)),
                             );

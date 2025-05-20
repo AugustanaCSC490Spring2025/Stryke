@@ -9,11 +9,9 @@ class Authentication {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Sign up with email & password
-  Future<bool> signUpUser(
-      String email, String password, BuildContext context) async {
+  Future<bool> signUpUser(String email, String password, BuildContext context) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
       return true;
     } on FirebaseAuthException catch (e) {
       print("SignUp Error: ${e.message}");
@@ -27,6 +25,7 @@ class Authentication {
           ),
         );
       }
+
       return false;
     }
   }
@@ -42,29 +41,6 @@ class Authentication {
     }
   }
 
-  Future<bool> checkIfUserExists() async {
-    try {
-      final User? user = FirebaseAuth.instance.currentUser;
-
-      if (user == null) {
-        return false;
-      }
-
-      final docSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-
-      if (!docSnapshot.exists) {
-        return false;
-      }
-
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   // Google Sign-In
   Future<bool> googleSignIn() async {
     try {
@@ -73,7 +49,7 @@ class Authentication {
       if (googleUser == null) return false;
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -86,6 +62,7 @@ class Authentication {
       return false;
     }
   }
+
 
   Future<bool> checkIfUserHasData() async {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -112,8 +89,7 @@ class Authentication {
       // Check specific fields you require to consider the user profile complete
       final requiredFields = ['first_Name', 'last_Name', 'age', 'height'];
       for (final field in requiredFields) {
-        if (data[field] == null ||
-            (data[field] is String && (data[field] as String).trim().isEmpty)) {
+        if (data[field] == null || (data[field] is String && (data[field] as String).trim().isEmpty)) {
           print("Missing or empty field '$field' for UID: ${user.uid}");
           return false;
         }
@@ -121,11 +97,13 @@ class Authentication {
 
       print("User data is complete for UID: ${user.uid}");
       return true;
+
     } catch (e) {
       print("Error checking user data: $e");
       return false;
     }
   }
+
 
   Future<void> signOut() async {
     try {
@@ -167,4 +145,5 @@ class Authentication {
       );
     }
   }
+
 }
