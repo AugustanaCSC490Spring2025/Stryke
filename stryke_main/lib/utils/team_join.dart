@@ -63,9 +63,7 @@ Future<void> joinTeam({
   String code = teamKeyController.text.trim().toUpperCase();
 
   if (formKey.currentState!.validate()) {
-    print("here");
     if (code[0] == "C"){
-      print("here2");
       try {
         QuerySnapshot coachCodeQuery = await FirebaseFirestore.instance
           .collection('teams')

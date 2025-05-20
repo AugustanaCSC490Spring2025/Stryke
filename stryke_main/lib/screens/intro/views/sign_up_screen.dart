@@ -244,16 +244,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   if (success) {
                     //bool userData = await _authService.checkIfUserHasData();
-                    bool userData = await _authService.checkIfUserExists();
+                    bool userData = await _authService.checkIfUserHasData();
 
                     if (userData == false) {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const InfoInputScreen()),
                       );
                     } else {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
