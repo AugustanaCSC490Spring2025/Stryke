@@ -69,6 +69,7 @@ Future<void> joinTeam({
           .collection('teams')
           .where('coach_Code', isEqualTo: code)
           .get();
+        print(coachCodeQuery.docs);
 
         final teamDoc = coachCodeQuery.docs.first;
 
@@ -97,7 +98,7 @@ Future<void> joinTeam({
         teamKeyController.clear();
         setErrorMsg(null);
 
-      }catch (e) {
+      } catch (e) {
         setErrorMsg("Coach code does not exist");
         formKey.currentState!.validate();
       }
