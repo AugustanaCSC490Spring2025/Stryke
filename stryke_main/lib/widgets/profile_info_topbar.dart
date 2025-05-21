@@ -113,7 +113,7 @@ class ProfileInfoTopbar extends StatelessWidget {
                 );
               },
               child: CircleAvatar(
-                radius: 22.0,
+                radius: screenWidth * .04,
                 backgroundImage: NetworkImage(
                   myUser.photoURL ??
                       'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg',
@@ -146,7 +146,7 @@ class ProfileInfoTopbar extends StatelessWidget {
               },
               icon:
                   const Icon(Icons.notifications_outlined, color: Colors.white),
-              iconSize: 26,
+              iconSize: screenWidth * .05,
             ),
           ],
         ),

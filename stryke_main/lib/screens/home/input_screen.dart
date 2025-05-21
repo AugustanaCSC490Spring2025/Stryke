@@ -311,7 +311,7 @@ class _InputScreenState extends State<InputScreen> {
                       // Date 
                       Expanded(
                           child: Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(30),
                         decoration: BoxDecoration(
                           color: const Color(0xFF2A2A2A),
                           borderRadius: const BorderRadius.only(
@@ -323,11 +323,11 @@ class _InputScreenState extends State<InputScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text("Date:",
+                                Text("Date:",
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 15)),
+                                        color: Colors.white, fontSize: screenWidth * .02)),
                                 DateTimePickerDropdown(
                                   selectedDate: selectedDate,
                                   onDatePicked: (date) {
@@ -365,11 +365,11 @@ class _InputScreenState extends State<InputScreen> {
                             borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(16)),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
                           alignment: Alignment.centerLeft,
-                          child: const Text("Value:",
+                          child: Text("Value:",
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 15)),
+                                  TextStyle(color: Colors.white, fontSize: screenWidth * .02)),
                         ),
                       ),
 
