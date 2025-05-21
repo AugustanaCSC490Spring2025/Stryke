@@ -86,7 +86,11 @@ class _CoachScreenState extends State<CoachScreen> {
         continue;
       }
 
-      final name = userDoc.data()?['name'] ?? 'Unknown';
+      final firstName = userDoc.data()?['first_Name'] ?? 'Unknown';
+      final lastName = userDoc.data()?['last_Name'] ?? '';
+      final lastInitial = lastName.isNotEmpty ? '${lastName[0]}.' : '';
+      final name = '$firstName $lastInitial';
+
 
       final metricSnapshot = await FirebaseFirestore.instance
           .collection('users')
