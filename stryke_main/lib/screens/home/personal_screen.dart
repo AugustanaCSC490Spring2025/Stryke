@@ -181,6 +181,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                     fontSize: screenWidth * .05,
                                     fontWeight: FontWeight.bold,
                                 ),
+                                ),
                               ],
                             ),
                             Column(
