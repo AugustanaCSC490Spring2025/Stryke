@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../database_services/exercise_service.dart';
 import '../../widgets/metric_box/coach_metric_box.dart';
-import '../../widgets/metric_box/metric_box_builder.dart';
 import '../../widgets/profile_info_topbar.dart';
 import '../../utils/spacing.dart';
 
@@ -217,7 +216,7 @@ class _CoachScreenState extends State<CoachScreen> {
                     (context, index) {
                       final athlete = filteredAthletes[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                         child: buildCoachMetricBox(
                             context: context,
                             athleteId: athlete['id'],

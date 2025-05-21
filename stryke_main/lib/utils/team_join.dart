@@ -69,7 +69,7 @@ Future<void> joinTeam({
           .collection('teams')
           .where('coach_Code', isEqualTo: code)
           .get();
-        print(coachCodeQuery.docs);
+        print(coachCodeQuery.docs.first);
 
         final teamDoc = coachCodeQuery.docs.first;
 
