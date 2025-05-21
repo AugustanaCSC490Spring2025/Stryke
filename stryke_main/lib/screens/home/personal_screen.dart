@@ -148,7 +148,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             "Basics",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenWidth * .05,
+                              fontSize: screenWidth * .03,
                             ),
                           ),
                         ],
@@ -174,9 +174,13 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                const Text(
+                                Text(
                                   'Age',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * .05,
+                                    fontWeight: FontWeight.bold,
+                                ),
                                 ),
                               ],
                             ),
@@ -192,9 +196,13 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                const Text(
+                                Text(
                                   'Height',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * .05,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
@@ -210,9 +218,13 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                const Text(
+                                Text(
                                   'Weight',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * .05,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),

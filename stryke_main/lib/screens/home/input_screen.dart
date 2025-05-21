@@ -197,7 +197,7 @@ class _InputScreenState extends State<InputScreen> {
                         // Time Filter Row
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: ['Day', 'Week', 'Month', 'Year'].map((e) {
+                          children: ['D', 'W', 'M', 'Y'].map((e) {
                             final isSelected = e == selectedFilter;
                             return GestureDetector(
                               onTap: () {
