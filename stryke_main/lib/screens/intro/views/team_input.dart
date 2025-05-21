@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../components/my_text_field.dart';
@@ -18,6 +19,34 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
   final user = FirebaseAuth.instance.currentUser;
 
   String? _errorMsg;
+  List<String> joinedTeamCodes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadJoinedTeams();
+  }
+
+  Future<void> _loadJoinedTeams() async {
+    if (user == null) return;
+
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+
+      final data = userDoc.data() as Map<String, dynamic>?;
+
+      if (data != null && data['team_IDs'] != null) {
+        setState(() {
+          joinedTeamCodes = List<String>.from(data['team_IDs']);
+        });
+      }
+    } catch (e) {
+      print('Error loading team IDs: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +94,47 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
+                    ),
+                  ),
+                  verticalSpacing(screenHeight * .03),
+
+                  // ✅ Joined teams box
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF303030),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Teams You've Joined:",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        if (joinedTeamCodes.isEmpty)
+                          const Text(
+                            "You haven't joined any teams yet.",
+                            style: TextStyle(color: Colors.white38),
+                          )
+                        else
+                          ...joinedTeamCodes.map(
+                            (team) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Text(
+                                team,
+                                style: const TextStyle(
+                                    color: Colors.white70, fontSize: 14),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],
@@ -119,10 +189,8 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Add Team Button at the top
                         Padding(
                           padding: EdgeInsets.only(top: screenHeight * .025),
-                          // adjust as needed
                           child: SizedBox(
                             width: screenWidth * 0.7,
                             height: 70,
@@ -139,7 +207,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                                   },
                                 );
 
-                                // Show success snackbar if there was no error
                                 if (_errorMsg == null || _errorMsg!.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -148,6 +215,8 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                                       behavior: SnackBarBehavior.floating,
                                     ),
                                   );
+                                  _teamKeyController.clear();
+                                  await _loadJoinedTeams(); // ✅ refresh list
                                 }
                               },
                               style: ButtonStyles.colorButton(
@@ -160,7 +229,6 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                             ),
                           ),
                         ),
-
                         verticalSpacing(screenHeight * .005),
                         Text(
                           "This adds a team to your profile.",
@@ -170,11 +238,8 @@ class _TeamInputScreenState extends State<TeamInputScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-
-                        // Done Button at the very bottom
                         Padding(
                           padding: EdgeInsets.only(top: screenHeight * .1),
-                          // adjust as needed
                           child: SizedBox(
                             width: screenWidth * 0.7,
                             height: 70,
