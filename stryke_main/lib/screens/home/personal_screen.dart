@@ -7,7 +7,6 @@ import '../../components/main_navigation.dart';
 import '../../utils/spacing.dart';
 import '../../widgets/profile_info_topbar.dart';
 import '../intro/views/intro_screen.dart';
-import '../intro/views/splash_screen.dart';
 import '../intro/views/team_input.dart';
 
 class PersonalScreen extends StatefulWidget {
@@ -69,10 +68,33 @@ class _PersonalScreenState extends State<PersonalScreen> {
   }
 
   void deleteTeam(String teamId) async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(myUser!.uid)
-        .update({
+    final userId = myUser!.uid;
+    final teamDocRef = FirebaseFirestore.instance.collection('teams').doc(teamId);
+    final userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+    final teamSnapshot = await teamDocRef.get();
+    if (!teamSnapshot.exists) return;
+
+    final teamData = teamSnapshot.data()!;
+    final List<dynamic> athleteIDs = teamData['athlete_IDs'] ?? [];
+    final List<dynamic> coachIDs = teamData['coach_IDs'] ?? [];
+
+    final updates = <String, dynamic>{};
+
+    if (athleteIDs.contains(userId)) {
+      updates['athlete_IDs'] = FieldValue.arrayRemove([userId]);
+    }
+    if (coachIDs.contains(userId)) {
+      updates['coach_IDs'] = FieldValue.arrayRemove([userId]);
+      await userDocRef.update({'is_coach': false});
+    }
+
+    if (updates.isNotEmpty) {
+      await teamDocRef.update(updates);
+    }
+
+    // Remove team ID from user's own team list
+    await userDocRef.update({
       'team_IDs': FieldValue.arrayRemove([teamId]),
     });
 
@@ -80,8 +102,10 @@ class _PersonalScreenState extends State<PersonalScreen> {
       teamIDs.remove(teamId);
     });
 
-    Navigator.of(context).pop(); // optional: close dialog
+    Navigator.of(context).pop(); // Close dialog
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +249,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               title: const Text("Add Team",
                                   style: TextStyle(color: Colors.white)),
                               onTap: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>

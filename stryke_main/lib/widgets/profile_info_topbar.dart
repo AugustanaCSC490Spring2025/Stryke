@@ -83,7 +83,6 @@ class ProfileInfoTopbar extends StatelessWidget {
                                       onPressed: () async {
                                         await Authentication().deleteAccount(
                                             context);
-                                        Navigator.of(context).pop();
                                         Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(

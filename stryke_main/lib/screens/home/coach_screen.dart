@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../utils/metric_entry.dart';
+import '../../database_services/exercise_service.dart';
 import '../../widgets/metric_box/coach_metric_box.dart';
-import '../../widgets/metric_box/metric_box_builder.dart';
 import '../../widgets/profile_info_topbar.dart';
 import '../../utils/spacing.dart';
 
@@ -21,12 +20,27 @@ class _CoachScreenState extends State<CoachScreen> {
   List<Map<String, dynamic>> athleteCards = [];
   String selectedMetric = 'Weight';
   String searchQuery = '';
+  List<String> metricBoxExercises = [];
 
   @override
   void initState() {
     super.initState();
     _loadCoachAthletes();
+    _loadGlobalExercises();
   }
+
+  Future<void> _loadGlobalExercises() async {
+    final rawList = await ExerciseServices().fetchGlobalExerciseNames();
+    final List<String> names = rawList.cast<String>();
+
+    if (!names.contains('Weight')) names.add('Weight');
+    final uniqueNames = names.toSet().toList();
+
+    setState(() {
+      metricBoxExercises = uniqueNames;
+    });
+  }
+
 
   Future<void> _loadCoachAthletes() async {
     if (myUser == null) return;
@@ -160,13 +174,13 @@ class _CoachScreenState extends State<CoachScreen> {
                           color: Color(0xFFB7FF00),
                           fontSize: 18,
                         ),
-                        items: ['Weight', 'Bench Press', 'Back Squat', 'Front Squat']
-                            .map((metric) {
-                          return DropdownMenuItem(
-                            value: metric,
-                            child: Text(metric),
-                          );
-                        }).toList(),
+                        items: metricBoxExercises
+                            .map((name) => DropdownMenuItem<String>(
+                          value: name,
+                          child: Text(name,
+                              style: const TextStyle(color: Color(0xFFB7FF00))),
+                        ))
+                            .toList(),
                         onChanged: (newMetric) {
                           if (newMetric != null) {
                             setState(() => selectedMetric = newMetric);

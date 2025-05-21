@@ -183,7 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           );
 
                           if (success) {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const InfoInputScreen(),
@@ -252,7 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             builder: (context) => const InfoInputScreen()),
                       );
                     } else {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
@@ -292,7 +292,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
             InkWell(
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
