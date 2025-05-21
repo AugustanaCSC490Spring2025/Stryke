@@ -148,7 +148,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             "Basics",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenWidth * .05,
+                              fontSize: screenWidth * .03,
                             ),
                           ),
                         ],
