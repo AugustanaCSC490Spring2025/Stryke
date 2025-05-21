@@ -91,29 +91,58 @@ class _CoachScreenState extends State<CoachScreen> {
       final name = '$firstName $lastInitial';
 
 
-      final metricSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .collection(selectedMetric)
-          .orderBy('timestamp', descending: true)
-          .limit(1)
-          .get();
+      if (selectedMetric == 'Attendance') {
+        final checkins = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection('checkins')
+            .orderBy('timestamp', descending: true)
+            .limit(1)
+            .get();
 
-      if (metricSnapshot.docs.isEmpty) {
-        print('No data for $uid on $selectedMetric');
-        continue;
+        if (checkins.docs.isEmpty) {
+          print('No check-in data for $uid');
+          continue;
+        }
+
+        final checkinDoc = checkins.docs.first;
+        final checkedIn = checkinDoc['checkedIn'] == true;
+        final value = checkedIn ? '✅' : '❌';
+        final date = DateFormat.yMMMMd().format((checkinDoc['timestamp'] as Timestamp).toDate());
+
+        fetched.add({
+          'id': uid,
+          'name': name,
+          'value': value,
+          'date': date,
+        });
+
+      } else {
+        final metricSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .collection(selectedMetric)
+            .orderBy('timestamp', descending: true)
+            .limit(1)
+            .get();
+
+        if (metricSnapshot.docs.isEmpty) {
+          print('No data for $uid on $selectedMetric');
+          continue;
+        }
+
+        final metricDoc = metricSnapshot.docs.first;
+        final value = metricDoc['value'];
+        final date = DateFormat.yMMMMd().format((metricDoc['timestamp'] as Timestamp).toDate());
+
+        fetched.add({
+          'id': uid,
+          'name': name,
+          'value': value,
+          'date': date,
+        });
       }
 
-      final metricDoc = metricSnapshot.docs.first;
-      final value = metricDoc['value'];
-      final date = DateFormat.yMMMMd().format((metricDoc['timestamp'] as Timestamp).toDate());
-
-      fetched.add({
-        'id': uid,
-        'name': name,
-        'value': value,
-        'date': date,
-      });
     }
 
     setState(() {
@@ -216,7 +245,7 @@ class _CoachScreenState extends State<CoachScreen> {
                     (context, index) {
                       final athlete = filteredAthletes[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                         child: buildCoachMetricBox(
                             context: context,
                             athleteId: athlete['id'],

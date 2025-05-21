@@ -79,18 +79,19 @@ class _AthleteMetricDetailPageState extends State<AthleteMetricDetailPage> {
             pinned: false,
             backgroundColor: const Color(0xFF1C1C1C),
             flexibleSpace: Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
               child: Row(
                 children: [
                   IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
                   ),
+                  horizontalSpacing(screenWidth * 0.3),
                   Text(
                     '${widget.athleteName} - ${widget.metric}',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: screenWidth * 0.045,
+                      fontSize: screenHeight * 0.045,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

@@ -130,9 +130,8 @@ class _InputScreenState extends State<InputScreen> {
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: EdgeInsets.zero,
               title: Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                         onPressed: () {
@@ -140,30 +139,22 @@ class _InputScreenState extends State<InputScreen> {
                         },
                         icon: const Icon(Icons.arrow_back_ios_new_rounded,
                             color: Colors.white)),
+                    horizontalSpacing(screenWidth*.3),
                     Text(
                       widget.metricName,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: screenWidth * 0.045,
+                        fontSize: screenHeight * 0.045,
                         fontWeight: FontWeight.w700,
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_outlined,
-                        color: Colors.white,
-                      ),
-                      iconSize: 26,
-                      onPressed: () {
-                        // Notifications
-                      },
                     ),
                   ],
                 ),
               ),
             ),
           ),
+          SliverToBoxAdapter(child: verticalSpacing(screenHeight * .03)),
+
 
           SliverToBoxAdapter(
             child: Padding(
@@ -311,7 +302,7 @@ class _InputScreenState extends State<InputScreen> {
                       // Date 
                       Expanded(
                           child: Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(30),
                         decoration: BoxDecoration(
                           color: const Color(0xFF2A2A2A),
                           borderRadius: const BorderRadius.only(
@@ -323,11 +314,11 @@ class _InputScreenState extends State<InputScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text("Date:",
+                                Text("Date:",
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 15)),
+                                        color: Colors.white, fontSize: screenHeight * .025)),
                                 DateTimePickerDropdown(
                                   selectedDate: selectedDate,
                                   onDatePicked: (date) {
@@ -365,11 +356,11 @@ class _InputScreenState extends State<InputScreen> {
                             borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(16)),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
                           alignment: Alignment.centerLeft,
-                          child: const Text("Value:",
+                          child: Text("Value:",
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 15)),
+                                  TextStyle(color: Colors.white, fontSize: screenHeight * .025)),
                         ),
                       ),
 

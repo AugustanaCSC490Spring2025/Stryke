@@ -141,11 +141,11 @@ class _PersonalScreenState extends State<PersonalScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             "Basics",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: screenWidth * .022,
                             ),
                           ),
                         ],
@@ -164,16 +164,20 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               children: [
                                 Text(
                                   age,
-                                  style: const TextStyle(
-                                    color: Color(0xFFB7FF00),
-                                    fontSize: 20,
+                                  style: TextStyle(
+                                    color: const Color(0xFFB7FF00),
+                                    fontSize: screenWidth * .03,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                const Text(
+                                Text(
                                   'Age',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * .02,
+                                    fontWeight: FontWeight.bold,
+                                ),
                                 ),
                               ],
                             ),
@@ -182,16 +186,20 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               children: [
                                 Text(
                                   height,
-                                  style: const TextStyle(
-                                    color: Color(0xFFB7FF00),
-                                    fontSize: 20,
+                                  style: TextStyle(
+                                    color: const Color(0xFFB7FF00),
+                                    fontSize: screenWidth * .03,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                const Text(
+                                Text(
                                   'Height',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * .02,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
@@ -200,16 +208,20 @@ class _PersonalScreenState extends State<PersonalScreen> {
                               children: [
                                 Text(
                                   '$weight lbs',
-                                  style: const TextStyle(
-                                    color: Color(0xFFB7FF00),
-                                    fontSize: 20,
+                                  style: TextStyle(
+                                    color: const Color(0xFFB7FF00),
+                                    fontSize: screenWidth * .03,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                const Text(
+                                Text(
                                   'Weight',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * .02,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
