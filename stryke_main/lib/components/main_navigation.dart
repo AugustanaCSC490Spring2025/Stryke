@@ -9,7 +9,7 @@ import '../screens/home/personal_screen.dart';
 class MainNavigation extends StatefulWidget {
   final int index;
 
-  const MainNavigation({Key? key, required this.index}) : super(key: key);
+  const MainNavigation({super.key, required this.index});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -54,14 +54,14 @@ class _MainNavigationState extends State<MainNavigation> {
       );
     }
 
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       _isCoach ? const CoachScreen() : const HomePage(),
       const PersonalScreen(),
     ];
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         backgroundColor: const Color(0xFF1C1C1C),

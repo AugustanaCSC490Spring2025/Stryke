@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
-
 import '../../models/stat_point.dart';
 import '../../widgets/line_chart_widget.dart';
 import '../../data_filters_players/filter_manager.dart';

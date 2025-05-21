@@ -81,7 +81,8 @@ class _HomePageState extends State<HomePage> {
 
 Future<void> _loadGlobalExercises() async {
   final rawList = await ExerciseServices().fetchGlobalExerciseNames();
-  final List<String> names = rawList.cast<String>();
+  //Puts list into alphabetical order
+  final List<String> names = rawList.cast<String>()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   setState(() {
     metricBoxExercises = names;
   });
@@ -119,6 +120,8 @@ Future<void> _loadGlobalExercises() async {
                     SizedBox(height: screenHeight * .02),
                     const Text('Your Metrics...', style: TextStyle(color: Colors.white, fontSize: 15)),
                     SizedBox(height: screenHeight * .01),
+
+                    //Add Metric Boxes with streambuilder to always update new data  
                     ...preferences.map((entry){
                       return StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance.collection('users').doc(myUser!.uid)
@@ -136,12 +139,13 @@ Future<void> _loadGlobalExercises() async {
                           final timestamp = (doc['timestamp'] as Timestamp).toDate();
                           final dateStr = DateFormat('MM/dd/yyyy').format(timestamp);
 
+                          //Build actual metric boxes
                           return buildMetricBox(context, entry, value, dateStr);
                         },
                       );
                     }),
 
-                    //Metric Boxes
+                    //Metric Boxes on Tap functionality 
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -173,7 +177,7 @@ Future<void> _loadGlobalExercises() async {
                         child: const Icon(Icons.add, color: Colors.black, size: 25),
                       ),
                     ),
-                    SizedBox(height: screenHeight * .05),
+                    SizedBox(height: screenHeight * .2),
                   ],
                 ),
               ),

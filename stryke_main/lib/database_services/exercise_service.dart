@@ -15,6 +15,8 @@ class ExerciseServices {
     }
   }
 
+
+  //Gets Global Exercise Names for display 
   Future<List> fetchGlobalExerciseNames() async {
     final snapshot =
         await FirebaseFirestore.instance.collection('exercises').get();
@@ -37,19 +39,6 @@ class ExerciseServices {
     await userExerciseRef
         .add({'value': value, 'timestamp': Timestamp.fromDate(date)});
   }
-
-  /* Future<void> addUserWeight(
-      {required String userID,
-      required String weight,
-      required DateTime date}) async {
-    final userWeightRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userID)
-        .collection('Weight');
-
-    await userWeightRef
-        .add({'timestamp': Timestamp.fromDate(date), 'value': weight});
-  } */
 
   Future<double> fetchGoal(
       {required String userID, required String goalName}) async {
