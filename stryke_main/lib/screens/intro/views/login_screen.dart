@@ -316,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         if (success) {
                           bool userData = await _authService.checkIfUserHasData();
-                          if (!mounted) return;
+                          //if (!mounted) return;
                           if (userData == false) {
                             nav.pushReplacement(
                               MaterialPageRoute(

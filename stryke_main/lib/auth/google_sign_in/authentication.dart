@@ -134,7 +134,6 @@ class Authentication {
           behavior: SnackBarBehavior.floating,
         ),
       );
-
     } catch (e) {
       print('Error deleting account: $e');
       ScaffoldMessenger.of(context).showSnackBar(

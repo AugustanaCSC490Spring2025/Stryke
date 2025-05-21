@@ -382,13 +382,10 @@ class _InfoInputScreenState extends State<InfoInputScreen> {
                             "value": _weightController.text,
                             "timestamp": DateTime.now(),
                           });
-                          await user?.updateDisplayName('${_nameController.text.split(' ').first} ${_nameController.text.split(' ').last}');
-                        } else {
-                          // User data already exists, handle accordingly (update or skip)
-                          print('User data already exists.');
+                          await user?.updateDisplayName(
+                              '${_nameController.text.split(' ').first} ${_nameController.text.split(' ').last}');
                         }
 
-                        // Navigate once complete
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

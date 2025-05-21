@@ -60,9 +60,9 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     height: 70,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute<void>(
+                          MaterialPageRoute(
                               builder: (context) =>
                               const SignUpScreen()),
                         );
@@ -82,7 +82,7 @@ class _IntroScreenState extends State<IntroScreen> with TickerProviderStateMixin
                     height: 70,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                             context, MaterialPageRoute(
                             builder:(context) => const LoginScreen())
                         );

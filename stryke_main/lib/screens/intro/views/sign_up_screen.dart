@@ -243,7 +243,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   bool success = await _authService.googleSignIn();
 
                   if (success) {
-                    //bool userData = await _authService.checkIfUserHasData();
                     bool userData = await _authService.checkIfUserHasData();
 
                     if (userData == false) {
@@ -293,7 +292,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
             InkWell(
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
