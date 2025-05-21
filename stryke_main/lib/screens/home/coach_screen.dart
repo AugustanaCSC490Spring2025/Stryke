@@ -62,11 +62,16 @@ class _CoachScreenState extends State<CoachScreen> {
     final List<Map<String, dynamic>> fetched = [];
 
     for (String uid in uniqueAthleteIds) {
+      print('Loading athlete: $uid');
+
       final userDoc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-      if (!userDoc.exists) continue;
-      final userData = userDoc.data()!;
-      final name = '${userData['first_Name']} ${userData['last_Name'][0]}.';
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (!userDoc.exists) {
+        print('User $uid not found');
+        continue;
+      }
+
+      final name = userDoc.data()?['name'] ?? 'Unknown';
 
       final metricSnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -76,14 +81,17 @@ class _CoachScreenState extends State<CoachScreen> {
           .limit(1)
           .get();
 
-      if (metricSnapshot.docs.isEmpty) continue;
+      if (metricSnapshot.docs.isEmpty) {
+        print('No data for $uid on $selectedMetric');
+        continue;
+      }
 
       final metricDoc = metricSnapshot.docs.first;
-      final value = metricDoc['value'].toString();
-      final date = DateFormat.yMMMMd()
-          .format((metricDoc['timestamp'] as Timestamp).toDate());
+      final value = metricDoc['value'];
+      final date = DateFormat.yMMMMd().format((metricDoc['timestamp'] as Timestamp).toDate());
 
       fetched.add({
+        'id': uid,
         'name': name,
         'value': value,
         'date': date,
@@ -160,8 +168,12 @@ class _CoachScreenState extends State<CoachScreen> {
                           color: Color(0xFFB7FF00),
                           fontSize: 18,
                         ),
-                        items: ['Weight', 'Bench Press', 'Back Squat', 'Front Squat']
-                            .map((metric) {
+                        items: [
+                          'Weight',
+                          'Bench Press',
+                          'Back Squat',
+                          'Front Squat'
+                        ].map((metric) {
                           return DropdownMenuItem(
                             value: metric,
                             child: Text(metric),
@@ -192,11 +204,12 @@ class _CoachScreenState extends State<CoachScreen> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: buildCoachMetricBox(
-                          context: context,
-                          athleteName: athlete['name'],
-                          value: athlete['value'],
-                          date: athlete['date'],
-                        ),
+                            context: context,
+                            athleteId: athlete['id'],
+                            athleteName: athlete['name'],
+                            value: athlete['value'],
+                            date: athlete['date'],
+                            selectedMetric: selectedMetric),
                       );
                     },
                     childCount: filteredAthletes.length,
