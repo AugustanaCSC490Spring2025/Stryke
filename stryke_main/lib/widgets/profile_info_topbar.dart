@@ -113,7 +113,7 @@ class ProfileInfoTopbar extends StatelessWidget {
                 );
               },
               child: CircleAvatar(
-                radius: screenWidth * .04,
+                radius: screenHeight * .04,
                 backgroundImage: NetworkImage(
                   myUser.photoURL ??
                       'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg',
@@ -130,7 +130,7 @@ class ProfileInfoTopbar extends StatelessWidget {
                     '${myUser.displayName}',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: screenWidth * .05,
+                      fontSize: screenHeight * .04,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -146,7 +146,7 @@ class ProfileInfoTopbar extends StatelessWidget {
               },
               icon:
                   const Icon(Icons.notifications_outlined, color: Colors.white),
-              iconSize: screenWidth * .05,
+              iconSize: screenHeight * .04,
             ),
           ],
         ),
