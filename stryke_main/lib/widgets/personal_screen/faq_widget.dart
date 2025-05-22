@@ -7,7 +7,7 @@ class FaqWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Color(0xFF2A2A2A),
-      title: const Text("FAQ*", style: TextStyle(color: Colors.white)),
+      title: const Text("FAQ", style: TextStyle(color: Colors.white)),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

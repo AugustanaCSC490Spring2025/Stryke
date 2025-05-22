@@ -139,7 +139,7 @@ class _InputScreenState extends State<InputScreen> {
                         },
                         icon: const Icon(Icons.arrow_back_ios_new_rounded,
                             color: Colors.white)),
-                    horizontalSpacing(screenWidth*.3),
+                    horizontalSpacing(20),
                     Text(
                       widget.metricName,
                       style: TextStyle(
@@ -302,7 +302,7 @@ class _InputScreenState extends State<InputScreen> {
                       // Date 
                       Expanded(
                           child: Container(
-                        padding: const EdgeInsets.all(30),
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         decoration: BoxDecoration(
                           color: const Color(0xFF2A2A2A),
                           borderRadius: const BorderRadius.only(

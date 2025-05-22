@@ -344,7 +344,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             ListTile(
                               leading: const Icon(Icons.question_answer,
                                   color: Color(0xFFB7FF00)),
-                              title: const Text("FAQ*",
+                              title: const Text("FAQ",
                                   style: TextStyle(color: Colors.white)),
                               onTap: () {
                                 showDialog(
@@ -356,7 +356,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             ListTile(
                               leading: const Icon(Icons.info_outline,
                                   color: Color(0xFFB7FF00)),
-                              title: const Text("About*",
+                              title: const Text("About",
                                   style: TextStyle(color: Colors.white)),
                               onTap: () {
                                 showDialog(

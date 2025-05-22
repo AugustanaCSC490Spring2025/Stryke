@@ -154,7 +154,7 @@ class PersonalManagementWidget extends StatelessWidget {
                           TextFormField(
                             controller: heightController,
                             style: const TextStyle(color: Colors.white),
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.number,
                             decoration: const InputDecoration(
                               hintText: "ex. 6' 2",
                               labelText: 'Height',
@@ -163,6 +163,18 @@ class PersonalManagementWidget extends StatelessWidget {
                               focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFFB7FF00))),
                               errorStyle: TextStyle(height: 0.8),
                             ),
+                            onChanged: (val) {
+                              final digits = val.replaceAll(RegExp(r'[^0-9]'), '');
+                              if (digits.length >= 2) {
+                                final ft = digits[0];
+                                final inch = digits.substring(1);
+                                final formatted = "$ft' $inch";
+                                heightController.value = TextEditingValue(
+                                  text: formatted,
+                                  selection: TextSelection.collapsed(offset: formatted.length),
+                                );
+                              }
+                            },
                           ),
                           const SizedBox(height: 20),
                           Row(
