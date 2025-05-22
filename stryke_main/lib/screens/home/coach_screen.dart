@@ -21,6 +21,7 @@ class _CoachScreenState extends State<CoachScreen> {
   String selectedMetric = 'Weight';
   String searchQuery = '';
   List<String> metricBoxExercises = [];
+  String? teamId = '';
 
   @override
   void initState() {
@@ -238,7 +239,8 @@ class _CoachScreenState extends State<CoachScreen> {
                             value: athlete['value'],
                             date: athlete['date'],
                             selectedMetric: selectedMetric,
-                          checkedInToday: athlete['checkedInToday']
+                          checkedInToday: athlete['checkedInToday'],
+                            teamId: teamId,
                         ),
                       );
                     },

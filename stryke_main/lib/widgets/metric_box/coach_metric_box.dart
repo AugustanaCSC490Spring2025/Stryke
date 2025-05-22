@@ -5,10 +5,11 @@ Widget buildCoachMetricBox({
   required BuildContext context,
   required String athleteId,
   required String athleteName,
+  required String? teamId,
   required String value,
   required String date,
   required String selectedMetric,
-  required bool checkedInToday
+  required bool checkedInToday,
 }) {
   return Material(
     color: Colors.transparent,
