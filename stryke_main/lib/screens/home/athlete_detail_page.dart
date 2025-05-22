@@ -102,7 +102,7 @@ class _AthleteMetricDetailPageState extends State<AthleteMetricDetailPage> {
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
                   ),
-                  horizontalSpacing(screenWidth * 0.1),
+                  horizontalSpacing(25),
                   Text(
                     '${widget.athleteName} - ${widget.metric}',
                     style: TextStyle(

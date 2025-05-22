@@ -139,15 +139,29 @@ class _CoachScreenState extends State<CoachScreen> {
     });
   }
 
+  String capitalize(String s) {
+    if (s.isEmpty) return s;
+    return s[0].toUpperCase() + s.substring(1).toLowerCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
     final filteredAthletes = athleteCards.where((athlete) {
-      final name = athlete['name'].toString().toLowerCase();
-      return name.contains(searchQuery.toLowerCase());
+      final rawName = athlete['name'].toString().toLowerCase();
+      return rawName.contains(searchQuery.toLowerCase());
+    }).map((athlete) {
+      final fullName = athlete['name'].toString().split(' ');
+      final first = capitalize(fullName[0]);
+      final last = fullName.length > 1 ? '${capitalize(fullName[1][0])}.' : '';
+      return {
+        ...athlete,
+        'name': '$first $last',
+      };
     }).toList();
+
 
     return Scaffold(
       backgroundColor: const Color(0xFF1C1C1C),
