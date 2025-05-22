@@ -107,7 +107,7 @@ class _AthleteMetricDetailPageState extends State<AthleteMetricDetailPage> {
                     '${widget.athleteName} - ${widget.metric}',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: screenHeight * 0.045,
+                      fontSize: screenHeight * 0.03,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

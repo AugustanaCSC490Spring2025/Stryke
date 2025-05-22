@@ -35,12 +35,14 @@ class _CoachScreenState extends State<CoachScreen> {
     final List<String> names = rawList.cast<String>();
 
     if (!names.contains('Weight')) names.add('Weight');
-    final uniqueNames = names.toSet().toList();
+
+    final uniqueNames = names.toSet().toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
 
     setState(() {
       metricBoxExercises = uniqueNames;
     });
   }
+
 
 
   Future<void> _loadCoachAthletes() async {
