@@ -31,8 +31,7 @@ class ProfileInfoTopbar extends StatelessWidget {
                   builder: (context) {
                     return AlertDialog(
                       backgroundColor: const Color(0xFF303030),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       title: const Text(
                         'Account Options',
                         style: TextStyle(color: Colors.white),
@@ -41,71 +40,65 @@ class ProfileInfoTopbar extends StatelessWidget {
                         'Choose an action:',
                         style: TextStyle(color: Colors.white70),
                       ),
+                      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+                      actionsPadding: const EdgeInsets.only(bottom: 32),
                       actions: [
-                        TextButton(
-                          onPressed: () async {
-                            await Authentication().signOut();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const IntroScreen()),
-                            ); // Your method
-                          },
-                          child: const Text('Sign Out',
-                              style: TextStyle(color: Color(0xFFB7FF00))),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  backgroundColor: const Color(0xFF303030),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)),
-                                  title: const Text(
-                                    'Confirm Deletion',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  content: const Text(
-                                    'Are you sure you want to delete your account? This action cannot be undone.',
-                                    style: TextStyle(color: Colors.white70),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('Cancel',
-                                          style:
-                                              TextStyle(color: Colors.white60)),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        await Authentication().deleteAccount(
-                                            context);
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => const IntroScreen()),
-                                        );
-                                      },
-                                      child: const Text('Delete',
-                                          style: TextStyle(
-                                              color: Colors.redAccent)),
-                                    ),
-                                  ],
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextButton(
+                              onPressed: () async {
+                                await Authentication().signOut();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const IntroScreen()),
                                 );
                               },
-                            );
-                            // Make sure this exists
-                          },
-                          child: const Text('Delete Account',
-                              style: TextStyle(color: Colors.redAccent)),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Cancel',
-                              style: TextStyle(color: Colors.white60)),
+                              child: const Text('Sign Out', style: TextStyle(color: Color(0xFFB7FF00))),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      backgroundColor: const Color(0xFF303030),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      title: const Text(
+                                        'Confirm Deletion',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      content: const Text(
+                                        'Are you sure you want to delete your account? This action cannot be undone.',
+                                        style: TextStyle(color: Colors.white70),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(),
+                                          child: const Text('Cancel', style: TextStyle(color: Colors.white60)),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            await Authentication().deleteAccount(context);
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const IntroScreen()),
+                                            );
+                                          },
+                                          child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: const Text('Delete Account', style: TextStyle(color: Colors.redAccent)),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('Cancel', style: TextStyle(color: Colors.white60)),
+                            ),
+                          ],
                         ),
                       ],
                     );

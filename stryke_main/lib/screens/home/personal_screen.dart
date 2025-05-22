@@ -145,7 +145,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                             "Basics",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenWidth * .022,
+                              fontSize: 15,
                             ),
                           ),
                         ],
@@ -166,7 +166,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   age,
                                   style: TextStyle(
                                     color: const Color(0xFFB7FF00),
-                                    fontSize: screenWidth * .03,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -175,7 +175,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   'Age',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: screenWidth * .02,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                 ),
                                 ),
@@ -188,7 +188,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   height,
                                   style: TextStyle(
                                     color: const Color(0xFFB7FF00),
-                                    fontSize: screenWidth * .03,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -197,7 +197,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   'Height',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: screenWidth * .02,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -210,7 +210,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   '$weight lbs',
                                   style: TextStyle(
                                     color: const Color(0xFFB7FF00),
-                                    fontSize: screenWidth * .03,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -219,7 +219,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                   'Weight',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: screenWidth * .02,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

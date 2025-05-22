@@ -166,7 +166,7 @@ class LineChartWidget extends StatelessWidget {
             LineChartBarData(
               spots: spots,
               isCurved: false,
-              color: Colors.limeAccent,
+              color: const Color(0xFFB7FF00),
               barWidth: 3,
               isStrokeCapRound: true,
               belowBarData: BarAreaData(
@@ -176,7 +176,7 @@ class LineChartWidget extends StatelessWidget {
                 show: true,
                 getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
                   radius: 4,
-                  color: Colors.limeAccent,
+                  color: const Color(0xFFB7FF00),
                   strokeWidth: 1,
                   strokeColor: Colors.black,
                 ),
